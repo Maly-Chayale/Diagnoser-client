@@ -1,0 +1,35 @@
+.table-container {
+    width: 100%;
+    margin: 30px 0;
+    overflow-x: auto;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    font-family: Arial, sans-serif;
+}
+
+.styled-table thead {
+    background: linear-gradient(90deg, #4e73df, #1cc88a);
+    color: #ffffff;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 14px 16px;
+    text-align: center;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+}
+
+.styled-table tbody tr:hover {
+    background: #f1f3f9;
+}

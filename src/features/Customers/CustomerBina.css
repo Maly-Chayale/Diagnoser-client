@@ -1,0 +1,127 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* Body */
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background: #0f172a; 
+    overflow-x: hidden;
+    color: #ffffff;
+}
+
+/* Animated Background */
+.bg-animated {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 30%, #3b82f6, transparent),
+                radial-gradient(circle at 80% 70%, #9333ea, transparent);
+    filter: blur(120px);
+    z-index: -1; /* שים את הרקע מתחת לכל שאר האלמנטים */
+    animation: moveBg 20s infinite alternate;
+}
+
+@keyframes moveBg {
+    from { transform: translate(0, 0); }
+    to { transform: translate(40px, -40px); }
+}
+
+/* Customers List Container */
+.clients-page {
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1;
+}
+
+/* Title */
+.clients-title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* Grid for Customers */
+.clients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+/* Customer Card */
+.client-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, background 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.client-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Customer Header */
+.client-header {
+    margin-bottom: 10px;
+}
+
+.client-name {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+/* Customer Badge */
+.client-badge {
+    font-size: 1rem;
+    color: #ddd;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Customer Description */
+.client-description {
+    font-size: 1rem;
+    margin-top: 10px;
+    color: #bbb;
+    font-weight: 400;
+}
+
+/* Customer Meta */
+.client-meta {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-top: 10px;
+    font-weight: 300;
+}
+
+/* Animation for Cards */
+.client-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: cardIn 0.5s forwards ease-out;
+}
+
+@keyframes cardIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hover Effect on Card */
+.client-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}

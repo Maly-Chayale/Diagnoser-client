@@ -1,0 +1,128 @@
+.clients-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    background: #f4f6ff;
+    /* טיפה יותר סגלגל מהמאבחנות */
+    min-height: 100vh;
+}
+
+/* כותרת ללקוחות – גוון סגול */
+.clients-title {
+    text-align: right;
+    margin-bottom: 24px;
+    color: #312e81;
+    /* אינדיגו כהה */
+}
+
+/* רשת כרטיסים – אפשר להשתמש באותה .cards-grid אם אתה רוצה */
+.clients-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+/* כרטיס לקוח – עגול יותר, טיפה צבעוני */
+.client-card {
+    background: linear-gradient(135deg, #ffffff, #eef2ff);
+    border-radius: 16px;
+    padding: 16px 18px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 25%;
+    border: 1px solid rgba(129, 140, 248, 0.35);
+    /* קו אינדיגו עדין */
+}
+
+/* כותרת כרטיס לקוח */
+.client-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.client-name {
+    font-size: 1.02rem;
+    margin: 0;
+    color: #111827;
+}
+
+/* תג ללקוח – גוון ירקרק במקום כחול */
+.client-badge {
+    background: #dcfce7;
+    color: #15803d;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* תיאור לקוח */
+.client-description {
+    margin: 0;
+    font-size: 0.88rem;
+    color: #4b5563;
+}
+
+/* מידע נוסף קטן (למשל: תאריך אחרון, סוג אבחון) */
+.client-meta {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6b7280;
+}
+
+/* כפתור ללקוח – אותו גרדיאנט כמו אצלך, אבל אפשר קטן יותר */
+.client-btn {
+    margin-top: 8px;
+    align-self: flex-start;
+    background: linear-gradient(135deg, #4f46e5, #ec4899);
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.1s ease;
+}
+
+.client-btn:hover {
+    opacity: 0.96;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.35);
+    transform: translateY(-1px);
+}
+
+.clients-filters-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+    gap: 8px;
+}
+
+.clients-filter-label {
+    font-size: 0.9rem;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.clients-filter-select {
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid #c4b5fd;
+    /* סגול בהיר */
+    background: #ffffff;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.clients-filter-select:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+    background: #000;
+ 
+}

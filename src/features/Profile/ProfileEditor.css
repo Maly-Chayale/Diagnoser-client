@@ -1,0 +1,122 @@
+.profile-container {
+  background-color: #ffffff;
+  border: 1px solid #9333ea;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 450px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.profile-header {
+  font-size: 24px;
+  font-weight: bold;
+  color: #3b82f6;
+  margin-bottom: 20px;
+}
+
+.profile-header2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #9333ea;
+  margin-bottom: 20px;
+  justify-content: center;
+  justify-items: center;
+}
+
+.field-wrapper {
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+}
+
+.field-label {
+  font-weight: bold;
+  color: #3b82f6;
+}
+
+.field-value {
+  display: block;
+  padding: 6px;
+  background-color: #f3f4f6;
+  color: #111827;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.editable-input {
+  width: 100%;
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  background-color: #e0e7ff;
+  transition: all 0.3s ease;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+}
+
+.checkbox-label {
+  margin-left: 8px;
+  color: #3b82f6;
+  font-size: 14px;
+}
+
+.button-container {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.profile-button {
+  background-color: #9333ea;
+  color: #ffffff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.profile-button:hover {
+  background-color: #7e22ce;
+}
+
+.cancel-button {
+  background-color: #9ca3af;
+}
+
+.cancel-button:hover {
+  background-color: #6b7280;
+}
+
+.field-wrapper, .checkbox-container {
+  margin-bottom: 12px;
+  transition: all 0.3s ease, opacity 0.3s ease;
+  opacity: 1;
+}
+
+.field-wrapper.editing, .checkbox-container.editing {
+  opacity: 1;
+}
+
+.editable-input {
+  width: 100%;
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  background-color: #e0e7ff;
+  transition: all 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.field-wrapper.editing .editable-input {
+  opacity: 1;
+}

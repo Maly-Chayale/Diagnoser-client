@@ -1,0 +1,264 @@
+/* Example CSS styling for standard HTML tags */
+
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
+
+body {
+    direction: rtl;
+    text-align: center;
+}
+
+header {
+    background-color: #bc1a1a;
+    color: white;
+    padding: 10px;
+    text-align: center;
+
+
+    display: flex;
+}
+
+nav {
+    flex: 1;
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: end;
+}
+
+nav a {
+    color: white;
+}
+
+nav a:hover {
+
+    text-decoration: underline;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+button {
+    background-color: #bc1a1a;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+input,
+select,
+button,
+textarea {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 2rem;
+}
+
+textarea {
+    min-height: 10rem;
+}
+
+form {
+    margin: 0 auto;
+    max-width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #333;
+}
+
+p {
+    line-height: 1.5;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+}
+
+ul {
+    list-style-type: disc;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+table {
+    border-collapse: collapse;
+
+}
+
+tr {
+    padding: 0.2rem;
+}
+
+
+th,
+td {
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* navbar */
+#logo {
+    font-weight: 900;
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+/* recipies */
+
+.recipiesList {
+    padding: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+}
+
+
+.recipy {
+    width: 25vw;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.5rem;
+
+    text-align: start;
+    box-shadow: 0px 0px 5px gray;
+}
+
+.likeBtn {
+    background-color: transparent;
+    border: none;
+    color: grey;
+    font-size: 1.6rem;
+
+}
+
+.recipiyHeader {
+    display: flex;
+}
+
+.recipiyHeader h1 {
+    flex: 1;
+    text-align: start;
+}
+
+.recipiyHeader button {
+    background-color: transparent;
+    border: none;
+    color: grey;
+    font-size: larger;
+    align-self: center;
+}
+
+.author {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.author span {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: grey;
+    color: white;
+    border-radius: 50%;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.details {
+    display: flex;
+    justify-content: space-around;
+}
+
+.details p {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#search input {
+    width: 20rem;
+}
+
+/* add recipy */
+.addRecipyForm {
+    max-width: 50vw;
+    text-align: start;
+}
+
+.addRecipyForm ul {
+    border: 1px solid red;
+    border-radius: 0.5rem;
+
+}
+
+#addIngredientForm {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+#addIngredientForm input {
+
+    flex: 1;
+}
+
+/* home */
+.home{
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.home .info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5vw;
+
+
+}
+
+.home .info p {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:2rem;
+    border:2px solid rgb(104, 16, 16);   
+    border-radius: 2rem;
+    width:20vw;
+}
