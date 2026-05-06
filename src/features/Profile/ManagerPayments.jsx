@@ -42,18 +42,9 @@ const ManagerPayments = () => {
         <div className="landing-shell">
             <div className="table-card fade-in">
                 <div className="table-title">התחשבנות מאבחנות</div>
-
-
-
                 <div className="search-row">
                     <input type="text" className="search-input" placeholder="חיפוש לפי שם מאבחנת, תחום, תאריך או שעה..." value={search} onChange={e => setSearch(e.target.value)} />
                 </div>
-
-
-
-
-
-
                 <table className="modern-table">
                     <thead>
                         <tr>
@@ -68,7 +59,7 @@ const ManagerPayments = () => {
                     <tbody>
                         {
                         filteredSlots
-                            .filter(d => d.mail != '22@2')
+                            .filter(d => d.mail != '22@2' && d.precentagePayment > 0)
                           .map((d, i) => (
                                 <tr key={i}>
                                     <td>{d.name}</td>

@@ -39,21 +39,11 @@ const OdersAndReferences = () => {
     const priceWorkshop = (code) => getWorkshop(code)?.price || 0;
     const codeDiagnoser = (code) => getWorkshop(code)?.codeDiagnoser || '';
     const getNameDiagnoser = (code) => diagnosers.find(d => d.code == codeDiagnoser(code))?.name || '';
-    const [amountPaid, setAmountPaid] = useState(0);
-    const [remaining, setRemaining] = useState(0);
-
 
     const [filter, setFilter] = useState("all");
     const [search, setSearch] = useState("");
 
 
-    useEffect(() => {
-        if (references.length && user) {
-            const total = user.precentagePayment
-
-            setRemaining(total);
-        }
-    }, [references, user]);
 
 
     // פתיחת פופאפ עם ההזמנה שנבחרה
@@ -76,12 +66,7 @@ const OdersAndReferences = () => {
         setActiveBooking(null);
     };
 
-    const handlePayment = async () => {
-        if (!amountPaid || amountPaid <= 0) return;
-        await dispatch(payToManager({ code: user.code, num: amountPaid }));
-        setRemaining(prev => prev - amountPaid);
-        setAmountPaid(0);
-    };
+
 
 
     const string = (d) => {
@@ -243,24 +228,7 @@ const OdersAndReferences = () => {
                         </div>
                     </div>
                 )}
-                {statusUser !== "Esty" && (
-                    <div className="payment-box">
-                        <h3>התחשבנות עם מנהלת</h3>
-
-                        <div>נותר לתשלום: {remaining}</div>
-
-                        <input
-                            type="number"
-                            value={amountPaid}
-                            onChange={(e) => setAmountPaid(Number(e.target.value))}
-                            placeholder="הכנס סכום ששולם"
-                        />
-
-                        <button className="profile-button" onClick={handlePayment}>
-                            אישור תשלום
-                        </button>
-                    </div>
-                )}
+                
             </div>
         </div >
     );

@@ -4,6 +4,7 @@ import axios from "axios"
 const initialState = {
     WorkShops: [],
     Diagnosers: [],
+    WorkshopsOfDiag: [],
     status: ""
 }
 
@@ -109,6 +110,17 @@ export const GetDiagnosersOfConditions= createAsyncThunk("GetDiagnosersOfConditi
     }
 )
 
+export const GetWorkShops= createAsyncThunk("GetWorkShops",
+    async ({c, g, m, typeGroup}) => {
+        let data
+        await axios.get('https://localhost:7082/api/WorkShops/GetWorkShops/' + c + '/' + g + '/' + m+ '/'+ typeGroup)
+            .then(res =>
+                data = res.data
+            )
+        return data
+    }
+)
+
 
 const WorkShopSlice = createSlice({
     name: "WorkShop",
@@ -129,7 +141,7 @@ const WorkShopSlice = createSlice({
             .addCase(addWorkShop.fulfilled, (state, action) => {
                 const workshop = action.payload;
                 state.status = "succesfull";
-                state.WorkShops.push(workshop)
+               state.WorkShops=[...state.WorkShops,workshop]// state.WorkShops.push(workshop)
             })
             .addCase(deleteWorkShop.fulfilled, (state, action) => {
                 const workshop = action.payload;
@@ -175,6 +187,9 @@ const WorkShopSlice = createSlice({
             })
             .addCase(GetDiagnosersOfConditions.fulfilled, (state, action)=>{
                 state.Diagnosers=action.payload;
+            })
+            .addCase(GetWorkShops.fulfilled, (state, action)=>{
+                state.WorkshopsOfDiag=action.payload;
             });
     }
 })

@@ -256,11 +256,12 @@
 
 // // export default WorkshopCard;
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteWorkShop, GetDiagnosersOfThisWorkshop, InitWorkShops } from './WorkShopSlice';
+import { deleteWorkShop, GetDiagnosersOfThisWorkshop, GetWorkShops, InitWorkShops } from './WorkShopSlice';
 import './AppointmentCard.css'; // ייבוא קובץ עיצוב
 import { GiButterfly } from 'react-icons/gi';
+import { addReference } from '../References/ReferencesSlice';
 
 function WorkshopCard({ WorkShop }) {
     const dispatch = useDispatch();
@@ -269,12 +270,18 @@ function WorkshopCard({ WorkShop }) {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // מצב לפתיחת הפופ-אפ של מחיקת הסדנא
     const groups = useSelector(state => state.TypeGroup.groups);
     const diagnosers = useSelector(state => state.WorkShop.Diagnosers);
+    // const workshops = useSelector(state => state.WorkShop.WorkshopsOfDiag);
+    const workshops = useSelector(state => state.WorkShop.WorkShops);
+    const customer = useSelector(state => state.LogIn.thisUser);
     const statusUser = useSelector(state => state.LogIn.statusUser);
+    const references = useSelector(state => state.Reference.references);
 
-    const openModal = () => {
+    const openModal = async () => {
         setIsModalOpen(true); // פותח את הפופ-אפ של המאבחנות
-        dispatch(GetDiagnosersOfThisWorkshop(WorkShop));
+        await dispatch(GetDiagnosersOfThisWorkshop(WorkShop));
+        // await dispatch(GetWorkShops({ m: WorkShop.morfology, c: WorkShop.chirology, g: WorkShop.grafology, typeGroup: WorkShop.typeGroup }))
     }
+
 
     const closeModal = () => {
         setIsModalOpen(false); // סוגר את הפופ-אפ של המאבחנות
@@ -299,20 +306,43 @@ function WorkshopCard({ WorkShop }) {
         return groups.find(g => g.code === code)?.description;
         // let data = ( dispatch(getType(code)))
         // console.log(data);
-        
+
         // return "name"
     }
 
     const handleBooking = (diagnoser) => {
-        // שליחה למייל של המאבחנת
+        // יצירת תאריך בפורמט שהשרת מצפה לו: YYYY-MM-DD (DateOnly)
+        const today = new Date().toISOString().split('T')[0];
+
+        // בניית אובייקט reference בהתאם למודל ב־C#
+        const newReference = {
+            code: 0, // חדש → השרת יוצר
+            codeWorkShop: workshops.find(w => w.codeDiagnoser == diagnoser.code &&
+                w.morfology==WorkShop.morfology &&
+                w.chirology==WorkShop.chirology &&
+                w.grafology==WorkShop.grafology &&
+                w.typeGroup==WorkShop.typeGroup
+            )?.code, // קישור לסדנא שנבחרה
+            codeCustomer: customer.code, // קישור ללקוחה המחוברת
+            date: today, // תאריך בפורמט נכון
+            time: 0, // ערך ברירת מחדל (אם אין בחירה בפועל)
+            adress: "", // ערך ברירת מחדל (יש לעדכן אם קיים אצלך)
+            comments: "", // הערות ריקות
+            status: 1 // סטטוס התחלתי
+        };
+
+        // שליחת מייל למאבחנת
         const mailBody = `שלום ${diagnoser.name}, \n\n יש הזמנה חדשה לסדנא.`;
         const mailSubject = `הזמנה לסדנא ${WorkShop.code}`;
-        
         window.location.href = `mailto:${diagnoser.mail}?subject=${mailSubject}&body=${mailBody}`;
 
-        // הודעה ללקוחה (הצגת פופ-אפ או התראה)
+        // הודעה למשתמש
         alert(`ההזמנה למאבחנת ${diagnoser.name} נשלחה בהצלחה!`);
-    }
+
+        // שליחת האובייקט ל־Redux → ומשם לשרת (C# API)
+        dispatch(addReference(newReference));
+    };
+
 
     const openDetails = (diagnoser) => {
         setSelectedDiagnoser(diagnoser); // מעדכן את המאבחנת שנבחרה להציג את פרטיה

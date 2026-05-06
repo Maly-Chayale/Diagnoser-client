@@ -7,6 +7,7 @@ import ProfileSlice from "../features/Profile/ProfileSlice"
 import ReferencesSlice from "../features/References/ReferencesSlice"
 import TypeGroupSlice from "../features/TypeGroup/TypeGroupSlice"
 import StatusSlice from "../features/Statuss/StatusSlice"
+import LeadsSlice from "../features/Leads/LeadsSlice"
 
 export const store = configureStore({
     reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
         Profile: ProfileSlice,
         Reference: ReferencesSlice,
         TypeGroup: TypeGroupSlice,
-        Status: StatusSlice
+        Status: StatusSlice,
+        Lead: LeadsSlice
     }
 });

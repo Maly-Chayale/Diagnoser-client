@@ -11,10 +11,13 @@ import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
 function Workshop() {
 
     const dispatch = useDispatch()
+    // const customer = useSelector(state => state.LogIn.thisUser); 
+    const statusUser = useSelector(state => state.LogIn.statusUser);
     const workshops = useSelector(state => state.WorkShop.WorkShops)
     const status = useSelector(state => state.WorkShop.status)
     const statusT = useSelector(state => state.TypeGroup.status)
     const diagnosers = useSelector(state => state.WorkShop.Diagnosers);  // המאבחנות
+    const workshopsforD = useSelector(state => state.WorkShop.WorkshopsOfDiag);  // המאבחנות
     const alldiagnosers = useSelector(state => state.Diagnoser.Diagnosers);
     const typeGroups = useSelector(state => state.TypeGroup.groups); // קבוצות הסוגים
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -53,9 +56,10 @@ function Workshop() {
     useEffect(() => {
         if (status == "" || status == "faild")
             dispatch(InitWorkShops())
-        if (statusT == "" || statusT == "faild")
-            dispatch(fetchTypeGroups())
-        dispatch(InitDiagnoser())
+        // if (statusT == "" || statusT == "faild")
+        //     dispatch(fetchTypeGroups())
+      dispatch(InitDiagnoser())
+   
     }, [status, dispatch])
 
 
@@ -70,9 +74,9 @@ function Workshop() {
     };
 
     // פונקציה להוספת סדנא
-    const   handleAddWorkshop = async () => {
-       await dispatch(addWorkShop(newWorkshop));  // פעולה להוספת סדנא
-       await dispatch(InitWorkShops())
+    const handleAddWorkshop = async () => {
+        await dispatch(addWorkShop(newWorkshop));  // פעולה להוספת סדנא
+        await dispatch(InitWorkShops())
         closeModal();  // סוגר את הפופ-אפ אחרי ההוספה
     };
 
@@ -111,7 +115,9 @@ function Workshop() {
 
 
             {/* כפתור הוספת סדנא */}
-            <button className="primary" onClick={openModal}>הוספת סדנא</button>
+             {statusUser !== "cust" && statusUser !== null  &&<button className="primary" onClick={openModal}>הוספת סדנא</button>}
+            {/* { customer!= "cust" &&
+            <button className="primary" onClick={openModal}>הוספת סדנא</button>} */}
             {filteredSlots.map(w => (
                 <AppointmentCard key={w.code} WorkShop={w} />
             ))}
