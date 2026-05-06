@@ -33,6 +33,7 @@ const LogIn = () => {
     }, [statusC, statusD, dispatch])
 
     async function SignIn(){
+        setErr(false)
         // console.log(customers);
         // let customerIndex = customers.findIndex(c => c.mail == mail && c.password == parseInt(password))
         // if (customerIndex != -1) {
@@ -53,7 +54,10 @@ const LogIn = () => {
             thisUser:thisuser,
             status: status
         }))
-        navigate("../enter")
+        if(status=="wrong")
+            setErr(true)
+        else
+            navigate("../enter")
         // }
         // else {
         //     setErr(true);
