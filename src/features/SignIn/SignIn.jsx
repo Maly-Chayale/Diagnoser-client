@@ -5,6 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addLead, signIn } from './LogInSlice';
 import { fetchTypeGroups } from '../TypeGroup/TypeGroupSlice';
+import { InitCustomer } from '../Customers/CustomerSlice';
+import { ProfilelogIn } from '../Profile/ProfileSlice';
 
 
 const SignIn = () => {
@@ -18,6 +20,8 @@ const SignIn = () => {
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers)
     const statusC = useSelector(state => state.Customer.status)
     const statusD = useSelector(state => state.Diagnoser.status)
+    const thisuser = useSelector(state=>state.LogIn.thisUser)
+    const statusUser = useSelector(state=>state.LogIn.statusUser)
 
     const [name, setName] = useState()
     const [mail, setMail] = useState()
@@ -37,7 +41,7 @@ const SignIn = () => {
             dispatch(InitCustomer())
         dispatch(ProfilelogIn({
             thisUser:thisuser,
-            status: status
+            status: statusUser
         }))
     }, [statusC, statusD, dispatch])
 
