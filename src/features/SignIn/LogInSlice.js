@@ -7,6 +7,19 @@ const initialState = {
     statusUser: null
 }
 
+const headers = {
+    'Content-Type': 'application/json'
+}
+
+export const addLead = createAsyncThunk("addLead",
+    async (lead) => {
+        await axios.post('https://localhost:7082/Leads/Add', lead,
+            {
+                headers: headers
+            }).then(res => { })
+        return lead
+    })
+
 const LogInSlice = createSlice({
     name: "Customer",
     initialState,
@@ -20,6 +33,7 @@ const LogInSlice = createSlice({
         },
         logIn: (state, action) => {
             let user = action.payload.user
+            user.mail=user.mail.toLowerCase()
             const Customers = action.payload.Customers
             const Diagnosers = action.payload.Diagnosers
             const customer = Customers.find(c => c.mail == user.mail && c.password == user.password)
@@ -38,9 +52,8 @@ const LogInSlice = createSlice({
                     state.thisUser=diagnoser
                 }
             }
-            // if (state.statusUser == null)
-            //     return false
-            // return true
+            if (state.statusUser == null)
+                state.statusUser="wrong"
         }
     },
     extraReducers: (builder) => {

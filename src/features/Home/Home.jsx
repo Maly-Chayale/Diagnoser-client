@@ -33,7 +33,7 @@ const Home = () => {
 
     useEffect(() => {
         const load = async () => {
-            await dispatch(fetchTypeGroups())
+            // await dispatch(fetchTypeGroups())
             await dispatch(InitDiagnoser());
             await dispatch(InitWorkShops());
         };
