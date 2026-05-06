@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addDiagnoser } from "./DiagnoserSlice";
 import styles from "./AddDiagnosticianPopup.module.css";
@@ -18,52 +18,30 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
         chirology: false
     });
 
-    const [errors, setErrors] = useState({});
-
-    const validateStep1 = () => {
-        const newErrors = {};
-
-        if (!form.name.trim()) newErrors.name = "שם חובה";
-
-        if (!form.mail.trim()) {
-            newErrors.mail = "אימייל חובה";
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.mail)) {
-            newErrors.mail = "אימייל לא תקין";
-        }
-
-        if (!form.password || form.password.length < 4) {
-            newErrors.password = "סיסמה חייבת להיות לפחות 4 תווים";
-        }
-
-        if (!form.phone.trim()) newErrors.phone = "טלפון חובה";
-
-        setErrors(newErrors);
-
-        return Object.keys(newErrors).length === 0;
-    };
+    // 🔒 מניעת גלילה ברקע
+    useEffect(() => {
+        document.body.style.overflow = isOpen ? "hidden" : "auto";
+        return () => (document.body.style.overflow = "auto");
+    }, [isOpen]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
 
-        setForm((prev) => ({
+        setForm(prev => ({
             ...prev,
             [name]: type === "checkbox" ? checked : value
         }));
     };
 
-    const nextStep = () => {
-        if (validateStep1()) {
-            setStep(2);
-        }
+    const nextStep = () => setStep(2);
+    const nextToSummary = () => setStep(3);
+
+    const back = () => {
+        setStep(prev => Math.max(1, prev - 1));
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        const payload = {
-            ...form,
-            available: true
-        };
+    const handleSubmit = () => {
+        const payload = { ...form, available: true };
 
         dispatch(addDiagnoser(payload));
         onSave(payload);
@@ -80,7 +58,7 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
             morphology: false,
             chirology: false
         });
-        setErrors({});
+
         setStep(1);
         onClose();
     };
@@ -88,52 +66,37 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
     if (!isOpen) return null;
 
     return (
-        <div className={styles.backdrop}>
-            <div className={styles.popup}>
+        <div
+            className={styles.backdrop}
+            onClick={closeAll}
+        >
+            <div
+                className={styles.popup}
+                onClick={(e) => e.stopPropagation()} // ⭐ קריטי למניעת סגירה בזמן הקלדה
+            >
+
+                <button
+                    type="button"
+                    className={styles.closeBtn}
+                    onClick={closeAll}
+                >
+                    ×
+                </button>
 
                 <h2 className={styles.title}>הוספת מאבחנת</h2>
 
                 {/* STEP 1 */}
                 {step === 1 && (
                     <div className={styles.step}>
-                        <input
-                            className={styles.input}
-                            name="name"
-                            placeholder="שם מלא"
-                            value={form.name}
-                            onChange={handleChange}
-                        />
-                        {errors.name && <span className={styles.error}>{errors.name}</span>}
+                        <input className={styles.input} name="name" placeholder="שם" onChange={handleChange} />
 
-                        <input
-                            className={styles.input}
-                            name="mail"
-                            placeholder="אימייל"
-                            value={form.mail}
-                            onChange={handleChange}
-                        />
-                        {errors.mail && <span className={styles.error}>{errors.mail}</span>}
+                        <input className={styles.input} name="mail" placeholder="מייל" onChange={handleChange} />
 
-                        <input
-                            className={styles.input}
-                            name="password"
-                            type="password"
-                            placeholder="סיסמה"
-                            value={form.password}
-                            onChange={handleChange}
-                        />
-                        {errors.password && <span className={styles.error}>{errors.password}</span>}
+                        <input className={styles.input} name="password" type="password" placeholder="סיסמה" onChange={handleChange} />
 
-                        <input
-                            className={styles.input}
-                            name="phone"
-                            placeholder="טלפון"
-                            value={form.phone}
-                            onChange={handleChange}
-                        />
-                        {errors.phone && <span className={styles.error}>{errors.phone}</span>}
+                        <input className={styles.input} name="phone" placeholder="טלפון" onChange={handleChange} />
 
-                        <button className={styles.nextBtn} onClick={nextStep}>
+                        <button type="button" className={styles.primaryBtn} onClick={nextStep}>
                             המשך לבחירת תחומים
                         </button>
                     </div>
@@ -142,11 +105,9 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
                 {/* STEP 2 */}
                 {step === 2 && (
                     <div className={styles.step}>
-                        <p className={styles.subtitle}>
-                            בחרי תחום/ים שבהם את מתמחה
-                        </p>
+                        <p className={styles.subtitle}>בחרי תחומי התמחות</p>
 
-                        <label className={styles.checkbox}>
+                        <label>
                             <input
                                 type="checkbox"
                                 name="morphology"
@@ -156,17 +117,7 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
                             מורפולוגיה
                         </label>
 
-                        <label className={styles.checkbox}>
-                            <input
-                                type="checkbox"
-                                name="chirology"
-                                checked={form.chirology}
-                                onChange={handleChange}
-                            />
-                            כירולוגיה
-                        </label>
-
-                        <label className={styles.checkbox}>
+                        <label>
                             <input
                                 type="checkbox"
                                 name="graphology"
@@ -176,19 +127,48 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
                             גרפולוגיה
                         </label>
 
-                        <div className={styles.buttons}>
-                            <button className={styles.secondaryBtn} onClick={() => setStep(1)}>
-                                חזור
-                            </button>
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="chirology"
+                                checked={form.chirology}
+                                onChange={handleChange}
+                            />
+                            כירולוגיה
+                        </label>
 
-                            <button className={styles.primaryBtn} onClick={handleSubmit}>
-                                שמור
-                            </button>
-                        </div>
+                        <button type="button" className={styles.primaryBtn} onClick={nextToSummary}>
+                            המשך לסיכום
+                        </button>
+
+                        <button type="button" className={styles.secondaryBtn} onClick={back}>
+                            חזור
+                        </button>
                     </div>
                 )}
 
-                <button className={styles.closeBtn} onClick={closeAll}>×</button>
+                {/* STEP 3 */}
+                {step === 3 && (
+                    <div className={styles.step}>
+                        <p><b>שם:</b> {form.name}</p>
+                        <p><b>מייל:</b> {form.mail}</p>
+                        <p><b>טלפון:</b> {form.phone}</p>
+
+                        <p><b>תחומים:</b></p>
+                        {form.morphology && <p>מורפולוגיה</p>}
+                        {form.graphology && <p>גרפולוגיה</p>}
+                        {form.chirology && <p>כירולוגיה</p>}
+
+                        <button type="button" className={styles.primaryBtn} onClick={handleSubmit}>
+                            שמור מאבחנת
+                        </button>
+
+                        <button type="button" className={styles.secondaryBtn} onClick={back}>
+                            חזור
+                        </button>
+                    </div>
+                )}
+
             </div>
         </div>
     );
