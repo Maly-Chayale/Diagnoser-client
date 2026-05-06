@@ -20,8 +20,8 @@ const SignIn = () => {
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers)
     const statusC = useSelector(state => state.Customer.status)
     const statusD = useSelector(state => state.Diagnoser.status)
-    const thisuser = useSelector(state=>state.LogIn.thisUser)
-    const statusUser = useSelector(state=>state.LogIn.statusUser)
+    const thisuser = useSelector(state => state.LogIn.thisUser)
+    const statusUser = useSelector(state => state.LogIn.statusUser)
 
     const [name, setName] = useState()
     const [mail, setMail] = useState()
@@ -40,7 +40,7 @@ const SignIn = () => {
         if (statusC == "")
             dispatch(InitCustomer())
         dispatch(ProfilelogIn({
-            thisUser:thisuser,
+            thisUser: thisuser,
             status: statusUser
         }))
     }, [statusC, statusD, dispatch])
@@ -53,13 +53,15 @@ const SignIn = () => {
         newCustomer.password = password
         newCustomer.phone = phone
         newCustomer.codeType = status
-        let c= customers.find(c=>c.mail==mail)
-        let d= diagnosers.find(c=>c.mail==mail)
-        if(c || d)
+        let c = customers.find(c => c.mail == mail)
+        let d = diagnosers.find(c => c.mail == mail)
+        if (c || d)
             setErr(true)
-        dispatch(signIn(newCustomer))
-        dispatch(addLead(newCustomer))
-        navigate("../enter")
+        else {
+            dispatch(signIn(newCustomer))
+            dispatch(addLead(newCustomer))
+            navigate("../enter")
+        }
     }
 
     const onSignInClick = () => {
@@ -84,7 +86,7 @@ const SignIn = () => {
                 <option value={2}>משפחה</option>
                 <option value={3}>פרטי</option> */}
             </select>
-            {err&&<div>מייל זה כבר רשום במערכת.</div>}
+            {err && <div>מייל זה כבר רשום במערכת.</div>}
             <button className="primary-btn" onClick={() => { SignIn() }}>OK</button>
             <button className="primary-btn" onClick={onSignInClick}> התחברות </button>
         </div>
