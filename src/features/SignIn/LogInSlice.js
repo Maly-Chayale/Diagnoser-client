@@ -7,6 +7,15 @@ const initialState = {
     statusUser: null
 }
 
+export const addDiagnoser = createAsyncThunk("addDiagnoser",
+    async (diagnoser) => {
+        await axios.post('https://localhost:7082/Diagnosers/Add', diagnoser,
+            {
+                headers: headers
+            }).then(res => { })
+        return diagnoser
+    })
+
 const LogInSlice = createSlice({
     name: "Customer",
     initialState,
