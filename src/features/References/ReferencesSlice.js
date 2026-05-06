@@ -130,7 +130,7 @@ const ReferencesSlice = createSlice({
             .addCase(addReference.fulfilled, (state, action) => {
                 const Reference = action.payload;
                 state.status = "succesfull";
-                state.references = state.references.push(Reference)
+                state.references =[...state.references,Reference]// state.references.push(Reference)
             })
             .addCase(deleteReference.fulfilled, (state, action) => {
                 const Reference = action.payload;

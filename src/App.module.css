@@ -1,40 +1,90 @@
-/* .link:focus {
-    background: linear-gradient(135deg, #6366f1, #ec4899);
-    color: white;
-}
-
-.link:hover {
-    color: black;
-    opacity: 0.95;
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.35);
-    transform: translateY(-1px);
-} */
-
-/* Styles for Links */
-.link {
-    text-decoration: none;
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: #6366f1;
-    transition: all 0.3s ease;
-}
-
-.link:focus {
-    background: linear-gradient(135deg, #6366f1, #ec4899);
-    color: white;
-}
-
-.link:hover {
-    color: black;
-    opacity: 0.95;
-    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.35);
-    transform: translateY(-1px);
-}
-
-/* Styles for Navigation */
-.main-nav {
+/* ROOT NAV */
+nav {
     display: flex;
-    justify-content: space-around;
-    background-color: #333;
-    padding: 10px 0;
+    justify-content: center; /* מרכז את כל הלינקים */
+    align-items: center;
+    gap: 30px; /* רווח בין הלינקים */
+    padding: 20px 0;
+    background-color: #ffffff; /* רקע לבן */
+    position: relative;
+    z-index: 10;
+}
+
+/* לינק רגיל */
+nav a {
+    position: relative;
+    text-decoration: none;
+    color: #333333;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.4s ease;
+    padding: 8px 12px;
+}
+
+/* אפקט מעבר עכבר */
+nav a:hover {
+    transform: scale(1.15);
+    color: #60a5fa;
+}
+
+/* פס תחתון אנימטיבי */
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 3px;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, #60a5fa, #a78bfa);
+    transition: width 0.4s ease;
+    border-radius: 2px;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* לינק פעיל */
+nav a.active {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #a78bfa;
+}
+
+nav a.active::after {
+    width: 100%;
+    background: linear-gradient(90deg, #a78bfa, #60a5fa);
+}
+
+/* אנימציה כניסה לינקים */
+@keyframes navLinkIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+nav a {
+    animation: navLinkIn 0.6s forwards ease;
+}
+
+/* אפקט נוסף למעבר עכבר מתקדם - glowing shadow */
+nav a:hover {
+    text-shadow: 0 0 10px rgba(96, 165, 250, 0.8),
+                 0 0 20px rgba(167, 139, 250, 0.6);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        gap: 20px;
+    }
+    nav a {
+        font-size: 1.2rem;
+    }
 }

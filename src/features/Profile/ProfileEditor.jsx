@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ProfileEditor.css";
 import { useSelector, useDispatch } from "react-redux";
-import { updateDiagnoser } from "../Diagnosers/DiagnoserSlice";
+import { payToManager, updateDiagnoser } from "../Diagnosers/DiagnoserSlice";
 import { UpdateUser } from "../SignIn/LogInSlice";
 
 const ProfileEditor = () => {
@@ -11,6 +11,20 @@ const ProfileEditor = () => {
   const [profile, setProfile] = useState(diagnostician);
   const [editing, setEditing] = useState(false);
   const [tempProfile, setTempProfile] = useState({ ...diagnostician });
+  const [amountPaid, setAmountPaid] = useState(0);
+  const [remaining, setRemaining] = useState(0);
+  const user = useSelector(state => state.LogIn.thisUser);
+  const statusUser = useSelector(state => state.LogIn.statusUser);
+  const references = useSelector(state => state.Reference.references);
+
+
+  useEffect(() => {
+    if (references.length && user) {
+      const total = user.precentagePayment
+
+      setRemaining(total);
+    }
+  }, [references, user]);
 
   const handleChange = (field, value) => setTempProfile({ ...tempProfile, [field]: value });
   const handleCheckboxChange = (field) => setTempProfile({ ...tempProfile, [field]: !tempProfile[field] });
@@ -21,7 +35,7 @@ const ProfileEditor = () => {
     setEditing(false);
   };
 
-  const saveEditing = async() => {
+  const saveEditing = async () => {
     setProfile({ ...tempProfile });
     dispatch(UpdateUser(tempProfile))
     await dispatch(updateDiagnoser(tempProfile))
@@ -57,32 +71,61 @@ const ProfileEditor = () => {
     </div>
   );
 
+
+  const handlePayment = async () => {
+    if (!amountPaid || amountPaid <= 0) return;
+    await dispatch(payToManager({ code: user.code, num: amountPaid }));
+    setRemaining(prev => prev - amountPaid);
+    setAmountPaid(0);
+  };
+
   return (
-    <div className="profile-container">
-      <div className="profile-header">שם: {profile.name}</div>
+    <>
+      <div className="profile-container">
+        <div className="profile-header">שם: {profile.name}</div>
 
-      {renderField("קוד", profile.code, "code", false)}
-      {renderField("אימייל", profile.mail, "mail", false)}
-      {renderField("אחוז תשלום", profile.precentagePayment, "precentagePayment", false)}
-      {renderField("שם", profile.name, "name")}
-      {renderField("טלפון", profile.phone, "phone")}
+        {renderField("קוד", profile.code, "code", false)}
+        {renderField("אימייל", profile.mail, "mail", false)}
+        {renderField("אחוז תשלום", profile.precentagePayment, "precentagePayment", false)}
+        {renderField("שם", profile.name, "name")}
+        {renderField("טלפון", profile.phone, "phone")}
 
-      {renderCheckbox("מורפולוגיה", "morphology")}
-      {renderCheckbox("כירולוגיה", "chirology")}
-      {renderCheckbox("גרפולוגיה", "graphology")}
-      {renderCheckbox("זמינה", "available")}
+        {renderCheckbox("מורפולוגיה", "morphology")}
+        {renderCheckbox("כירולוגיה", "chirology")}
+        {renderCheckbox("גרפולוגיה", "graphology")}
+        {renderCheckbox("זמינה", "available")}
 
-      <div className="button-container">
-        {editing ? (
-          <>
-            <button className="profile-button" onClick={saveEditing}>שמירה</button>
-            <button className="profile-button cancel-button" onClick={cancelEditing}>ביטול</button>
-          </>
-        ) : (
-          <button className="profile-button" onClick={startEditing}>לשנות פרטים?</button>
-        )}
+        <div className="button-container">
+          {editing ? (
+            <>
+              <button className="profile-button" onClick={saveEditing}>שמירה</button>
+              <button className="profile-button cancel-button" onClick={cancelEditing}>ביטול</button>
+            </>
+          ) : (
+            <button className="profile-button" onClick={startEditing}>לשנות פרטים?</button>
+          )}
+        </div>
       </div>
-    </div>
+
+      {statusUser !== "Esty" && (
+        <div >
+          <h3>התחשבנות עם מנהלת</h3>
+
+          <div>נותר לתשלום: {remaining}</div>
+
+          <input
+            type="number"
+            value={amountPaid}
+            onChange={(e) => setAmountPaid(Number(e.target.value))}
+            placeholder="הכנס סכום ששולם"
+          />
+
+          <button className="profile-button" onClick={handlePayment}>
+            אישור תשלום
+          </button>
+        </div>
+      )}
+    </>
   );
 };
 

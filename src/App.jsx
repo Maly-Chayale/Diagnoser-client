@@ -1,14 +1,82 @@
-// import './App.css';
+// // import React from 'react';
+// // import { useSelector } from 'react-redux';
+// // import { Routes, Route, NavLink } from "react-router-dom";
+// // import styles from './App.module.css';
+
+// // // ייבוא הדפים
+// // import DiagnoserList from './features/Diagnosers/DiagnoserList';
+// // import CustomersList from './features/Customers/CustomersList';
+// // import Home from "./features/Home/Home";
+// // import Workshop from "./features/WorkShop/WorkShop";
+// // import DiagnoserDetails from './features/Diagnosers/DiagnoserDetails';
+// // import SignIn from './features/SignIn/SignIn';
+// // import LoginPage from './features/Home/LoginPage';
+// // import LogIn from './features/SignIn/LogIn';
+// // import WorkshopDetails from './features/WorkShop/WorkshopDetails';
+// // import ProfileWrapper from './features/Profile/ProfileWrapper';
+// // import OdersAndReferences from './features/References/OdersAndReferences';
+// // import ManagerPayments from './features/Profile/ManagerPayments';
+
+// // function App() {
+// //   const statusUser = useSelector(state => state.LogIn.statusUser);
+// //   const user = useSelector(state => state.LogIn.thisUser);
+
+// //   return (
+  
+// //       <div >
+
+      
+// //       <nav >
+// //         {user && <NavLink to="/Orders" className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
+// //         {user && <NavLink to="/Profile" className={({ isActive }) => isActive ? styles.active : styles.link}>פרופיל</NavLink>}
+// //         <NavLink to="/enter" className={({ isActive }) => isActive ? styles.active : styles.link}>דף הבית</NavLink>
+// //         <NavLink to="/Workshop" className={({ isActive }) => isActive ? styles.active : styles.link}>סדנאות</NavLink>
+// //         {(statusUser === "diagnoser" || statusUser === "Esty") && <NavLink to="/Customers" className={({ isActive }) => isActive ? styles.active : styles.link}>לקוחות</NavLink>}
+// //         {(statusUser === "Esty") && <NavLink to="/Payments" className={({ isActive }) => isActive ? styles.active : styles.link}>תשלומים</NavLink>}
+// //         <NavLink to="/Diagnosers" className={({ isActive }) => isActive ? styles.active : styles.link}>מאבחנות</NavLink>
+// //       </nav>
+
+// //       {/* תוכן כל הדפים */}
+// //       <div className={styles.pageContent}>
+// //         <Routes>
+// //           <Route path="/" element={<LoginPage />} />
+// //           <Route path="/Workshop" element={<Workshop />} />
+// //           <Route path="/Customers" element={<CustomersList />} />
+// //           <Route path="/Diagnosers" element={<DiagnoserList />} />
+// //           <Route path="/DiagnoserDetails/:code" element={<DiagnoserDetails />} />
+// //           <Route path="/SignIn" element={<SignIn />} />
+// //           <Route path="/LogIn" element={<LogIn />} />
+// //           <Route path="/enter" element={<Home />} />
+// //           <Route path="/Orders" element={<OdersAndReferences />} />
+// //           <Route path="/Orders/:code" element={<OdersAndReferences />} />
+// //           <Route path="/Profile" element={<ProfileWrapper />} />
+// //           <Route path="/WorkshopDetails/:code" element={<WorkshopDetails />} />
+// //           <Route path="/Payments" element={<ManagerPayments />} />
+// //         </Routes>
+// //       </div>
+// //     </div>
+  
+// //   );
+// // }
+
+// // export default App;
+
+
+
+// import React from 'react';
+// import { useSelector } from 'react-redux';
+// import { Routes, Route, NavLink, Navigate, useNavigate, parsePath } from "react-router-dom";
+// import styles from './App.module.css';
+
+// // דפים
 // import DiagnoserList from './features/Diagnosers/DiagnoserList';
 // import CustomersList from './features/Customers/CustomersList';
-// import { Router, Routes, Route, Link } from "react-router-dom";
 // import Home from "./features/Home/Home";
 // import Workshop from "./features/WorkShop/WorkShop";
 // import DiagnoserDetails from './features/Diagnosers/DiagnoserDetails';
 // import SignIn from './features/SignIn/SignIn';
 // import LoginPage from './features/Home/LoginPage';
 // import LogIn from './features/SignIn/LogIn';
-// import { useSelector } from 'react-redux';
 // import WorkshopDetails from './features/WorkShop/WorkshopDetails';
 // import ProfileWrapper from './features/Profile/ProfileWrapper';
 // import OdersAndReferences from './features/References/OdersAndReferences';
@@ -16,48 +84,125 @@
 
 // function App() {
 
-//   const statusUser = useSelector(state => state.LogIn.statusUser)
-//   const user = useSelector(state => state.LogIn.thisUser)
+//   const path=parsePath()
+
+//   const statusUser = useSelector(state => state.LogIn.statusUser);
+//   const user = useSelector(state => state.LogIn.thisUser);
 
 //   return (
-//     // <Router>
-//     <div className="diagnosticians-page">
-//       <nav className='main-nav'>
-//         {user && <Link to="/Orders" className="link">הזמנות</Link>}
-//         {user && <Link to="/Profile" className="link">פרופיל</Link>}
-//         <Link to="/enter" className="link">דף הבית</Link>
-//         <Link to="/Workshop" className="link">סדנאות</Link>
-//         {(statusUser == "diagnoser" || statusUser == "Esty") && <Link to="/Customers"  className='link'>לקוחות</Link>}
-//         {(statusUser == "Esty") && <Link to="/Payments"  className='link'>תשלומים</Link>}
-//         <Link to="/Diagnosers" className='link'>מאבחנות</Link>
+//     <>
+  
+//       <nav>
+//         {user && <NavLink to="/Orders" className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
+//         {user && <NavLink to="/Profile" className={({ isActive }) => isActive ? styles.active : styles.link}>פרופיל</NavLink>}
+//         <NavLink to="/enter" className={({ isActive }) => isActive ? styles.active : styles.link}>דף הבית</NavLink>
+//         <NavLink to="/Workshop" className={({ isActive }) => isActive ? styles.active : styles.link}>סדנאות</NavLink>
+//         {(statusUser === "diagnoser" || statusUser === "Esty") && <NavLink to="/Customers" className={({ isActive }) => isActive ? styles.active : styles.link}>לקוחות</NavLink>}
+//         {(statusUser === "Esty") && <NavLink to="/Payments" className={({ isActive }) => isActive ? styles.active : styles.link}>תשלומים</NavLink>}
+//         <NavLink to="/Diagnosers" className={({ isActive }) => isActive ? styles.active : styles.link}>מאבחנות</NavLink>
 //       </nav>
-//       <Routes>
-//         <Route path="/" element={<LoginPage />} />
-//         <Route path="/Workshop" element={<Workshop />} />
-//         {/* <Route path="Workshop/:code"  element={< Workshop />} /> */}
-//         <Route path="/Customers" element={<CustomersList />} />
-//         <Route path="/Diagnosers" element={<DiagnoserList />} />
-//         <Route path="/DiagnoserDetails/:code" element={<DiagnoserDetails />} />
-//         {/* <Route path="/CustomerProfile/:index" element={<CustomerProfile />} /> */}
-//         <Route path="/SignIn" element={<SignIn />} />
-//         <Route path="/LogIn" element={<LogIn />} />
-//         <Route path="/enter" element={<Home />} />
-//         <Route path="/Orders" element={<OdersAndReferences />} />
-//         <Route path="/Profile" element={<ProfileWrapper />} />
-//         <Route path="/WorkshopDetails/:code" element={<WorkshopDetails />} />
-//         <Route path="/Payments" element={<ManagerPayments />} />
-//       </Routes>
-//     </div>
-//     // </Router>
+
+//       <div className={styles.pageContent}>
+//         <Routes>
+//           <Route path="/" element={<LoginPage />} />
+//           <Route path="/Workshop" element={<Workshop />} />
+//           <Route path="/Customers" element={<CustomersList />} />
+//           <Route path="/Diagnosers" element={<DiagnoserList />} />
+//           <Route path="/DiagnoserDetails/:code" element={<DiagnoserDetails />} />
+//           <Route path="/SignIn" element={<SignIn />} />
+//           <Route path="/LogIn" element={<LogIn />} />
+//           <Route path="/enter" element={<Home />} />
+//           <Route path="/Orders" element={<OdersAndReferences />} />
+//           <Route path="/Orders/:code" element={<OdersAndReferences />} />
+//           <Route path="/Profile" element={<ProfileWrapper />} />
+//           <Route path="/WorkshopDetails/:code" element={<WorkshopDetails />} />
+//           <Route path="/Payments" element={<ManagerPayments />} />
+//         </Routes>
+//       </div>
+//     </>
 //   );
 // }
 
 // export default App;
 
 
-import React from 'react';
+
+
+
+
+
+
+
+
+
+
+// // import React from 'react';
+// // import { useSelector } from 'react-redux';
+// // import { Routes, Route, NavLink } from "react-router-dom";
+// // import styles from './App.module.css';
+
+// // // דפים
+// // import DiagnoserList from './features/Diagnosers/DiagnoserList';
+// // import CustomersList from './features/Customers/CustomersList';
+// // import Home from "./features/Home/Home";
+// // import Workshop from "./features/WorkShop/WorkShop";
+// // import DiagnoserDetails from './features/Diagnosers/DiagnoserDetails';
+// // import SignIn from './features/SignIn/SignIn';
+// // import LoginPage from './features/Home/LoginPage';
+// // import LogIn from './features/SignIn/LogIn';
+// // import WorkshopDetails from './features/WorkShop/WorkshopDetails';
+// // import ProfileWrapper from './features/Profile/ProfileWrapper';
+// // import OdersAndReferences from './features/References/OdersAndReferences';
+// // import ManagerPayments from './features/Profile/ManagerPayments';
+
+// // function App() {
+// //   const statusUser = useSelector(state => state.LogIn.statusUser);
+// //   const user = useSelector(state => state.LogIn.thisUser);
+
+// //   return (
+// //     <div className={styles.siteWrapper}>
+// //       {/* ניווט קבוע בחלק העליון */}
+// //       <nav className={styles.mainNav}>
+// //         {user && <NavLink to="/Orders" className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
+// //         {user && <NavLink to="/Profile" className={({ isActive }) => isActive ? styles.active : styles.link}>פרופיל</NavLink>}
+// //         <NavLink to="/enter" className={({ isActive }) => isActive ? styles.active : styles.link}>דף הבית</NavLink>
+// //         <NavLink to="/Workshop" className={({ isActive }) => isActive ? styles.active : styles.link}>סדנאות</NavLink>
+// //         {(statusUser === "diagnoser" || statusUser === "Esty") && <NavLink to="/Customers" className={({ isActive }) => isActive ? styles.active : styles.link}>לקוחות</NavLink>}
+// //         {(statusUser === "Esty") && <NavLink to="/Payments" className={({ isActive }) => isActive ? styles.active : styles.link}>תשלומים</NavLink>}
+// //         <NavLink to="/Diagnosers" className={({ isActive }) => isActive ? styles.active : styles.link}>מאבחנות</NavLink>
+// //       </nav>
+
+// //       {/* תוכן כל הדפים */}
+// //       <div className={styles.pageContent}>
+// //         <Routes>
+// //           <Route path="/" element={<LoginPage />} />
+// //           <Route path="/Workshop" element={<Workshop />} />
+// //           <Route path="/Customers" element={<CustomersList />} />
+// //           <Route path="/Diagnosers" element={<DiagnoserList />} />
+// //           <Route path="/DiagnoserDetails/:code" element={<DiagnoserDetails />} />
+// //           <Route path="/SignIn" element={<SignIn />} />
+// //           <Route path="/LogIn" element={<LogIn />} />
+// //           <Route path="/enter" element={<Home />} />
+// //           <Route path="/Orders" element={<OdersAndReferences />} />
+// //           <Route path="/Orders/:code" element={<OdersAndReferences />} />
+// //           <Route path="/Profile" element={<ProfileWrapper />} />
+// //           <Route path="/WorkshopDetails/:code" element={<WorkshopDetails />} />
+// //           <Route path="/Payments" element={<ManagerPayments />} />
+// //         </Routes>
+// //       </div>
+// //     </div>
+// //   );
+// // }
+
+// // export default App;
+
+
+import React, { useState } from 'react';
+import { Routes, Route, NavLink } from "react-router-dom";
 import { useSelector } from 'react-redux';
-import { Routes, Route, Link } from "react-router-dom";
+import styles from './App.module.css';
+
+// דפים
 import DiagnoserList from './features/Diagnosers/DiagnoserList';
 import CustomersList from './features/Customers/CustomersList';
 import Home from "./features/Home/Home";
@@ -70,43 +215,58 @@ import WorkshopDetails from './features/WorkShop/WorkshopDetails';
 import ProfileWrapper from './features/Profile/ProfileWrapper';
 import OdersAndReferences from './features/References/OdersAndReferences';
 import ManagerPayments from './features/Profile/ManagerPayments';
-
-// יבוא של קובץ ה-CSS מודול
-import styles from './App.module.css';
+import LeadsList from './features/Leads/LeadsList';
 
 function App() {
   const statusUser = useSelector(state => state.LogIn.statusUser);
   const user = useSelector(state => state.LogIn.thisUser);
 
-  return (
-    <div className="diagnosticians-page">
-      <nav className={styles.mainNav}>
-        {user && <Link to="/Orders" className={styles.link}>הזמנות</Link>}
-        {user && <Link to="/Profile" className={styles.link}>פרופיל</Link>}
-        <Link to="/enter" className={styles.link}>דף הבית</Link>
-        <Link to="/Workshop" className={styles.link}>סדנאות</Link>
-        {(statusUser === "diagnoser" || statusUser === "Esty") && <Link to="/Customers" className={styles.link}>לקוחות</Link>}
-        {(statusUser === "Esty") && <Link to="/Payments" className={styles.link}>תשלומים</Link>}
-        <Link to="/Diagnosers" className={styles.link}>מאבחנות</Link>
-      </nav>
+  const [hasAccess, setHasAccess] = useState(false);
 
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/Workshop" element={<Workshop />} />
-        <Route path="/Customers" element={<CustomersList />} />
-        <Route path="/Diagnosers" element={<DiagnoserList />} />
-        <Route path="/DiagnoserDetails/:code" element={<DiagnoserDetails />} />
-        <Route path="/SignIn" element={<SignIn />} />
-        <Route path="/LogIn" element={<LogIn />} />
-        <Route path="/enter" element={<Home />} />
-        <Route path="/Orders" element={<OdersAndReferences />} />
-        <Route path="/Orders/:code" element={<OdersAndReferences />} />
-        <Route path="/Profile" element={<ProfileWrapper />} />
-        <Route path="/WorkshopDetails/:code" element={<WorkshopDetails />} />
-        <Route path="/Payments" element={<ManagerPayments />} />
-      </Routes>
+  return (
+    <div>
+      {/* ניווטים מופיעים רק אחרי לחיצה */}
+      {hasAccess && (
+        <nav>
+          {user && <NavLink to="/Orders" className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
+          {user && <NavLink to="/Profile" className={({ isActive }) => isActive ? styles.active : styles.link}>פרופיל</NavLink>}
+          <NavLink to="/enter" className={({ isActive }) => isActive ? styles.active : styles.link}>דף הבית</NavLink>
+          <NavLink to="/Workshop" className={({ isActive }) => isActive ? styles.active : styles.link}>סדנאות</NavLink>
+          {(statusUser === "diagnoser" || statusUser === "Esty") && <NavLink to="/Customers" className={({ isActive }) => isActive ? styles.active : styles.link}>לקוחות</NavLink>}
+          {(statusUser === "Esty") && <NavLink to="/Payments" className={({ isActive }) => isActive ? styles.active : styles.link}>תשלומים</NavLink>}
+          {(statusUser === "Esty") && <NavLink to="/Leads" className={({ isActive }) => isActive ? styles.active : styles.link}>מתעניינים</NavLink>}
+          <NavLink to="/Diagnosers" className={({ isActive }) => isActive ? styles.active : styles.link}>מאבחנות</NavLink>
+        </nav>
+      )}
+
+      <div className={styles.pageContent}>
+        <Routes>
+          {/* דף ההשראה */}
+          <Route path="/" element={<LoginPage setHasAccess={setHasAccess}/>} />
+
+          {/* כל שאר הדפים זמינים רק אחרי לחיצה */}
+         
+            <>
+              <Route path="/enter" element={<Home />} />
+              <Route path="/Workshop" element={<Workshop />} />
+              <Route path="/Customers" element={<CustomersList />} />
+              <Route path="/Diagnosers" element={<DiagnoserList />} />
+              <Route path="/DiagnoserDetails/:code" element={<DiagnoserDetails />} />
+              <Route path="/SignIn" element={<SignIn />} />
+              <Route path="/LogIn" element={<LogIn />} />
+              <Route path="/Orders" element={<OdersAndReferences />} />
+              <Route path="/Orders/:code" element={<OdersAndReferences />} />
+              <Route path="/Profile" element={<ProfileWrapper />} />
+              <Route path="/WorkshopDetails/:code" element={<WorkshopDetails />} />
+              <Route path="/Payments" element={<ManagerPayments />} />
+              <Route path="/Leads" element={<LeadsList />} />
+            </>
+          
+        </Routes>
+      </div>
     </div>
   );
 }
 
 export default App;
+

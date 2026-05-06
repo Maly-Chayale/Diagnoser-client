@@ -82,12 +82,12 @@ const DiagnoserSlice = createSlice({
             .addCase(addDiagnoser.fulfilled, (state, action) => {
                 const diagnoser = action.payload;
                 state.status = "succesfull";
-                state.Diagnosers = state.Diagnosers.push(diagnoser)
+                state.Diagnosers =[...state.Diagnosers,diagnoser] //state.Diagnosers.push(diagnoser)
             })
             .addCase(deleteDiagnoser.fulfilled, (state, action) => {
                 const diagnoser = action.payload;
                 state.status = "succesfull";
-                state.Diagnosers = state.Diagnosers.filter(d => d.mail != diagnoser.mail)
+                state.Diagnosers = state.Diagnosers?.filter(d => d.mail != diagnoser.mail)
             })
             .addCase(deleteDiagnoser.pending, (state) => {
                 state.status = "loading"
@@ -97,7 +97,7 @@ const DiagnoserSlice = createSlice({
             })
             .addCase(updateDiagnoser.fulfilled, (state, action) => {
                 const diagnoser = action.payload;
-                let i = state.Diagnosers.findIndex(d => d.mail == diagnoser.mail)
+                let i = state.Diagnosers?.findIndex(d => d.mail == diagnoser.mail)
                 state.Diagnosers[i] = diagnoser
             });
     }

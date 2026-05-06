@@ -1,0 +1,211 @@
+/* ROOT */
+.landing-page {
+    position: relative;
+    margin: 0;
+    font-family: sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+
+/* BACKGROUND ANIMATED */
+.landing-page::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 30%, #60a5fa, transparent),
+                radial-gradient(circle at 80% 70%, #a78bfa, transparent);
+    filter: blur(90px);
+    opacity: 0.9;
+    z-index: 0;
+    animation: moveBg 20s infinite alternate;
+}
+
+@keyframes moveBg {
+    from { transform: translate(0,0); }
+    to { transform: translate(40px, -40px); }
+}
+
+/* תוכן מעל הרקע */
+.landing-page .content {
+    position: relative;
+    z-index: 1; /* התוכן מעל הרקע */
+    width: 100%;
+    height: 100%;
+}
+
+/* Shell */
+.landing-page .landing-shell {
+    position: relative;
+    z-index: 1;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header */
+.landing-page .landing-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+/* Logo */
+.landing-page .logo-big .logo {
+    font-size: 10rem;
+    opacity: 0;
+    transform: scale(3);
+    animation: landing-logoScaleDown 1.5s forwards ease-in-out;
+    color: #ffffff;
+}
+
+.landing-page .logo-small .logo {
+    font-size: 3rem;
+    color: #ffffff;
+}
+
+@keyframes landing-logoScaleDown {
+    0% { opacity: 0; transform: scale(3); }
+    70% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Badge */
+.landing-page .logo-badge-animate {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: landing-fadeSlideIn 0.8s forwards ease-in;
+    animation-delay: 1.6s;
+    color: #ffffff;
+}
+
+@keyframes landing-fadeSlideIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards */
+.landing-page .cards {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
+
+.landing-page .card {
+    flex: 0 0 300px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 25px;
+    padding: 30px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+    color: #ffffff;
+}
+
+.landing-page .card:hover {
+    transform: scale(1.05);
+    background: rgba(255,255,255,0.2);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+}
+
+.landing-page .card .emoji {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.landing-page .card span {
+    font-weight: bold;
+    display: block;
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+
+.landing-page .card-info {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, padding 0.5s ease;
+    text-align: left;
+    margin-top: 10px;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.85);
+}
+
+.landing-page .card:hover .card-info {
+    max-height: 200px;
+    padding-top: 10px;
+}
+
+.landing-page .card-animate {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: landing-cardIn 0.5s forwards ease-out;
+}
+
+@keyframes landing-cardIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* TEXT */
+.landing-page h1,
+.landing-page p {
+    color: #ffffff;
+    font-size: 1.3rem;
+}
+
+/* bullets */
+.landing-page .landing-bullets p {
+    color: rgba(255,255,255,0.85);
+    font-size: 1.1rem;
+}
+
+/* STEPS */
+.landing-page .step-pill {
+    color: #ffffff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: 1.1rem;
+}
+
+/* BUTTON */
+.landing-page .primary-btn {
+    margin-top: 30px;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.landing-page .primary-btn:hover {
+    transform: scale(1.07);
+    box-shadow: 0 12px 30px rgba(96,165,250,0.4);
+}
+
+/* FOOTER */
+.landing-page .landing-footer {
+    margin-top: 50px;
+    display: flex;
+    gap: 25px;
+    font-size: 1.1rem;
+    opacity: 0.9;
+    justify-content: center;
+    color: #ffffff;
+}
