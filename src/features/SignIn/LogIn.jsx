@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logIn } from './LogInSlice';
 import { ProfilelogIn } from '../Profile/ProfileSlice';
+import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
+import { InitLeads } from '../Leads/LeadsSlice';
 
 const LogIn = () => {
 
@@ -12,6 +14,8 @@ const LogIn = () => {
 
     const customers = useSelector(state => state.Customer.Customers)
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers)
+    const leads = useSelector(state => state.Lead.Leads)
+    const statusL = useSelector(state => state.Lead.status)
     const statusC = useSelector(state => state.Customer.status)
     const statusD = useSelector(state => state.Diagnoser.status)
 
@@ -26,6 +30,10 @@ const LogIn = () => {
     useEffect(() => {
         if (statusC == "")
             dispatch(InitCustomer())
+        if (statusD == "")
+            dispatch(InitDiagnoser())
+        if (statusL == "")
+            dispatch(InitLeads())
         dispatch(ProfilelogIn({
             thisUser:thisuser,
             status: status
@@ -43,7 +51,8 @@ const LogIn = () => {
                 mail: mail
             },
             Customers: customers,
-            Diagnosers: diagnosers
+            Diagnosers: diagnosers,
+            Leads: leads
         }))
         // setTimeout(
         //  dispatch(ProfilelogIn({

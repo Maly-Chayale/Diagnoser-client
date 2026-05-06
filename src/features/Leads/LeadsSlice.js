@@ -11,16 +11,6 @@ const headers = {
     'Content-Type': 'application/json'
 }
 
-// export const InitLeads = createAsyncThunk("InitLeads",
-//     async () => {
-//         let data
-//         await axios.get('https://localhost:7082/Leads/ReadAll').then(res => {
-//             data = res.data
-//         })
-//         return data
-//     })
-
-
 
     export const InitLeads = createAsyncThunk("InitLeads",
     async () => {

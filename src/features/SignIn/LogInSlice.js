@@ -36,10 +36,16 @@ const LogInSlice = createSlice({
             user.mail=user.mail.toLowerCase()
             const Customers = action.payload.Customers
             const Diagnosers = action.payload.Diagnosers
+            const Leads = action.payload.Leads
             const customer = Customers.find(c => c.mail == user.mail && c.password == user.password)
+            const lead = Leads.find(c => c.mail == user.mail && c.password == user.password)
             if (customer != null) {
                 state.statusUser = "cust"
                 state.thisUser=customer
+            }
+            else if (lead != null) {
+                state.statusUser = "lead"
+                state.thisUser=lead
             }
             else {
                 const diagnoser = Diagnosers.find(c => c.mail == user.mail && c.password == user.password)

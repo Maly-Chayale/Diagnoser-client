@@ -262,6 +262,8 @@ import { deleteWorkShop, GetDiagnosersOfThisWorkshop, GetWorkShops, InitWorkShop
 import './AppointmentCard.css'; // ייבוא קובץ עיצוב
 import { GiButterfly } from 'react-icons/gi';
 import { addReference } from '../References/ReferencesSlice';
+import { addCustomer, InitCustomer } from '../Customers/CustomerSlice';
+import { deleteLead } from '../Leads/LeadsSlice';
 
 function WorkshopCard({ WorkShop }) {
     const dispatch = useDispatch();
@@ -275,6 +277,13 @@ function WorkshopCard({ WorkShop }) {
     const customer = useSelector(state => state.LogIn.thisUser);
     const statusUser = useSelector(state => state.LogIn.statusUser);
     const references = useSelector(state => state.Reference.references);
+    const customers = useSelector(state => state.Customer.Customers)
+    const statusCust = useSelector(state => state.Customer.status)
+
+    useEffect(()=>{
+        if (statusCust === "")
+            dispatch(InitCustomer())
+    }, [dispatch, statusCust])
 
     const openModal = async () => {
         setIsModalOpen(true); // פותח את הפופ-אפ של המאבחנות
@@ -310,9 +319,15 @@ function WorkshopCard({ WorkShop }) {
         // return "name"
     }
 
-    const handleBooking = (diagnoser) => {
+    const handleBooking = async (diagnoser) => {
         // יצירת תאריך בפורמט שהשרת מצפה לו: YYYY-MM-DD (DateOnly)
         const today = new Date().toISOString().split('T')[0];
+
+        if(customers.find(c=>c.code === customer.code) ==null)
+        {
+            dispatch(deleteLead(customer))
+            await dispatch(addCustomer(customer))
+        }            
 
         // בניית אובייקט reference בהתאם למודל ב־C#
         const newReference = {
