@@ -7,6 +7,10 @@ const initialState = {
     statusUser: null
 }
 
+const headers = {
+    'Content-Type': 'application/json'
+}
+
 export const addDiagnoser = createAsyncThunk("addDiagnoser",
     async (diagnoser) => {
         await axios.post('https://localhost:7082/Diagnosers/Add', diagnoser,
