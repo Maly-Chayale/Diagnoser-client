@@ -61,7 +61,7 @@ const DiagnoserList = () => {
     return (
         <div className={style["diagnosticians-page"]}>
 
-            <h1 className={style.title}>רשימת מאבחנות</h1>
+            {/* <h1 className={style.title}>רשימת מאבחנות</h1> */}
 
             {/* SEARCH */}
             <div className={style["search-row"]}>
@@ -136,15 +136,21 @@ const DiagnoserList = () => {
                     </div>
                 </div>
             )}
-            <button
+           {(statusUser === "Esty") &&<button
                 className={style["primary-btn2"]}
                 onClick={() => setOpen(true)}
             >
                ➕ הוספת מאבחנת
-            </button>
+            </button>}
 
 
-
+            {/* <AddDiagnosticianPopup
+    isOpen={open}
+    onClose={() => setOpen(false)}
+    onSave={(data) => {
+        dispatch(addDiagnoser(data)); // אם אתה רוצה כפול
+    }}
+/> */}
 
             <AddDiagnosticianPopup
                 isOpen={open}

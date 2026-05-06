@@ -1,24 +1,25 @@
 .backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.45);
+    background: rgba(0, 0, 0, 0.55);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+    z-index: 99999; /* קריטי כדי שלא יעלה מעליו שום דבר */
 }
 
 .popup {
-    width: 420px;
-    background: white;
-    border-radius: 18px;
-    padding: 30px;
+    background: #fff;
+    border-radius: 24px;
+    padding: 28px 36px;
+    width: 520px;
+    max-width: 92%;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
     position: relative;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    animation: popIn 0.3s ease;
+    animation: pop 0.25s ease;
 }
 
-@keyframes popIn {
+@keyframes pop {
     from {
         transform: scale(0.9);
         opacity: 0;
@@ -29,104 +30,124 @@
     }
 }
 
+.closeBtn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    border: none;
+    background: transparent;
+    font-size: 26px;
+    cursor: pointer;
+    color: #666;
+}
+
 .title {
     text-align: center;
-    font-size: 1.6rem;
-    font-weight: 800;
-    background: linear-gradient(135deg,#60a5fa,#a78bfa);
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 20px;
 }
 
 .step {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 14px;
+    margin-top: 10px;
 }
 
-/* 👇 אינפוטים צרים יותר + רווח פנימי */
+/* INPUTS */
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
 .input {
-    width: 85%;
-    margin: 0 auto;
-    padding: 10px 12px;
-    border-radius: 10px;
-    border: 2px solid #ddd;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
     outline: none;
-    transition: 0.3s;
+    transition: 0.2s;
 }
 
 .input:focus {
     border-color: #60a5fa;
-    box-shadow: 0 0 10px rgba(96,165,250,0.3);
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
 }
 
+/* ERROR */
 .error {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: #ef4444;
-    text-align: right;
-    margin-top: -6px;
 }
 
-/* checkbox */
-.checkbox {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+/* BUTTONS */
+.wideBtn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    color: white;
     font-weight: 600;
-}
-
-/* subtitle */
-.subtitle {
-    text-align: center;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
-/* buttons */
-.buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
-}
-
-.primaryBtn {
-    background: linear-gradient(135deg,#60a5fa,#a78bfa);
-    border: none;
-    color: white;
-    padding: 10px 14px;
-    border-radius: 12px;
     cursor: pointer;
+    transition: 0.3s;
 }
 
-.secondaryBtn {
-    background: #eee;
-    border: none;
-    padding: 10px 14px;
-    border-radius: 12px;
-    cursor: pointer;
+.wideBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(96, 165, 250, 0.3);
 }
 
-/* next button */
-.nextBtn {
-    margin-top: 10px;
-    background: linear-gradient(135deg,#60a5fa,#a78bfa);
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 12px;
-    cursor: pointer;
+.wideBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
 }
 
-/* close */
-.closeBtn {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    border: none;
+/* BACK BUTTON */
+.backBtn {
     background: transparent;
-    font-size: 20px;
+    border: none;
+    color: #666;
     cursor: pointer;
+}
 
-    
+/* CAPABILITIES */
+.capGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.capCard {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 2px solid #e5e7eb;
+    cursor: pointer;
+    transition: 0.25s;
+    user-select: none;
+}
+
+.capCard:hover {
+    transform: scale(1.02);
+    border-color: #a78bfa;
+}
+
+.active {
+    background: rgba(96, 165, 250, 0.12);
+    border-color: #60a5fa;
+}
+
+/* SUMMARY */
+.summary {
+    background: #f9fafb;
+    border-radius: 16px;
+    padding: 14px;
+    line-height: 1.6;
 }

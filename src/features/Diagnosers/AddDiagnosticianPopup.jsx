@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addDiagnoser } from "./DiagnoserSlice";
 import styles from "./AddDiagnosticianPopup.module.css";
@@ -18,11 +18,7 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
         chirology: false
     });
 
-    // 🔒 מניעת גלילה ברקע
-    useEffect(() => {
-        document.body.style.overflow = isOpen ? "hidden" : "auto";
-        return () => (document.body.style.overflow = "auto");
-    }, [isOpen]);
+    const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -31,20 +27,58 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
             ...prev,
             [name]: type === "checkbox" ? checked : value
         }));
+
+        // מידי עדכון – נבדוק תקינות השדה
+        validateField(name, type === "checkbox" ? checked : value);
     };
 
-    const nextStep = () => setStep(2);
-    const nextToSummary = () => setStep(3);
+    const validateField = (name, value) => {
+        let err = "";
 
-    const back = () => {
-        setStep(prev => Math.max(1, prev - 1));
+        if (["name", "mail", "password", "phone"].includes(name)) {
+            if (!value) {
+                err = "שדה חובה";
+            } else {
+                if (name === "mail" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    err = "מייל לא תקין";
+                }
+            }
+        }
+
+        setErrors(prev => ({
+            ...prev,
+            [name]: err
+        }));
     };
+
+    const isStepValid = () => {
+        if (step === 1) {
+            return ["name", "mail", "password", "phone"].every(f => form[f] && !errors[f]);
+        }
+        if (step === 2) {
+            return form.graphology || form.morphology || form.chirology;
+        }
+        return true;
+    };
+
+    const nextStep = () => {
+        if (isStepValid()) setStep(2);
+    };
+    const nextToSummary = () => {
+        if (isStepValid()) setStep(3);
+    };
+    const back = () => setStep(step - 1);
 
     const handleSubmit = () => {
-        const payload = { ...form, available: true };
+        if (!isStepValid()) return;
+
+        const payload = {
+            ...form,
+            available: true
+        };
 
         dispatch(addDiagnoser(payload));
-        onSave(payload);
+        // onSave?.(payload);
         closeAll();
     };
 
@@ -58,7 +92,7 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
             morphology: false,
             chirology: false
         });
-
+        setErrors({});
         setStep(1);
         onClose();
     };
@@ -66,37 +100,38 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
     if (!isOpen) return null;
 
     return (
-        <div
-            className={styles.backdrop}
-            onClick={closeAll}
-        >
-            <div
-                className={styles.popup}
-                onClick={(e) => e.stopPropagation()} // ⭐ קריטי למניעת סגירה בזמן הקלדה
-            >
+        <div className={styles.backdrop}>
+            <div className={styles.popup}>
 
-                <button
-                    type="button"
-                    className={styles.closeBtn}
-                    onClick={closeAll}
-                >
-                    ×
-                </button>
+                <button className={styles.closeBtn} onClick={closeAll}>×</button>
 
                 <h2 className={styles.title}>הוספת מאבחנת</h2>
 
                 {/* STEP 1 */}
                 {step === 1 && (
                     <div className={styles.step}>
-                        <input className={styles.input} name="name" placeholder="שם" onChange={handleChange} />
+                        <div className={styles.inputGroup}>
+                            <input className={styles.input} name="name" placeholder="שם" value={form.name} onChange={handleChange} />
+                            {errors.name && <span className={styles.error}>{errors.name}</span>}
+                        </div>
+                        <div className={styles.inputGroup}>
+                            <input className={styles.input} name="mail" placeholder="מייל" value={form.mail} onChange={handleChange} />
+                            {errors.mail && <span className={styles.error}>{errors.mail}</span>}
+                        </div>
+                        <div className={styles.inputGroup}>
+                            <input className={styles.input} name="password" type="password" placeholder="סיסמה" value={form.password} onChange={handleChange} />
+                            {errors.password && <span className={styles.error}>{errors.password}</span>}
+                        </div>
+                        <div className={styles.inputGroup}>
+                            <input className={styles.input} name="phone" placeholder="טלפון" value={form.phone} onChange={handleChange} />
+                            {errors.phone && <span className={styles.error}>{errors.phone}</span>}
+                        </div>
 
-                        <input className={styles.input} name="mail" placeholder="מייל" onChange={handleChange} />
-
-                        <input className={styles.input} name="password" type="password" placeholder="סיסמה" onChange={handleChange} />
-
-                        <input className={styles.input} name="phone" placeholder="טלפון" onChange={handleChange} />
-
-                        <button type="button" className={styles.primaryBtn} onClick={nextStep}>
+                        <button
+                            className={styles.wideBtn}
+                            onClick={nextStep}
+                            disabled={!isStepValid()}
+                        >
                             המשך לבחירת תחומים
                         </button>
                     </div>
@@ -107,41 +142,31 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
                     <div className={styles.step}>
                         <p className={styles.subtitle}>בחרי תחומי התמחות</p>
 
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="morphology"
-                                checked={form.morphology}
-                                onChange={handleChange}
-                            />
-                            מורפולוגיה
-                        </label>
+                        <div className={styles.capGrid}>
 
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="graphology"
-                                checked={form.graphology}
-                                onChange={handleChange}
-                            />
-                            גרפולוגיה
-                        </label>
+                            <label className={`${styles.capCard} ${form.morphology ? styles.active : ""}`}>
+                                <input type="checkbox" name="morphology" onChange={handleChange} />
+                                🧠 מורפולוגיה
+                            </label>
 
-                        <label>
-                            <input
-                                type="checkbox"
-                                name="chirology"
-                                checked={form.chirology}
-                                onChange={handleChange}
-                            />
-                            כירולוגיה
-                        </label>
+                            <label className={`${styles.capCard} ${form.graphology ? styles.active : ""}`}>
+                                <input type="checkbox" name="graphology" onChange={handleChange} />
+                                ✍️ גרפולוגיה
+                            </label>
 
-                        <button type="button" className={styles.primaryBtn} onClick={nextToSummary}>
+                            <label className={`${styles.capCard} ${form.chirology ? styles.active : ""}`}>
+                                <input type="checkbox" name="chirology" onChange={handleChange} />
+                                ✋ כירולוגיה
+                            </label>
+
+                        </div>
+                        {!isStepValid() && <span className={styles.error}>בחר לפחות תחום אחד</span>}
+
+                        <button className={styles.wideBtn} onClick={nextToSummary} disabled={!isStepValid()}>
                             המשך לסיכום
                         </button>
 
-                        <button type="button" className={styles.secondaryBtn} onClick={back}>
+                        <button className={styles.backBtn} onClick={back}>
                             חזור
                         </button>
                     </div>
@@ -150,20 +175,22 @@ function AddDiagnosticianPopup({ isOpen, onClose, onSave }) {
                 {/* STEP 3 */}
                 {step === 3 && (
                     <div className={styles.step}>
-                        <p><b>שם:</b> {form.name}</p>
-                        <p><b>מייל:</b> {form.mail}</p>
-                        <p><b>טלפון:</b> {form.phone}</p>
+                        <div className={styles.summary}>
+                            <p><b>שם:</b> {form.name}</p>
+                            <p><b>מייל:</b> {form.mail}</p>
+                            <p><b>טלפון:</b> {form.phone}</p>
 
-                        <p><b>תחומים:</b></p>
-                        {form.morphology && <p>מורפולוגיה</p>}
-                        {form.graphology && <p>גרפולוגיה</p>}
-                        {form.chirology && <p>כירולוגיה</p>}
+                            <p><b>תחומים:</b></p>
+                            {form.morphology && <p>🧠 מורפולוגיה</p>}
+                            {form.graphology && <p>✍️ גרפולוגיה</p>}
+                            {form.chirology && <p>✋ כירולוגיה</p>}
+                        </div>
 
-                        <button type="button" className={styles.primaryBtn} onClick={handleSubmit}>
+                        <button className={styles.wideBtn} onClick={handleSubmit} disabled={!isStepValid()}>
                             שמור מאבחנת
                         </button>
 
-                        <button type="button" className={styles.secondaryBtn} onClick={back}>
+                        <button className={styles.backBtn} onClick={back}>
                             חזור
                         </button>
                     </div>
