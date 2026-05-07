@@ -108,6 +108,7 @@ import { addLead, signIn } from './LogInSlice';
 import { fetchTypeGroups } from '../TypeGroup/TypeGroupSlice';
 import { InitCustomer } from '../Customers/CustomerSlice';
 import { ProfilelogIn } from '../Profile/ProfileSlice';
+import { InitLeads } from '../Leads/LeadsSlice';
 
 
 const SignIn = () => {
@@ -118,9 +119,9 @@ const SignIn = () => {
     const typeGroups = useSelector(state => state.TypeGroup.groups)
     const statusType = useSelector(state => state.TypeGroup.status)
     const customers = useSelector(state => state.Customer.Customers)
-    const diagnosers = useSelector(state => state.Diagnoser.Diagnosers)
+    const leads = useSelector(state => state.Lead.Leads)
     const statusC = useSelector(state => state.Customer.status)
-    const statusD = useSelector(state => state.Diagnoser.status)
+    const statusL = useSelector(state => state.Lead.status)
     const thisuser = useSelector(state => state.LogIn.thisUser)
     const statusUser = useSelector(state => state.LogIn.statusUser)
 
@@ -140,11 +141,13 @@ const SignIn = () => {
     useEffect(() => {
         if (statusC === "")
             dispatch(InitCustomer())
+        if (statusL === "")
+            dispatch(InitLeads())
         dispatch(ProfilelogIn({
             thisUser: thisuser,
             status: statusUser
         }))
-    }, [statusC, statusD, dispatch])
+    }, [statusC, statusL, dispatch])
 
     function SignIn() {
         setErr(false)
@@ -155,9 +158,9 @@ const SignIn = () => {
             phone,
             codeType: status
         }
-        let c = customers.find(c => c.mail === mail)
-        let d = diagnosers.find(c => c.mail === mail)
-        if (c || d)
+        let c = customers.find(c => c.mail === mail.toLowerCase())
+        let l = leads.find(l => l.mail === mail.toLowerCase())
+        if (c || l)
             setErr(true)
         else {
             dispatch(signIn(newCustomer))
