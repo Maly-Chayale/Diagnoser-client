@@ -13,7 +13,7 @@ const DiagnoserList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [filter, setFilter] = useState("all");
+    const [filter, setFilter] = useState("הכל");
     const [open, setOpen] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(null);
     const [search, setSearch] = useState("");
@@ -38,11 +38,11 @@ const DiagnoserList = () => {
     };
 
     const filtered = diagnosers?.filter((d) => {
-        if (filter === "all") return true;
-        if (filter === "available" && d.available) return true;
-        if (filter === "Morfology" && d.morphology) return true;
-        if (filter === "Chirology" && d.chirology) return true;
-        if (filter === "Grafology" && d.graphology) return true;
+        if (filter === "הכל") return true;
+        if (filter === "זמינות" && d.available) return true;
+        if (filter === "מורפולוגיה" && d.morphology) return true;
+        if (filter === "כירולוגיה" && d.chirology) return true;
+        if (filter === "גרפולוגיה;" && d.graphology) return true;
         return false;
     });
 
@@ -75,7 +75,7 @@ const DiagnoserList = () => {
 
             {/* FILTERS */}
             <div className={style["filters-row"]}>
-                {["all", "available", "Morfology", "Chirology", "Grafology"].map((f) => (
+                {["הכל", "זמינות", "מורפולוגיה", "כירולוגיה", "גרפולוגיה"].map((f) => (
                     <button
                         key={f}
                         onClick={() => setFilter(f)}

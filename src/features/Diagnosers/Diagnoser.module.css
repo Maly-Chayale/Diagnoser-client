@@ -60,6 +60,7 @@
 
 .filter-btn:hover {
     transform: translateY(-3px);
+     background: linear-gradient(135deg, #a7cbf8, #c5b4f6);
 }
 
 .active {
@@ -98,7 +99,8 @@
 
 /* BUTTON HOVER GROW */
 .card:hover .primary-btn1 {
-    transform: scale(1.06);
+    transform: scale(-5px);
+    
 }
 
 .card::before {
