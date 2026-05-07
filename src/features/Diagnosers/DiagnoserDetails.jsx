@@ -1,32 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import style from './DiagnoserDetails.module.css';
 
 const DiagnoserDetails = () => {
+    const diagnosers = useSelector((state) => state.Diagnoser.Diagnosers);
+    const { code } = useParams();
+    const d = diagnosers.find(d => d.code == code);
 
-    const diagnosers = useSelector((state) => state.Diagnoser.Diagnosers)
-    const { code } = useParams()
-    const d = diagnosers.find(d=>d.code==code)
+    if (!d) {
+        return <div className={style['details-page']}>לא נמצאה מאבחנת עם הקוד הזה.</div>;
+    }
 
     return (
-        <div className="cards-grid">
-            {/* <h1 className="title">דף אישי מאבחנת {d.name}</h1> */}
-            <div key={d.mail} className="card">
-                <div className="card-header">
-                    <h2 className="name">{d.name}</h2>
-                    {d.morphology && <span className="badge">מורפולוגית</span>}
-                    <br></br>
-                    {d.chorology && <span className="badge">כירולוגיה</span>}
-                    <br></br>
-                    {d.graphology && <span className="badge">גרפולוגית</span>}
+        <div className={style['details-page']}>
+            <div className={style['cards-grid']}>
+                <div key={d.mail} className={style.card}>
+                    <div className={style['card-header']}>
+                        <h2 className={style.name}>{d.name}</h2>
+                        {d.morphology && <span className={`${style.badge} ${style.morphology}`}>🧠 מורפולוגיה</span>}
+                        {d.chirology && <span className={`${style.badge} ${style.chirology}`}>✋ כירולוגיה</span>}
+                        {d.graphology && <span className={`${style.badge} ${style.graphology}`}>✍️ גרפולוגיה</span>}
+                    </div>
+
+                    <p className={style.description}>📧 {d.mail}</p>
+                    <p className={style.description}>📞 {d.phone}</p>
+
+                    <span className={`${style.badge} ${d.available ? style['status-available'] : style['status-unavailable']}`}>
+                        {d.available ? 'זמינה' : 'לא זמינה כרגע'}
+                    </span>
                 </div>
-                <p className="description">צרו קשר:</p>
-                <p className="description">{d.mail}</p>
-                <p className="description">{d.phone}</p>
-                {d.available ? <span className="badge">זמינה</span> :
-                    <span className="badge">לא זמינה כרגע</span>}
             </div>
         </div>
-    )
-}
+    );
+};
+
 export default DiagnoserDetails;

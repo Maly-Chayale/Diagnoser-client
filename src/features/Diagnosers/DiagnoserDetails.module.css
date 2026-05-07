@@ -1,0 +1,144 @@
+.details-page {
+    min-height: 100vh;
+    background: #ffffff;
+    padding: 40px 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* GRID */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    justify-items: center;
+}
+
+/* CARD */
+.card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: fadeUp 0.5s ease forwards;
+}
+
+.card:hover {
+    transform: translateY(-14px) scale(1.04);
+    border-color: #60a5fa;
+    box-shadow:
+        0 25px 60px rgba(24, 128, 255, 0.35),
+        0 10px 25px rgba(64, 0, 255, 0.25);
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(150deg, #60a5fa, #a78bfa);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.card:hover::before {
+    opacity: 0.18;
+}
+
+.card * {
+    position: relative;
+    z-index: 1;
+}
+
+/* NAME */
+.name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #111827;
+}
+
+/* BADGES */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin: 4px;
+    cursor: default;
+}
+
+.badge:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(96,165,250,0.25);
+}
+
+/* Badge Colors */
+.morphology {
+    background: rgba(96,165,250,0.12);
+    color: #2563eb;
+    border: 1px solid rgba(96,165,250,0.3);
+}
+
+.graphology {
+    background: rgba(167,139,250,0.12);
+    color: #7c3aed;
+    border: 1px solid rgba(167,139,250,0.3);
+}
+
+.chirology {
+    background: rgba(34,197,94,0.12);
+    color: #16a34a;
+    border: 1px solid rgba(34,197,94,0.3);
+}
+
+/* STATUS */
+.status {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.status-available {
+    background: rgba(34,197,94,0.12);
+    color: #16a34a;
+    border: 1px solid rgba(34,197,94,0.3);
+}
+
+.status-unavailable {
+    background: rgba(239,68,68,0.12);
+    color: #ef4444;
+    border: 1px solid rgba(239,68,68,0.3);
+}
+
+/* DESCRIPTION */
+.description {
+    font-size: 0.95rem;
+    margin: 4px 0;
+    color: #374151;
+}
+
+/* CARD HEADER */
+.card-header {
+    margin-bottom: 16px;
+}
+
+/* FADE-UP ANIMATION */
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

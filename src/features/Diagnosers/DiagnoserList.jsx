@@ -29,6 +29,16 @@ const DiagnoserList = () => {
         setConfirmDelete(null);
     };
 
+        const highlight = (text, query) => {
+        if (!query) return text;
+        const parts = text.split(new RegExp(`(${query})`, "gi"));
+        return parts.map((part, i) =>
+            part.toLowerCase() === query.toLowerCase()
+                ? <mark key={i} className={style.highlight}>{part}</mark>
+                : part
+        );
+    };
+
     const getText = (s) => {
         let str = s.name + " " + s.mail;
         if (s.graphology) str += " גרפולוגיה";
@@ -75,7 +85,7 @@ const DiagnoserList = () => {
 
             {/* FILTERS */}
             <div className={style["filters-row"]}>
-                {["הכל", "זמינות", "מורפולוגיה", "כירולוגיה", "גרפולוגיה"].map((f) => (
+                {["הכל 🌐", "זמינות⚡", "מורפולוגיה 🧠", "כירולוגיה ✋", "גרפולוגיה ✍️"].map((f) => (
                     <button
                         key={f}
                         onClick={() => setFilter(f)}
@@ -89,22 +99,50 @@ const DiagnoserList = () => {
             {/* CARDS */}
             <div className={style["cards-grid"]}>
                 {final?.map((d) => (
-                    <div key={d.mail} className={style.card}>
+                   
+ <div key={d.mail} className={style.card}>
 
-                        <h2 className={style.name}>{d.name}</h2>
-
+                        <h2 className={style.name}>
+                            {highlight(d.name, search)}
+                        </h2>
                         <div className={style.capabilities}>
-                            {d.morphology && <span className={`${style.badge} ${style.morphology}`}>🧠 מורפולוגיה</span>}
-                            {d.graphology && <span className={`${style.badge} ${style.graphology}`}>✍️ גרפולוגיה</span>}
-                            {d.chirology && <span className={`${style.badge} ${style.chirology}`}>✋ כירולוגיה</span>}
+
+                            {d.morphology && (
+                                <span className={`${style.badge} ${style.morphology}`}>
+                                    🧠 מורפולוגיה
+                                </span>
+                            )}
+
+                            {d.graphology && (
+                                <span className={`${style.badge} ${style.graphology}`}>
+                                    ✍️ גרפולוגיה
+                                </span>
+                            )}
+
+                            {d.chirology && (
+                                <span className={`${style.badge} ${style.chirology}`}>
+                                    ✋ כירולוגיה
+                                </span>
+                            )}
+
                         </div>
 
-                        <p className={style.description}>{d.mail}</p>
-                        <p className={style.description}>{d.phone}</p>
 
-                        {/* STATUS */}
-                        {d.available ? null : (
-                            <div className={style.statusOff}>לא זמינה</div>
+
+
+                        <p className={style.description}>
+                            📧 {highlight(d.mail, search)}
+                        </p>
+
+                        <p className={style.description}>
+                            📞 {highlight(d.phone, search)}
+                        </p>
+
+                        {/* only show when NOT available */}
+                        {!d.available && (
+                            <span className={style["status-off"]}>
+                                ⛔ לא זמינה כרגע
+                            </span>
                         )}
 
                         <button
