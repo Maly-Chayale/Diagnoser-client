@@ -13,7 +13,7 @@ const DiagnoserList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [filter, setFilter] = useState("all");
+    const [filter, setFilter] = useState("הכל");
     const [open, setOpen] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(null);
     const [search, setSearch] = useState("");
@@ -29,7 +29,7 @@ const DiagnoserList = () => {
         setConfirmDelete(null);
     };
 
-    const buildString = (s) => {
+    const getText = (s) => {
         let str = s.name + " " + s.mail;
         if (s.graphology) str += " גרפולוגיה";
         if (s.morphology) str += " מורפולוגיה";
@@ -38,39 +38,25 @@ const DiagnoserList = () => {
     };
 
     const filtered = diagnosers?.filter((d) => {
-        if (filter === "all") return true;
-        if (filter === "available" && d.available) return true;
-        if (filter === "Grafology" && d.graphology) return true;
-        if (filter === "Morfology" && d.morphology) return true;
-        if (filter === "Chirology" && d.chirology) return true;
+        if (filter === "הכל") return true;
+        if (filter === "זמינות" && d.available) return true;
+        if (filter === "מורפולוגיה" && d.morphology) return true;
+        if (filter === "כירולוגיה" && d.chirology) return true;
+        if (filter === "גרפולוגיה;" && d.graphology) return true;
         return false;
     });
 
     const final = filtered?.filter(s =>
-        buildString(s).toLowerCase().includes(search.toLowerCase())
+        getText(s).toLowerCase().includes(search.toLowerCase())
     );
 
-    const highlight = (text, query) => {
-        if (!query) return text;
-        const parts = text.split(new RegExp(`(${query})`, "gi"));
-        return parts.map((part, i) =>
-            part.toLowerCase() === query.toLowerCase()
-                ? <mark key={i} className={style.highlight}>{part}</mark>
-                : part
-        );
-    };
-
     if (status === "" || status === "loading") {
-        return (
-            <div className={style["cards-grid"]}>
-                {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className={style["skeleton-card"]}></div>
-                ))}
-            </div>
-        );
+        return <div className={style.loading}>טוען נתונים...</div>;
     }
 
-    if (status === "faild") return <div>נכשל</div>;
+    if (status === "faild") {
+        return <div className={style.error}>שגיאה בטעינה</div>;
+    }
 
     return (
         <div className={style["diagnosticians-page"]}>
@@ -81,82 +67,44 @@ const DiagnoserList = () => {
             <div className={style["search-row"]}>
                 <input
                     className={style["search-input"]}
-                    placeholder="חיפוש מאבחנת..."
+                    placeholder="חיפוש..."
                     value={search}
-                    onChange={e => setSearch(e.target.value)}
+                    onChange={(e) => setSearch(e.target.value)}
                 />
             </div>
 
             {/* FILTERS */}
             <div className={style["filters-row"]}>
-
-                <button className={`${style["filter-btn"]} ${filter === "all" ? style.active : ""}`} onClick={() => setFilter("all")}>🌐 הכל</button>
-
-                <button className={`${style["filter-btn"]} ${filter === "available" ? style.active : ""}`} onClick={() => setFilter("available")}>⚡ זמינות</button>
-
-                <button className={`${style["filter-btn"]} ${filter === "Grafology" ? style.active : ""}`} onClick={() => setFilter("Grafology")}>✍️ גרפולוגיה</button>
-
-                <button className={`${style["filter-btn"]} ${filter === "Morfology" ? style.active : ""}`} onClick={() => setFilter("Morfology")}>🧠 מורפולוגיה</button>
-
-                <button className={`${style["filter-btn"]} ${filter === "Chirology" ? style.active : ""}`} onClick={() => setFilter("Chirology")}>✋ כירולוגיה</button>
-
+                {["הכל", "זמינות", "מורפולוגיה", "כירולוגיה", "גרפולוגיה"].map((f) => (
+                    <button
+                        key={f}
+                        onClick={() => setFilter(f)}
+                        className={`${style["filter-btn"]} ${filter === f ? style.active : ""}`}
+                    >
+                        {f}
+                    </button>
+                ))}
             </div>
 
-            {/* EMPTY */}
-            {final?.length === 0 && (
-                <div className={style["empty-state"]}>
-                    <div className={style["empty-icon"]}>🔍</div>
-                    <h2>לא נמצאו תוצאות</h2>
-                    <p>נסה לשנות חיפוש או פילטרים</p>
-                </div>
-            )}
-
-            {/* GRID */}
+            {/* CARDS */}
             <div className={style["cards-grid"]}>
                 {final?.map((d) => (
                     <div key={d.mail} className={style.card}>
 
-                        <h2 className={style.name}>
-                            {highlight(d.name, search)}
-                        </h2>
+                        <h2 className={style.name}>{d.name}</h2>
+
                         <div className={style.capabilities}>
-
-                            {d.morphology && (
-                                <span className={`${style.badge} ${style.morphology}`}>
-                                    🧠 מורפולוגיה
-                                </span>
-                            )}
-
-                            {d.graphology && (
-                                <span className={`${style.badge} ${style.graphology}`}>
-                                    ✍️ גרפולוגיה
-                                </span>
-                            )}
-
-                            {d.chirology && (
-                                <span className={`${style.badge} ${style.chirology}`}>
-                                    ✋ כירולוגיה
-                                </span>
-                            )}
-
+                            {d.morphology && <span className={`${style.badge} ${style.morphology}`}>🧠 מורפולוגיה</span>}
+                            {d.graphology && <span className={`${style.badge} ${style.graphology}`}>✍️ גרפולוגיה</span>}
+                            {d.chirology && <span className={`${style.badge} ${style.chirology}`}>✋ כירולוגיה</span>}
                         </div>
 
+                        <p className={style.description}>{d.mail}</p>
+                        <p className={style.description}>{d.phone}</p>
 
-
-
-                        <p className={style.description}>
-                            📧 {highlight(d.mail, search)}
-                        </p>
-
-                        <p className={style.description}>
-                            📞 {highlight(d.phone, search)}
-                        </p>
-
-                        {/* only show when NOT available */}
-                        {!d.available && (
-                            <span className={style["status-off"]}>
-                                ⛔ לא זמינה כרגע
-                            </span>
+                        {/* STATUS */}
+                        {d.available ? null : (
+                            <div className={style.statusOff}>לא זמינה</div>
                         )}
 
                         <button
@@ -178,28 +126,35 @@ const DiagnoserList = () => {
                 ))}
             </div>
 
-            {/* DELETE */}
+            {/* POPUP */}
             {confirmDelete && (
-                <div className={style["confirm-popup"]}>
-                    <div className={style["confirm-content"]}>
-                        <p>מחיקה של {confirmDelete.name}?</p>
-                        <button onClick={() => Delete(confirmDelete)}>אישור</button>
-                        <button onClick={() => setConfirmDelete(null)}>ביטול</button>
+                <div className={style.modalBackdrop}>
+                    <div className={style.modalBox}>
+                        <p>למחוק את {confirmDelete.name}?</p>
+                        <button onClick={() => Delete(confirmDelete)}>כן</button>
+                        <button onClick={() => setConfirmDelete(null)}>לא</button>
                     </div>
                 </div>
             )}
-
-            {/* ADD */}
-            <button
+           {(statusUser === "Esty") &&<button
                 className={style["primary-btn2"]}
                 onClick={() => setOpen(true)}
             >
                ➕ הוספת מאבחנת
-            </button>
+            </button>}
+
+
+            {/* <AddDiagnosticianPopup
+    isOpen={open}
+    onClose={() => setOpen(false)}
+    onSave={(data) => {
+        dispatch(addDiagnoser(data)); // אם אתה רוצה כפול
+    }}
+/> */}
+
             <AddDiagnosticianPopup
                 isOpen={open}
                 onClose={() => setOpen(false)}
-                onSave={() => { }}
             />
         </div>
     );
