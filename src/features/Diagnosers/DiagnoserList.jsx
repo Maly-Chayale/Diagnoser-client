@@ -4,6 +4,7 @@ import { deleteDiagnoser, InitDiagnoser } from './DiagnoserSlice';
 import AddDiagnosticianPopup from './AddDiagnosticianPopup';
 import { useNavigate } from 'react-router-dom';
 import style from './Diagnoser.module.css';
+import ConfirmDeletePopup from './ConfirmDeletePopup';
 
 const DiagnoserList = () => {
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
@@ -13,7 +14,7 @@ const DiagnoserList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [filter, setFilter] = useState("הכל");
+    const [filter, setFilter] = useState("הכל 🌐");
     const [open, setOpen] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(null);
     const [search, setSearch] = useState("");
@@ -29,7 +30,7 @@ const DiagnoserList = () => {
         setConfirmDelete(null);
     };
 
-        const highlight = (text, query) => {
+    const highlight = (text, query) => {
         if (!query) return text;
         const parts = text.split(new RegExp(`(${query})`, "gi"));
         return parts.map((part, i) =>
@@ -48,11 +49,11 @@ const DiagnoserList = () => {
     };
 
     const filtered = diagnosers?.filter((d) => {
-        if (filter === "הכל") return true;
-        if (filter === "זמינות" && d.available) return true;
-        if (filter === "מורפולוגיה" && d.morphology) return true;
-        if (filter === "כירולוגיה" && d.chirology) return true;
-        if (filter === "גרפולוגיה;" && d.graphology) return true;
+        if (filter === "הכל 🌐") return true;
+        if (filter === "זמינות⚡" && d.available) return true;
+        if (filter === "מורפולוגיה 🧠" && d.morphology) return true;
+        if (filter === "כירולוגיה ✋" && d.chirology) return true;
+        if (filter === "גרפולוגיה ✍️" && d.graphology) return true;
         return false;
     });
 
@@ -99,8 +100,8 @@ const DiagnoserList = () => {
             {/* CARDS */}
             <div className={style["cards-grid"]}>
                 {final?.map((d) => (
-                   
- <div key={d.mail} className={style.card}>
+
+                    <div key={d.mail} className={style.card}>
 
                         <h2 className={style.name}>
                             {highlight(d.name, search)}
@@ -163,22 +164,25 @@ const DiagnoserList = () => {
                     </div>
                 ))}
             </div>
+            {/* 
+            {
+                final.length==0&&<p className="empty-text">לא נמצאו מאבחנות מתאימות לחיפוש.</p>
+            } */}
 
             {/* POPUP */}
             {confirmDelete && (
-                <div className={style.modalBackdrop}>
-                    <div className={style.modalBox}>
-                        <p>למחוק את {confirmDelete.name}?</p>
-                        <button onClick={() => Delete(confirmDelete)}>כן</button>
-                        <button onClick={() => setConfirmDelete(null)}>לא</button>
-                    </div>
-                </div>
+                <ConfirmDeletePopup
+                    isOpen={!!confirmDelete}
+                    onClose={() => setConfirmDelete(null)}
+                    onConfirm={() => Delete(confirmDelete)}
+                    name={confirmDelete.name}
+                />
             )}
-           {(statusUser === "Esty") &&<button
+            {(statusUser === "Esty") && <button
                 className={style["primary-btn2"]}
                 onClick={() => setOpen(true)}
             >
-               ➕ הוספת מאבחנת
+                ➕ הוספת מאבחנת
             </button>}
 
 

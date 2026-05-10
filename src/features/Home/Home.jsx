@@ -91,7 +91,7 @@ const Home = () => {
                 <input type="text" className="search-input" placeholder="חיפוש לפי שם מאבחנת, תחום, תאריך או שעה..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
 
-            <section className="section">
+            {/* <section className="section">
                 <h2 className="section-title">  סדנאות  </h2>
                 <div className="cards-grid"> {
                     filteredSlots?.map(w =>
@@ -104,8 +104,8 @@ const Home = () => {
                             <p className="empty-text">לא נמצאו תורים פנויים מתאימים לחיפוש.</p>
                         )}
                 </div>
-            </section>
-            <section className="section">
+            </section> */}
+            {/* <section className="section">
                 <h2 className="section-title">מאבחנות</h2>
                 <div className="cards-grid">
                     <div className="cards-grid">
@@ -130,7 +130,7 @@ const Home = () => {
                     </div>
 
                 </div>
-            </section>
+            </section> */}
         </div>);
 }
 export default Home;

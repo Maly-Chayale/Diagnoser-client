@@ -1,72 +1,58 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useDispatch } from "react-redux";
-import { getType } from '../WorkShop/WorkShopSlice';
-import { diagnoser } from '../References/ReferencesSlice';
-import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
-// import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
-
+import { FaUser, FaEnvelope, FaPhone, FaDollarSign, FaEye } from 'react-icons/fa';
+import styles from './ManagerPayments.module.css';
 
 const ManagerPayments = () => {
 
-    const references = useSelector(state => state.Reference.references);
-    const workshops = useSelector(state => state.WorkShop.WorkShops);
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
-
-    const getWorkshop = (code) => workshops.find(w => w.code === code);
-    const priceWorkshop = (code) => getWorkshop(code)?.price || 0;
-    const codeDiagnoser = (code) => getWorkshop(code)?.codeDiagnoser;
-
-    const dispatch = useDispatch()
-    
-    const string = (s) => {
-        let string = s.name+" "+s.mail+" "+s.precentagePayment
-        return string
-    }
-    
+    const string = (s) => `${s.name} ${s.mail} ${s.precentagePayment}`;
     const [search, setSearch] = useState("");
 
-    const filteredSlots = useMemo(() =>
-        diagnosers.filter(s => (string(s)).toLowerCase().includes(search.toLowerCase())), [diagnosers, search]);
-
-
-
-    // useEffect(() => {
-    //      if (status == "" || status == "faild")
-                  
-    //     dispatch(InitDiagnoser())
-    // }, [ dispatch])
-
+    const filteredSlots = useMemo(
+        () => diagnosers.filter(s => string(s).toLowerCase().includes(search.toLowerCase())),
+        [diagnosers, search]
+    );
 
     return (
-        <div className="landing-shell">
-            <div className="table-card fade-in">
-                <div className="table-title">התחשבנות מאבחנות</div>
-                <div className="search-row">
-                    <input type="text" className="search-input" placeholder="חיפוש לפי שם מאבחנת, תחום, תאריך או שעה..." value={search} onChange={e => setSearch(e.target.value)} />
-                </div>
-                <table className="modern-table">
+        <div className={styles["payments-page"]}>
+            <div className={styles["search-row"]}>
+                <input
+                    type="text"
+                    className={styles["search-input"]}
+                    placeholder="חיפוש לפי שם מאבחנת, תחום, תאריך או שעה..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                />
+            </div>
+            <div className={styles["table-card"]}>
+                {/* <div className={styles["table-title"]}>התחשבנות מאבחנות</div> */}
+
+
+
+                <table className={styles["modern-table"]}>
                     <thead>
                         <tr>
-                            <th>שם מאבחנת</th>
-                            <th>מייל</th>
-                            <th>פלאפון</th>
-                            <th>נותר לתשלום</th>
-                            <th>לצפיה בתורים</th>
+                            <th><FaUser /> שם מאבחנת</th>
+                            <th><FaEnvelope /> מייל</th>
+                            <th><FaPhone /> פלאפון</th>
+                            <th><FaDollarSign /> נותר לתשלום</th>
+                            <th><FaEye /> צפייה בתורים</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        {
-                        filteredSlots
-                            .filter(d => d.mail != '22@2' && d.precentagePayment > 0)
-                          .map((d, i) => (
-                                <tr key={i}>
+                        {filteredSlots
+                            .filter(d => d.mail !== '22@2' && d.precentagePayment > 0)
+                            .map((d, i) => (
+                                <tr key={i} className={styles["table-row"]}>
                                     <td>{d.name}</td>
                                     <td>{d.mail}</td>
                                     <td>{d.phone}</td>
-                                    <td>{d.precentagePayment}</td>                                   
-                                    <td><button>לצפיה</button></td>
+                                    <td>{d.precentagePayment}</td>
+                                    <td>
+                                        <button className={styles["view-btn"]}><FaEye /></button>
+                                    </td>
                                 </tr>
                             ))}
                     </tbody>

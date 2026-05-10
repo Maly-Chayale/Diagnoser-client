@@ -1,114 +1,77 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import axios from "axios"
-import './old.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { InitCustomer } from './CustomerSlice';
+import style from './CustomersList.module.css'
+import { FaEnvelope, FaPhone } from 'react-icons/fa';
 
 const CustomersList = () => {
+    const dispatch = useDispatch();
+    const customers = useSelector(state => state.Customer.Customers);
+    const status = useSelector(state => state.Customer.status);
 
-    const dispatch = useDispatch()
-
-    const customers = useSelector(state => state.Customer.Customers)
-    const status = useSelector(state => state.Customer.status)
-
-     const string = (s) => {
-        let string = s.name+" "+s.mail+" "+s.phone
-        return string
-    }
-    
     const [search, setSearch] = useState("");
 
+    const string = (s) => s.name + " " + s.mail + " " + s.phone;
+
     const filteredSlots = useMemo(() =>
-        customers.filter(s => (string(s)).toLowerCase().includes(search.toLowerCase())), [customers, search]);
-
-
+        customers.filter(s => string(s).toLowerCase().includes(search.toLowerCase())),
+        [customers, search]
+    );
 
     useEffect(() => {
-        if(status=="")
-            dispatch(InitCustomer())
-    }, [status, dispatch])
+        if (status === "")
+            dispatch(InitCustomer());
+    }, [status, dispatch]);
+
+    const highlight = (text, query) => {
+        if (!query) return text;
+        const parts = text.split(new RegExp(`(${query})`, "gi"));
+        return parts.map((part, i) =>
+            part.toLowerCase() === query.toLowerCase()
+                ? <mark key={i} className={style.highlight}>{part}</mark>
+                : part
+        );
+    };
+
+    if (status === "" || status === "loading") {
+        return <div className={style.loading}>טוען נתונים...</div>;
+    }
+
+    if (status === "faild") {
+        return <div className={style.error}>שגיאה בטעינה</div>;
+    }
 
     return (
+        <div className={style["customers-page"]}>
+            <div className={style["search-row"]}>
+                <input
+                    type="text"
+                    className={style["search-input"]}
+                    placeholder="חפש לקוח לפי שם, אימייל או טלפון..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                />
+            </div>
 
-        <div>
-            {/* <button onClick={()=>{fun()}}></button> */}
-            <div className="clients-page">
-
-                
-                <div className="search-row">
-                    <input type="text" className="search-input" placeholder="חיפוש לפי שם מאבחנת, תחום, תאריך או שעה..." value={search} onChange={e => setSearch(e.target.value)} />
-                </div>
-
-
-
-                <div className="clients-grid">
-                    <h1 className="clients-title">לקוחות</h1>
-                    {filteredSlots?.map(c =>
-                        <div className="client-card">
-                            <div className="client-header">
-                                <h2 className="client-name">{c.name}</h2>
-                                <span className="client-badge">{c.mail}</span>
-                                <span className="client-badge">{c.phone}</span>
-                            </div>
-                            <p className="client-description">אבחון גרפולוגי אישי.</p>
-                            <p className="client-meta">תור אחרון: 10.02.2026 • סטטוס: הושלם</p>
-                            {/* <button className="client-btn">לפרטי לקוח</button> */}
+            <div className={style["cards-grid"]}>
+                {filteredSlots.map(c => (
+                    <div key={c.mail} className={style.card}>
+                        <h2 className={style.name}>{highlight(c.name, search)}</h2>
+                        <div className={style.infoRow}>
+                            <FaEnvelope className={style.icon} />
+                            <span className={style.infoText}>{highlight(c.mail, search)}</span>
                         </div>
-                    )}
-                </div>
+                        <div className={style.infoRow}>
+                            <FaPhone className={style.icon} />
+                            <span className={style.infoText}>{highlight(c.phone, search)}</span>
+                        </div>
+                        <p className={style.description}>לקוח מרוצה ומעודכן.</p>
+                        <button className={style.orderBtn}>הצג הזמנות</button>
+                    </div>
+                ))}
             </div>
         </div>
     );
+};
 
-
-}
 export default CustomersList;
-
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState } from 'react';
-// import axios from "axios";
-// import styles from './styles.module.css'; // ייבוא CSS מודול
-// import { useDispatch, useSelector } from 'react-redux';
-// import { InitCustomer } from './CustomerSlice';
-
-// const CustomersList = () => {
-//     const dispatch = useDispatch();
-//     const customers = useSelector(state => state.Customer.Customers);
-//     const status = useSelector(state => state.Customer.status);
-
-//     useEffect(() => {
-//         if (status === "")
-//             dispatch(InitCustomer());
-//     }, [status, dispatch]);
-
-//     return (
-//         <div>
-//             <div className={styles.clientsPage}>
-//                 <div className={styles.clientsGrid}>
-//                     <h1 className={styles.clientsTitle}>לקוחות</h1>
-//                     {customers?.map(c => (
-//                         <div className={styles.clientCard} key={c.id}>
-//                             <div className={styles.clientHeader}>
-//                                 <h2 className={styles.clientName}>{c.name}</h2>
-//                                 <span className={styles.clientBadge}>{c.mail}</span>
-//                                 <span className={styles.clientBadge}>{c.phone}</span>
-//                             </div>
-//                             <p className={styles.clientDescription}>אבחון גרפולוגי אישי.</p>
-//                             <p className={styles.clientMeta}>תור אחרון: 10.02.2026 • סטטוס: הושלם</p>
-//                         </div>
-//                     ))}
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
-
-// export default CustomersList;
-

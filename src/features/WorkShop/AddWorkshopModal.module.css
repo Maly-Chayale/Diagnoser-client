@@ -1,0 +1,229 @@
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    backdrop-filter: blur(5px);
+    animation: fadeInBackdrop 0.3s ease;
+}
+
+@keyframes fadeInBackdrop {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.modal {
+    background: #ffffff;
+    width: 90%;
+    max-width: 650px;
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.25);
+    animation: fadeInScale 0.3s ease;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@keyframes fadeInScale {
+    0% { opacity: 0; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.closeBtn {
+    align-self: flex-end;
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s ease;
+}
+.closeBtn:hover { color: #f87171; transform: scale(1.2); }
+
+.modalTitle {
+    text-align: center;
+    font-size: 1.9rem;
+    margin-bottom: 24px;
+    color: #111827;
+    font-weight: 600;
+}
+
+.field, .fieldRow {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+}
+
+.fieldRow {
+    flex-direction: column; /* כעת המחיר וכמות משתתפים אחד מתחת לשני */
+    gap: 12px;
+}
+
+.iconInputWrapper {
+    position: relative;
+    flex: 1;
+}
+
+.iconInputWrapper .icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.input {
+    width: 100%;
+    padding: 12px 12px 12px 36px;
+    border-radius: 16px;
+    border: 2px solid #e5e7eb;
+    outline: none;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #f9fafb;
+    text-align: right;
+}
+
+.input:hover { background-color: #f0f4ff; }
+.input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 10px rgba(96,165,250,0.3);
+    background-color: #fff;
+}
+
+.input.filled { border-color: #16a34a; background-color: #ecfdf5; }
+
+.select, .textarea {
+    padding: 12px;
+    border-radius: 16px;
+    border: 2px solid #e5e7eb;
+    outline: none;
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    background-color: #f9fafb;
+}
+
+.select:hover, .textarea:hover { background-color: #f0f4ff; }
+.select:focus, .textarea:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 10px rgba(96,165,250,0.3);
+    background-color: #fff;
+}
+
+.select.filled, .textarea.filled { border-color: #16a34a; background-color: #ecfdf5; }
+
+.checkboxRow {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.submitBtn, .backBtn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 12px;
+}
+
+.submitBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #a5b4fc;
+}
+
+.submitBtn:hover:not(:disabled), .backBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(96,165,250,0.35);
+}
+
+.preview {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: right;
+    animation: fadeInPreview 0.3s ease;
+}
+
+@keyframes fadeInPreview {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.preview p {
+    background-color: #f9fafb;
+    padding: 10px 14px;
+    border-radius: 12px;
+    margin: 0;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.preview p:hover { background-color: #e0e7ff; }
+
+.previewButtons {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+.successMessage {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 20px;
+    color: #16a34a;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+    animation: fadeInSuccess 0.5s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@keyframes fadeInSuccess {
+    0% { opacity: 0; transform: scale(0.95); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.successIcon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+}
+
+.checkmark {
+    fill: none;
+    stroke: #16a34a;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: drawCheck 0.6s forwards;
+}
+
+@keyframes drawCheck {
+    0% { stroke-dashoffset: 100; }
+    100% { stroke-dashoffset: 0; }
+}

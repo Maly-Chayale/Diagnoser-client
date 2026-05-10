@@ -3,6 +3,8 @@ import axios from "axios"
 // import './old.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { InitLeads } from './LeadsSlice';
+import style from '../Customers/CustomersList.module.css'
+
 
 const LeadsList = () => {
 
