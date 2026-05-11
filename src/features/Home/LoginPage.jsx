@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import styles from "./LoginPage.module.css";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function LoginPage({ setHasAccess }) {
   const [logoLoaded, setLogoLoaded] = useState(false);
   const [showContent, setShowContent] = useState(false);
+      const thisuser = useSelector(state => state.LogIn.thisUser);
+    const statusUser = useSelector(state => state.LogIn.statusUser);
 
   const navigate = useNavigate()
 
@@ -78,7 +81,7 @@ export default function LoginPage({ setHasAccess }) {
                   <div className={`${styles["step-pill"]} ${styles["slide-up-delayed"]}`} style={{ animationDelay: `${cards.length * 0.4 + 1.4}s` }}>2. מאשר – מקבל תזכורת</div>
                 </div>
                 <div>
-                  <button className={styles["primary-btn"]} onClick={handleEnter}>להיכנס למערכת</button>
+                  {!thisuser && <button className={styles["primary-btn"]} onClick={handleEnter}>להיכנס למערכת</button>}
                 </div>
               </section>
             )}

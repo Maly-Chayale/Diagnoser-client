@@ -1,92 +1,133 @@
 import React, { useEffect, useState } from 'react';
-import { InitCustomer } from '../Customers/CustomerSlice';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
+
 import { logIn } from './LogInSlice';
 import { ProfilelogIn } from '../Profile/ProfileSlice';
+import { InitCustomer } from '../Customers/CustomerSlice';
 import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
 import { InitLeads } from '../Leads/LeadsSlice';
 
+import styles from './LogIn.module.css';
+
 const LogIn = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const customers = useSelector(state => state.Customer.Customers);
+    const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
+    const leads = useSelector(state => state.Lead.Leads);
 
-    const customers = useSelector(state => state.Customer.Customers)
-    const diagnosers = useSelector(state => state.Diagnoser.Diagnosers)
-    const leads = useSelector(state => state.Lead.Leads)
-    const statusL = useSelector(state => state.Lead.status)
-    const statusC = useSelector(state => state.Customer.status)
-    const statusD = useSelector(state => state.Diagnoser.status)
+    const statusL = useSelector(state => state.Lead.status);
+    const statusC = useSelector(state => state.Customer.status);
+    const statusD = useSelector(state => state.Diagnoser.status);
 
-    const thisuser = useSelector(state=>state.LogIn.thisUser)
-    const status = useSelector(state=>state.LogIn.statusUser)
+    const thisuser = useSelector(state => state.LogIn.thisUser);
+    const status = useSelector(state => state.LogIn.statusUser);
 
-    const [mail, setMail] = useState()
-    const [password, setPassword] = useState()
-    const [err, setErr] = useState(false)
-
+    const [mail, setMail] = useState("");
+    const [password, setPassword] = useState("");
+    const [err, setErr] = useState(false);
 
     useEffect(() => {
-        if (statusC == "")
-            dispatch(InitCustomer())
-        if (statusD == "")
-            dispatch(InitDiagnoser())
-        if (statusL == "")
-            dispatch(InitLeads())
-        dispatch(ProfilelogIn({
-            thisUser:thisuser,
-            status: status
-        }))
-    }, [statusC, statusD, dispatch])
+        if (statusC === "") dispatch(InitCustomer());
+        if (statusD === "") dispatch(InitDiagnoser());
+        if (statusL === "") dispatch(InitLeads());
 
-    async function SignIn(){
-        setErr(false)
-        // console.log(customers);
-        // let customerIndex = customers.findIndex(c => c.mail == mail && c.password == parseInt(password))
-        // if (customerIndex != -1) {
+        dispatch(ProfilelogIn({
+            thisUser: thisuser,
+            status: status
+        }));
+    }, [statusC, statusD, statusL, thisuser, status, dispatch]);
+
+    async function SignIn() {
+        setErr(false);
+
         await dispatch(logIn({
-            user: {
-                password: password,
-                mail: mail
-            },
+            user: { mail, password },
             Customers: customers,
             Diagnosers: diagnosers,
             Leads: leads
-        }))
-        // setTimeout(
-        //  dispatch(ProfilelogIn({
-        //     thisUser:thisuser,
-        //     status: status
-        // })),5000)
+        }));
+
         dispatch(ProfilelogIn({
-            thisUser:thisuser,
+            thisUser: thisuser,
             status: status
-        }))
-        if(status=="wrong")
-            setErr(true)
-        else
-            navigate("../enter")
-        // }
-        // else {
-        //     setErr(true);
-        // }
+        }));
+
+        if (status === "wrong") setErr(true);
+        else navigate("../hello");
     }
 
-    const onSignInClick = () => {
-        navigate("../SignIn")
-    }
+    const handleGoogleSuccess = (credentialResponse) => {
+        const decoded = jwtDecode(credentialResponse.credential);
+        const email = decoded.email;
 
+        const userExists =
+            customers.find(c => c.mail === email) ||
+            diagnosers.find(d => d.mail === email) ||
+            leads.find(l => l.mail === email);
+
+        if (userExists) {
+            dispatch(logIn({
+                user: { mail: email, password: null },
+                Customers: customers,
+                Diagnosers: diagnosers,
+                Leads: leads
+            }));
+            navigate("../hello");
+        } else {
+            setErr(true);
+        }
+    };
 
     return (
-        <div className='col'>
-            <input value={mail} onChange={(e) => { setMail(e.target.value) }} placeholder='Mail' type='mail'></input>
-            <input value={password} onChange={(e) => { setPassword(e.target.value) }} placeholder='password' type='password'></input>
-            <button className="primary-btn" onClick={() => { SignIn() }}>OK</button>
-            <button className="primary-btn" onClick={onSignInClick}> הרשמה </button>
-            {err && <p> אחד מהנתונים שהזנת שגוי אנא הרשם מחדש</p>}
-        </div>
-    )
+        <div className={styles.container}>
+            <div className={styles.card}>
 
-}
+                <h2 className={styles.title}>התחברות</h2>
+
+                <input
+                    className={styles.inputField}
+                    value={mail}
+                    onChange={(e) => setMail(e.target.value)}
+                    placeholder="אימייל"
+                    type="email"
+                />
+
+                <input
+                    className={styles.inputField}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="סיסמה"
+                    type="password"
+                />
+
+                {err && <div className={styles.errorMessage}>שגיאה בהתחברות</div>}
+
+                <button className={styles.button} onClick={SignIn}>
+                    התחברות
+                </button>
+
+                <button
+                    className={styles.secondaryButton}
+                    onClick={() => navigate("../SignIn")}
+                >
+                    הרשמה
+                </button>
+
+                <div className={styles.googleBox}>
+                    <GoogleLogin
+                        onSuccess={handleGoogleSuccess}
+                        onError={() => setErr(true)}
+                    />
+                </div>
+
+            </div>
+        </div>
+    );
+};
+
 export default LogIn;

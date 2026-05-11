@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { InitLeads } from './LeadsSlice';
-// import style from './LeadsList.module.css';
-import style from '../Customers/CustomersList.module.css';
+import style from './LeadsList.module.css';
+// import style from '../Customers/CustomersList.module.css';
 
 const LeadsList = () => {
   const dispatch = useDispatch();
@@ -42,8 +42,7 @@ const LeadsList = () => {
               <span className={style.badge}>📧 {lead.mail}</span>
               <span className={style.badge}>📞 {lead.phone}</span>
             </div>
-            <p className={style.description}>לקוח מרוצה ומעודכן.</p>
-            <button className={style.actionBtn}>הצג הזמנות</button>
+           
           </div>
         ))}
       </div>

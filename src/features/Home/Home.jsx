@@ -87,50 +87,8 @@ const Home = () => {
                 </div>
                 {thisUser != null && <h1>שלום ל{thisUser.name}  {statusUser}</h1>}
             </header>
-            <div className="search-row">
-                <input type="text" className="search-input" placeholder="חיפוש לפי שם מאבחנת, תחום, תאריך או שעה..." value={search} onChange={e => setSearch(e.target.value)} />
-            </div>
+           
 
-            {/* <section className="section">
-                <h2 className="section-title">  סדנאות  </h2>
-                <div className="cards-grid"> {
-                    filteredSlots?.map(w =>
-                        <div>
-                            <AppointmentCard WorkShop={w} />
-                        </div>
-                    )}
-                    {
-                        filteredSlots.length === 0 && (
-                            <p className="empty-text">לא נמצאו תורים פנויים מתאימים לחיפוש.</p>
-                        )}
-                </div>
-            </section> */}
-            {/* <section className="section">
-                <h2 className="section-title">מאבחנות</h2>
-                <div className="cards-grid">
-                    <div className="cards-grid">
-                        {filteredDiagnosticians?.map((d) => (<div key={d.mail} className="card">
-                            <div className="card-header">
-                                <h2 className="name">{d.name}</h2>
-                                {d.morphology && <span className="badge">מורפולוגית</span>}
-                                {d.graphology && <span className="badge">גרפולוגית</span>}
-                                {d.chirology && <span className="badge">כירולוגית</span>}
-                            </div>
-                            <p className="description">צרו קשר:</p>
-                            <p className="description">{d.mail}</p>
-                            <p className="description">{d.phone}</p>
-                            {d.available ? <span className="badge">זמינה</span> :
-                                <span className="badge">לא זמינה כרגע</span>}
-                            <button className="primary-btn" onClick={() => navigate(`/DiagnoserDetails/${(diagnosticians.find(diag => diag.mail == d.mail).code)}`)} >פרטים נוספים</button>
-                        </div>
-                        ))}
-                        {filteredDiagnosticians.length === 0 && (
-                            <p className="empty-text">לא נמצאו מאבחנות מתאימות לחיפוש.</p>
-                        )}
-                    </div>
-
-                </div>
-            </section> */}
         </div>);
 }
 export default Home;
