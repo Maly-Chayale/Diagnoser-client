@@ -114,15 +114,15 @@ const OdersAndReferences = () => {
                         <thead>
                             <tr>
                                 <th>תאריך</th>
-                                <th>שעה</th>
+                                {/* <th>שעה</th> */}
                                 <th>לקוח</th>
-                                <th>מיקום</th>
+                                {/* <th>מיקום</th> */}
                                 {statusUser === "Esty" && <th>מאבחנת</th>}
                                 <th>סדנא</th>
                                 <th>תשלום</th>
                                 <th>אחוזים</th>
                                 <th>סטטוס</th>
-                                <th>הערות</th>
+                                {/* <th>הערות</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -130,9 +130,9 @@ const OdersAndReferences = () => {
                                 (r.status != 1 && (statusUser === "Esty" || codeDiagnoser(r.codeWorkshop) === user.code)) && (
                                     <tr key={i} className="hover-row">
                                         <td>{r.date}</td>
-                                        <td>{r.time}</td>
+                                        {/* <td>{r.time}</td> */}
                                         <td>{customerName(r.codeCustomer)}</td>
-                                        <td>{r.adress}</td>
+                                        {/* <td>{r.adress}</td> */}
                                         {statusUser === "Esty" && <td>{getNameDiagnoser(r.codeWorkshop)}</td>}
                                         <td>
                                             <button className='link-btn' onClick={() => navigate(`/WorkshopDetails/${r.codeWorkshop}`)}> {r.codeWorkshop} </button>
@@ -140,13 +140,27 @@ const OdersAndReferences = () => {
                                         <td>{priceWorkshop(r.codeWorkshop)}</td>
                                         <td>{priceWorkshop(r.codeWorkshop) * 0.1}</td>
                                         <td>{getTypeGroup(r.status)}</td>
-                                        <td>{r.comments}</td>
+                                        {/* <td>{r.comments}</td> */}
+                                        {/* טבלה תורים פעילים */}
+<td>
+    <button className="details-button" onClick={() => setActiveBooking(r)}>
+        פרטים
+    </button>
+</td>
+
+
                                     </tr>
                                 )
                             ))}
                         </tbody>
                     </table>
                 </div>
+
+                {/* פופאפ */}
+<BookingPopupDetails
+    booking={activeBooking}
+    handleCancel={() => setActiveBooking(null)}
+/>
 
                 {/* טבלה שמאלית - תורים בהמתנה */}
                 <div className="table-card fade-in delay">
