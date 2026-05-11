@@ -140,7 +140,7 @@ const DiagnoserList = () => {
                         </p>
 
                         {/* only show when NOT available */}
-                        {!d.available && (
+                        {statusUser !== "Esty" && !d.available && (
                             <span className={style["status-off"]}>
                                 ⛔ לא זמינה כרגע
                             </span>
