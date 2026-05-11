@@ -208,7 +208,7 @@ function WorkshopCard({ WorkShop }) {
 
                         <div className={style.diagnoserGrid}>
 
-                            {diagnosers?.map((diagnoser) => (
+                            {diagnosers?.filter(d=>d.available).map((diagnoser) => (
 
                                 <div
                                     key={diagnoser.code}

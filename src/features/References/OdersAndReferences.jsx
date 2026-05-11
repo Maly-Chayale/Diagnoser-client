@@ -1,12 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { close, closeOrder, InitReferences, updateReference } from './ReferencesSlice';
-import { InitWorkShops } from '../WorkShop/WorkShopSlice';
+import { close, closeOrder, deleteReference, InitReferences, updateReference } from './ReferencesSlice';
+import { GetDiagnosersOfThisWorkshop, InitWorkShops } from '../WorkShop/WorkShopSlice';
 import { fetchStatus } from '../Statuss/StatusSlice';
 import { useNavigate } from 'react-router-dom';
 import './DiagnoserProfil.css';
 import { payToManager } from '../Diagnosers/DiagnoserSlice';
 import BookingPopup from './BookingPopup';
+import BookingPopupDetails from './BookingPopupDetails';
+import CancelPopup from './CancelPopup';
 
 const OdersAndReferences = () => {
     const dispatch = useDispatch();
@@ -21,7 +23,10 @@ const OdersAndReferences = () => {
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers)
     const statuss = useSelector(state => state.Status.statuss);
 
+    const diagnosersWorkshop = useSelector(state => state.WorkShop.Diagnosers);
+
     const [activeBooking, setActiveBooking] = useState(null);
+    const [activeBookingDetails, setActiveBookingDetails] = useState(null);
     const [amountPaid, setAmountPaid] = useState(0);
     const [remaining, setRemaining] = useState(0);
     const [filter, setFilter] = useState("all");
@@ -36,10 +41,10 @@ const OdersAndReferences = () => {
         loading();
     }, [status, dispatch]);
 
-    const customerName = (code) => customers.find(c => c.code === code)?.name || '';
+    const customer = (code) => customers.find(c => c.code === code);
     const getWorkshop = (code) => workshops.find(w => w.code === code);
     const codeDiagnoser = (code) => getWorkshop(code)?.codeDiagnoser || '';
-    const getNameDiagnoser = (code) => diagnosers.find(d => d.code === codeDiagnoser(code))?.name || '';
+    const getDiagnoser = (code) => diagnosers.find(d => d.code === codeDiagnoser(code));
     const priceWorkshop = (code) => getWorkshop(code)?.price || 0;
     const getTypeGroup = (code) => statuss.find(t => t.code == code)?.description;
 
@@ -51,6 +56,7 @@ const OdersAndReferences = () => {
 
     const handleApprove = (booking) => setActiveBooking({ ...booking });
     const handleCancel = () => setActiveBooking(null);
+    const handleCancelDetails = () => setActiveBookingDetails(null);
     const handleSave = async () => {
         await dispatch(updateReference(activeBooking));
         await dispatch(closeOrder(activeBooking.code));
@@ -58,18 +64,16 @@ const OdersAndReferences = () => {
         await dispatch(InitReferences());
         setActiveBooking(null);
     };
-    const handlePayment = async () => {
-        if (!amountPaid || amountPaid <= 0) return;
-        await dispatch(payToManager({ code: user.code, num: amountPaid }));
-        setRemaining(prev => prev - amountPaid);
-        setAmountPaid(0);
-    };
 
-    const string = (d) =>
-        getNameDiagnoser(d.codeWorkshop).toLowerCase() + " " +
-        d.date +
-        customerName(d.codeCustomer).toLowerCase() +
-        d.comments + " " + d.adress + " " + d.codeWorkshop;
+    const string = (d) => {
+        const diag = getDiagnoser(d.codeWorkshop);
+        return diag?.name + " " +
+            diag?.mail + " " +
+            d.date +
+            customer(d.codeCustomer)?.name + "" +
+            customer(d.codeCustomer)?.mail +
+            d.comments + " " + d.adress + " " + d.codeWorkshop
+    }
 
     const filteredpay = references?.filter((d) => {
         if (filter === "all") return true;
@@ -80,6 +84,118 @@ const OdersAndReferences = () => {
 
     const filtered = useMemo(() =>
         filteredpay.filter(s => string(s).toLowerCase().includes(search.toLowerCase())), [filteredpay, search]);
+
+
+
+
+
+
+
+
+
+
+    const workshopDiagnoser = (codeDiagnoser) => {
+        return workshops.filter(w => w.codeDiagnoser == codeDiagnoser)
+    }
+
+
+    const [activeCancelBooking, setActiveCancelBooking] = useState(null);
+
+    const handleOpenCancelPopup = async (booking) => {
+        // הבאת המאבחנות החלופיות
+        await dispatch(GetDiagnosersOfThisWorkshop(getWorkshop(booking.codeWorkshop)));
+        // const alternativeDiagnosers = res.payload || [];
+        setActiveCancelBooking(booking);
+    };
+
+    const handleCloseCancelPopup = () => {
+        setActiveCancelBooking(null);
+    };
+
+    const handleConfirmCancel = async () => {
+        if (!activeCancelBooking) return;
+
+        const workshop = getWorkshop(activeCancelBooking.codeWorkshop);
+        const morf = workshop.morfology;
+        const graf = workshop.grafology;
+        const chi = workshop.chirology;
+        const typeGroup = workshop.typeGroup;
+
+        // הבאת המאבחנות החלופיות
+        // const res = await dispatch(GetDiagnosersOfThisWorkshop(workshop));
+        // const alternativeDiagnosers = res.payload || [];
+
+        // בניית תוכן מייל עם טבלת HTML מעוצבת
+        const tableRows = diagnosersWorkshop.filter(d => d.code !== workshop.codeDiagnoser).map((d, index) =>
+            `<tr style="background-color: ${index % 2 === 0 ? '#f9f9f9' : '#ffffff'};">
+            <td style="padding: 8px; border: 1px solid #ccc;">${d.name}</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">${d.mail}</td>
+            <td style="padding: 8px; border: 1px solid #ccc; text-align: center;">${workshopDiagnoser(d.code).find(w =>
+                w.morfology == workshop.morfology &&
+                w.grafology == workshop.grafology &&
+                w.chirology == workshop.chirology &&
+                w.typeGroup == workshop.typeGroup)?.accontOfPeople || 0
+            }</td>
+            <td style="padding: 8px; border: 1px solid #ccc; text-align: right;">${workshopDiagnoser(d.code).find(w =>
+                w.morfology == workshop.morfology &&
+                w.grafology == workshop.grafology &&
+                w.chirology == workshop.chirology &&
+                w.typeGroup == workshop.typeGroup)?.price || 0
+            }</td>
+        </tr>`
+        ).join("");
+
+        const mailBody = `
+<p>שלום ${customer(activeCancelBooking.codeCustomer)?.name},</p>
+
+<p>לצערנו, המאבחנת שנבחרה לסדנא <strong>${workshop.code}</strong> אינה זמינה.</p>
+
+<p>להלן המאבחנות החלופיות עם פרטי הסדנא:</p>
+
+<table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
+    <thead>
+        <tr style="background-color: #007BFF; color: white;">
+            <th style="padding: 8px; border: 1px solid #ccc;">שם</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">מייל</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">כמות משתתפים</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">כסף</th>
+        </tr>
+    </thead>
+    <tbody>
+        ${tableRows}
+    </tbody>
+</table>
+
+<p>בברכה,</p>
+<p>צוות הסדנאות</p>
+`;
+
+        const mailSubject = `ביטול סדנא ${workshop.code}`;
+
+        // מחיקת הרפרנס
+        await dispatch(deleteReference(activeCancelBooking));
+
+        // רענון הטבלה והסתרת הפופאפ
+        dispatch(InitReferences());
+        setActiveCancelBooking(null);
+
+
+        // שליחת מייל
+        window.location.href =
+            `mailto:${customer(activeCancelBooking.codeCustomer)?.mail}?subject=${mailSubject}&body=${mailBody}`;
+    };
+
+
+
+
+
+
+
+
+
+
+
+
 
     if (!status || status === "loading") return <>טוען נתונים...</>;
 
@@ -114,15 +230,18 @@ const OdersAndReferences = () => {
                         <thead>
                             <tr>
                                 <th>תאריך</th>
-                                <th>שעה</th>
+                                {/* <th>שעה</th> */}
                                 <th>לקוח</th>
-                                <th>מיקום</th>
+                                {/* <th>מייל לקוח</th> */}
+                                {/* <th>מיקום</th> */}
                                 {statusUser === "Esty" && <th>מאבחנת</th>}
+                                {/* {statusUser === "Esty" && <th>מייל מאבחנת</th>} */}
                                 <th>סדנא</th>
                                 <th>תשלום</th>
                                 <th>אחוזים</th>
                                 <th>סטטוס</th>
-                                <th>הערות</th>
+                                <th></th>
+                                {/* <th>הערות</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -130,23 +249,40 @@ const OdersAndReferences = () => {
                                 (r.status != 1 && (statusUser === "Esty" || codeDiagnoser(r.codeWorkshop) === user.code)) && (
                                     <tr key={i} className="hover-row">
                                         <td>{r.date}</td>
-                                        <td>{r.time}</td>
-                                        <td>{customerName(r.codeCustomer)}</td>
-                                        <td>{r.adress}</td>
-                                        {statusUser === "Esty" && <td>{getNameDiagnoser(r.codeWorkshop)}</td>}
+                                        {/* <td>{r.time}</td> */}
+                                        <td>{customer(r.codeCustomer)?.name}</td>
+                                        {/* <td>{customer(r.codeCustomer)?.mail}</td> */}
+                                        {/* <td>{r.adress}</td> */}
+                                        {statusUser === "Esty" && <td>{getDiagnoser(r.codeWorkshop)?.name}</td>}
+                                        {/* {statusUser === "Esty" && <td>{getDiagnoser(r.codeWorkshop)?.mail}</td>} */}
                                         <td>
                                             <button className='link-btn' onClick={() => navigate(`/WorkshopDetails/${r.codeWorkshop}`)}> {r.codeWorkshop} </button>
                                         </td>
                                         <td>{priceWorkshop(r.codeWorkshop)}</td>
                                         <td>{priceWorkshop(r.codeWorkshop) * 0.1}</td>
                                         <td>{getTypeGroup(r.status)}</td>
-                                        <td>{r.comments}</td>
+                                        {/* <td>{r.comments}</td> */}
+                                        {/* טבלה תורים פעילים */}
+                                        <td>
+                                            <button className="details-button" onClick={() => setActiveBookingDetails(r)}>
+                                                פרטים
+                                            </button>
+                                        </td>
+
+
                                     </tr>
                                 )
                             ))}
                         </tbody>
                     </table>
                 </div>
+
+                <BookingPopupDetails
+                    booking={activeBookingDetails}
+                    handleCancel={handleCancelDetails} // <--- שם עקבי
+                    getDiagnoser={getDiagnoser}
+                    customer={customer}
+                />
 
                 {/* טבלה שמאלית - תורים בהמתנה */}
                 <div className="table-card fade-in delay">
@@ -156,9 +292,12 @@ const OdersAndReferences = () => {
                             <tr>
                                 <th>תאריך</th>
                                 <th>לקוח</th>
+                                {/* <th>מייל לקוח</th> */}
                                 {statusUser === "Esty" && <th>מאבחנת</th>}
+                                {/* {statusUser === "Esty" && <th>מייל מאבחנת</th>} */}
                                 <th>סדנא</th>
-                                <th>פעולה</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -166,13 +305,20 @@ const OdersAndReferences = () => {
                                 (r.status == 1 && (statusUser === "Esty" || codeDiagnoser(r.codeWorkshop) === user.code)) && (
                                     <tr key={i} className="hover-row">
                                         <td>{r.date}</td>
-                                        <td>{customerName(r.codeCustomer)}</td>
-                                        {statusUser === "Esty" && <td>{getNameDiagnoser(r.codeWorkshop)}</td>}
+                                        <td>{customer(r.codeCustomer)?.name}</td>
+                                        {/* <td>{customer(r.codeCustomer)?.mail}</td> */}
+                                        {statusUser === "Esty" && <td>{getDiagnoser(r.codeWorkshop)?.name}</td>}
+                                        {/* {statusUser === "Esty" && <td>{getDiagnoser(r.codeWorkshop)?.mail}</td>} */}
                                         <td>
                                             <button className='link-btn' onClick={() => navigate(`/WorkshopDetails/${r.codeWorkshop}`)}> {r.codeWorkshop} </button>
                                         </td>
                                         <td>
                                             <button className="profile-button" onClick={() => handleApprove(r)}>אשר</button>
+                                        </td>
+                                        <td>
+                                            <button className="profile-button cancel-button" onClick={() => handleOpenCancelPopup(r)}>
+                                                ביטול
+                                            </button>
                                         </td>
                                     </tr>
                                 )
@@ -181,32 +327,27 @@ const OdersAndReferences = () => {
                     </table>
                 </div>
 
+
+                <CancelPopup
+                    booking={activeCancelBooking}
+                    customer={customer}
+                    handleCancel={handleCloseCancelPopup}
+                    handleConfirm={handleConfirmCancel}
+                />
+
+
+
                 {/* פופאפ */}
                 <BookingPopup
                     booking={activeBooking}
-                    customerName={customerName}
-                    getNameDiagnoser={getNameDiagnoser}
+                    customer={customer}
+                    // getDiagnoser={getDiagnoser}
                     handleSave={handleSave}
                     handleCancel={handleCancel}
                     setBooking={setActiveBooking}
                 />
 
-                {/* תיבת תשלום למשתמשים שאינם Esty */}
-                {statusUser !== "Esty" && (
-                    <div className="payment-box">
-                        <h3>התחשבנות עם מנהלת</h3>
-                        <div>נותר לתשלום: {remaining}</div>
-                        <input
-                            type="number"
-                            value={amountPaid}
-                            onChange={(e) => setAmountPaid(Number(e.target.value))}
-                            placeholder="הכנס סכום ששולם"
-                        />
-                        <button className="profile-button" onClick={handlePayment}>
-                            אישור תשלום
-                        </button>
-                    </div>
-                )}
+
             </div>
         </div>
     );

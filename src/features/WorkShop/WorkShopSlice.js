@@ -69,7 +69,7 @@ export const getType = createAsyncThunk('getType',
     async (workShop, { rejectWithValue }) => {
         try {
             const res = await axios.post('https://localhost:7082/api/WorkShops/Type', workShop, { headers });
-            return res;
+            return res.data;
         } catch (err) {
             return rejectWithValue(err.response?.data || err.message);
         }
