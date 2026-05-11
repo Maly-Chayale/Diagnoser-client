@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { close, closeOrder, InitReferences, updateReference } from './ReferencesSlice';
+import { close, closeOrder, deleteReference, InitReferences, updateReference } from './ReferencesSlice';
 import { GetDiagnosersOfThisWorkshop, InitWorkShops } from '../WorkShop/WorkShopSlice';
 import { fetchStatus } from '../Statuss/StatusSlice';
 import { useNavigate } from 'react-router-dom';
@@ -100,12 +100,17 @@ const OdersAndReferences = () => {
 
 
 
-
+    const workshopDiagnoser = (codeDiagnoser) => {
+        return workshops.filter(w => w.codeDiagnoser == codeDiagnoser)
+    }
 
 
     const [activeCancelBooking, setActiveCancelBooking] = useState(null);
 
-    const handleOpenCancelPopup = (booking) => {
+    const handleOpenCancelPopup = async (booking) => {
+        // הבאת המאבחנות החלופיות
+        await dispatch(GetDiagnosersOfThisWorkshop(getWorkshop(booking.codeWorkshop)));
+        // const alternativeDiagnosers = res.payload || [];
         setActiveCancelBooking(booking);
     };
 
@@ -113,30 +118,40 @@ const OdersAndReferences = () => {
         setActiveCancelBooking(null);
     };
 
- const handleConfirmCancel = async () => {
-    if (!activeCancelBooking) return;
+    const handleConfirmCancel = async () => {
+        if (!activeCancelBooking) return;
 
-    const workshop = getWorkshop(activeCancelBooking.codeWorkshop);
-    const morf = workshop.morfology;
-    const graf = workshop.grafology;
-    const chi = workshop.chirology;
-    const typeGroup = workshop.typeGroup;
+        const workshop = getWorkshop(activeCancelBooking.codeWorkshop);
+        const morf = workshop.morfology;
+        const graf = workshop.grafology;
+        const chi = workshop.chirology;
+        const typeGroup = workshop.typeGroup;
 
-    // הבאת המאבחנות החלופיות
-    const res = await dispatch(GetDiagnosersOfThisWorkshop(workshop));
-    // const alternativeDiagnosers = res.payload || [];
+        // הבאת המאבחנות החלופיות
+        // const res = await dispatch(GetDiagnosersOfThisWorkshop(workshop));
+        // const alternativeDiagnosers = res.payload || [];
 
-    // בניית תוכן מייל עם טבלת HTML מעוצבת
-    const tableRows = diagnosersWorkshop.map((d, index) =>
-        `<tr style="background-color: ${index % 2 === 0 ? '#f9f9f9' : '#ffffff'};">
+        // בניית תוכן מייל עם טבלת HTML מעוצבת
+        const tableRows = diagnosersWorkshop.filter(d => d.code !== workshop.codeDiagnoser).map((d, index) =>
+            `<tr style="background-color: ${index % 2 === 0 ? '#f9f9f9' : '#ffffff'};">
             <td style="padding: 8px; border: 1px solid #ccc;">${d.name}</td>
             <td style="padding: 8px; border: 1px solid #ccc;">${d.mail}</td>
-            <td style="padding: 8px; border: 1px solid #ccc; text-align: center;">${d.accontOfPeople || 0}</td>
-            <td style="padding: 8px; border: 1px solid #ccc; text-align: right;">${d.price || 0}</td>
+            <td style="padding: 8px; border: 1px solid #ccc; text-align: center;">${workshopDiagnoser(d.code).find(w =>
+                w.morfology == workshop.morfology &&
+                w.grafology == workshop.grafology &&
+                w.chirology == workshop.chirology &&
+                w.typeGroup == workshop.typeGroup)?.accontOfPeople || 0
+            }</td>
+            <td style="padding: 8px; border: 1px solid #ccc; text-align: right;">${workshopDiagnoser(d.code).find(w =>
+                w.morfology == workshop.morfology &&
+                w.grafology == workshop.grafology &&
+                w.chirology == workshop.chirology &&
+                w.typeGroup == workshop.typeGroup)?.price || 0
+            }</td>
         </tr>`
-    ).join("");
+        ).join("");
 
-    const mailBody = `
+        const mailBody = `
 <p>שלום ${customer(activeCancelBooking.codeCustomer)?.name},</p>
 
 <p>לצערנו, המאבחנת שנבחרה לסדנא <strong>${workshop.code}</strong> אינה זמינה.</p>
@@ -161,22 +176,20 @@ const OdersAndReferences = () => {
 <p>צוות הסדנאות</p>
 `;
 
-    const mailSubject = `ביטול סדנא ${workshop.code}`;
+        const mailSubject = `ביטול סדנא ${workshop.code}`;
 
-    // שליחת מייל
+        // מחיקת הרפרנס
+        await dispatch(deleteReference(activeCancelBooking));
+
+        // רענון הטבלה והסתרת הפופאפ
+        dispatch(InitReferences());
+        setActiveCancelBooking(null);
 
 
-    window.location.href =
+        // שליחת מייל
+        window.location.href =
             `mailto:${customer(activeCancelBooking.codeCustomer)?.mail}?subject=${mailSubject}&body=${mailBody}`;
-
-
-    // מחיקת הרפרנס
-    await dispatch(deleteReference(activeCancelBooking));
-
-    // רענון הטבלה והסתרת הפופאפ
-    dispatch(InitReferences());
-    setActiveCancelBooking(null);
-};
+    };
 
 
 
