@@ -38,13 +38,13 @@
 /* GRID */
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 5px; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px; 
     justify-items: center;
 }
 
 /* CARD */
-.card {
+/* .card {
     background: white;
     border: 2px solid #e5e7eb;
     border-radius: 20px;
@@ -54,13 +54,14 @@
     overflow: hidden;
     transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
     animation: fadeUp 0.5s ease forwards;
-    width: 280px; /* רוחב כרטיס כמו בהתחלה */
+    width: 280px;
 }
 
 .card:hover {
+     transform: scale(-5px);
     transform: translateY(-12px) scale(1.04);
     border-color: #60a5fa;
-    box-shadow: 0 25px 60px rgba(24, 128, 255, 0.25),
+    box-shadow: 0 40p 60px rgba(24, 128, 255, 0.25),
                 0 10px 25px rgba(64, 0, 255, 0.2);
 }
 
@@ -75,12 +76,95 @@
 
 .card:hover::before {
     opacity: 0.15;
+     transform: scale(-5px);
+}
+
+.card * {
+    position: relative;
+    z-index: 1;
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: fadeUp 0.5s ease forwards;
+    width: 280px;
+}
+/* מצב hover חדש - חזק יותר */
+.card:hover {
+    transform: translateY(-14px) scale(1.04);
+    border-color: #60a5fa;
+    box-shadow:
+        0 25px 60px rgba(24, 128, 255, 0.35),
+        0 10px 25px rgba(64, 0, 255, 0.25);
+}
+
+/* BUTTON HOVER GROW */
+.card:hover .primary-btn1 {
+    transform: scale(-5px);
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(150deg, #60a5fa, #a78bfa);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.card:hover::before {
+    opacity: 0.18; /* חזק יותר ממה שהיה */
 }
 
 .card * {
     position: relative;
     z-index: 1;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* BUTTON HOVER GROW */
+
 
 /* NAME */
 .name {

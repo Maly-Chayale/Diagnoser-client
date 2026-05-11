@@ -100,7 +100,6 @@
 /* BUTTON HOVER GROW */
 .card:hover .primary-btn1 {
     transform: scale(-5px);
-    
 }
 
 .card::before {
