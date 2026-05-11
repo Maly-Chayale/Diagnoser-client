@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import './DiagnoserProfil.css';
 import { payToManager } from '../Diagnosers/DiagnoserSlice';
 import BookingPopup from './BookingPopup';
+import BookingPopupDetails from './BookingPopupDetails';
 
 const OdersAndReferences = () => {
     const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const OdersAndReferences = () => {
     const statuss = useSelector(state => state.Status.statuss);
 
     const [activeBooking, setActiveBooking] = useState(null);
+    const [activeBookingDetails, setActiveBookingDetails] = useState(null);
     const [amountPaid, setAmountPaid] = useState(0);
     const [remaining, setRemaining] = useState(0);
     const [filter, setFilter] = useState("all");
@@ -36,10 +38,10 @@ const OdersAndReferences = () => {
         loading();
     }, [status, dispatch]);
 
-    const customerName = (code) => customers.find(c => c.code === code)?.name || '';
+    const customer = (code) => customers.find(c => c.code === code);
     const getWorkshop = (code) => workshops.find(w => w.code === code);
     const codeDiagnoser = (code) => getWorkshop(code)?.codeDiagnoser || '';
-    const getNameDiagnoser = (code) => diagnosers.find(d => d.code === codeDiagnoser(code))?.name || '';
+    const getDiagnoser = (code) => diagnosers.find(d => d.code === codeDiagnoser(code));
     const priceWorkshop = (code) => getWorkshop(code)?.price || 0;
     const getTypeGroup = (code) => statuss.find(t => t.code == code)?.description;
 
@@ -51,6 +53,7 @@ const OdersAndReferences = () => {
 
     const handleApprove = (booking) => setActiveBooking({ ...booking });
     const handleCancel = () => setActiveBooking(null);
+    const handleCancelDetails = () => setActiveBookingDetails(null);
     const handleSave = async () => {
         await dispatch(updateReference(activeBooking));
         await dispatch(closeOrder(activeBooking.code));
@@ -65,11 +68,15 @@ const OdersAndReferences = () => {
         setAmountPaid(0);
     };
 
-    const string = (d) =>
-        getNameDiagnoser(d.codeWorkshop).toLowerCase() + " " +
-        d.date +
-        customerName(d.codeCustomer).toLowerCase() +
-        d.comments + " " + d.adress + " " + d.codeWorkshop;
+    const string = (d) => {
+        const diag = getDiagnoser(d.codeWorkshop);
+        return diag?.name + " " +
+            diag?.mail + " " +
+            d.date +
+            customer(d.codeCustomer)?.name +""+
+            customer(d.codeCustomer)?.mail +
+            d.comments + " " + d.adress + " " + d.codeWorkshop
+    }
 
     const filteredpay = references?.filter((d) => {
         if (filter === "all") return true;
@@ -116,8 +123,10 @@ const OdersAndReferences = () => {
                                 <th>תאריך</th>
                                 {/* <th>שעה</th> */}
                                 <th>לקוח</th>
+                                {/* <th>מייל לקוח</th> */}
                                 {/* <th>מיקום</th> */}
                                 {statusUser === "Esty" && <th>מאבחנת</th>}
+                                {/* {statusUser === "Esty" && <th>מייל מאבחנת</th>} */}
                                 <th>סדנא</th>
                                 <th>תשלום</th>
                                 <th>אחוזים</th>
@@ -131,9 +140,11 @@ const OdersAndReferences = () => {
                                     <tr key={i} className="hover-row">
                                         <td>{r.date}</td>
                                         {/* <td>{r.time}</td> */}
-                                        <td>{customerName(r.codeCustomer)}</td>
+                                        <td>{customer(r.codeCustomer)?.name}</td>
+                                        {/* <td>{customer(r.codeCustomer)?.mail}</td> */}
                                         {/* <td>{r.adress}</td> */}
-                                        {statusUser === "Esty" && <td>{getNameDiagnoser(r.codeWorkshop)}</td>}
+                                        {statusUser === "Esty" && <td>{getDiagnoser(r.codeWorkshop)?.name}</td>}
+                                        {/* {statusUser === "Esty" && <td>{getDiagnoser(r.codeWorkshop)?.mail}</td>} */}
                                         <td>
                                             <button className='link-btn' onClick={() => navigate(`/WorkshopDetails/${r.codeWorkshop}`)}> {r.codeWorkshop} </button>
                                         </td>
@@ -143,7 +154,7 @@ const OdersAndReferences = () => {
                                         {/* <td>{r.comments}</td> */}
                                         {/* טבלה תורים פעילים */}
                                         <td>
-                                            <button className="details-button" onClick={() => setActiveBooking(r)}>
+                                            <button className="details-button" onClick={() => setActiveBookingDetails(r)}>
                                                 פרטים
                                             </button>
                                         </td>
@@ -156,10 +167,11 @@ const OdersAndReferences = () => {
                     </table>
                 </div>
 
-                {/* פופאפ */}
                 <BookingPopupDetails
-                    booking={activeBooking}
-                    handleCancel={() => setActiveBooking(null)}
+                    booking={activeBookingDetails}
+                    handleCancel={handleCancelDetails} // <--- שם עקבי
+                    getDiagnoser={getDiagnoser}
+                    customer={customer}
                 />
 
                 {/* טבלה שמאלית - תורים בהמתנה */}
@@ -170,7 +182,9 @@ const OdersAndReferences = () => {
                             <tr>
                                 <th>תאריך</th>
                                 <th>לקוח</th>
+                                {/* <th>מייל לקוח</th> */}
                                 {statusUser === "Esty" && <th>מאבחנת</th>}
+                                {/* {statusUser === "Esty" && <th>מייל מאבחנת</th>} */}
                                 <th>סדנא</th>
                                 <th>פעולה</th>
                             </tr>
@@ -180,8 +194,10 @@ const OdersAndReferences = () => {
                                 (r.status == 1 && (statusUser === "Esty" || codeDiagnoser(r.codeWorkshop) === user.code)) && (
                                     <tr key={i} className="hover-row">
                                         <td>{r.date}</td>
-                                        <td>{customerName(r.codeCustomer)}</td>
-                                        {statusUser === "Esty" && <td>{getNameDiagnoser(r.codeWorkshop)}</td>}
+                                        <td>{customer(r.codeCustomer)?.name}</td>
+                                        {/* <td>{customer(r.codeCustomer)?.mail}</td> */}
+                                        {statusUser === "Esty" && <td>{getDiagnoser(r.codeWorkshop)?.name}</td>}
+                                        {/* {statusUser === "Esty" && <td>{getDiagnoser(r.codeWorkshop)?.mail}</td>} */}
                                         <td>
                                             <button className='link-btn' onClick={() => navigate(`/WorkshopDetails/${r.codeWorkshop}`)}> {r.codeWorkshop} </button>
                                         </td>
@@ -198,8 +214,8 @@ const OdersAndReferences = () => {
                 {/* פופאפ */}
                 <BookingPopup
                     booking={activeBooking}
-                    customerName={customerName}
-                    getNameDiagnoser={getNameDiagnoser}
+                    customer={customer}
+                    // getDiagnoser={getDiagnoser}
                     handleSave={handleSave}
                     handleCancel={handleCancel}
                     setBooking={setActiveBooking}

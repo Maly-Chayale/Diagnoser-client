@@ -1,14 +1,15 @@
 import React from 'react';
 import './DiagnoserProfil.css';
 
-const BookingPopup = ({ booking, customerName, getNameDiagnoser, handleSave, handleCancel, setBooking }) => {
+const BookingPopup = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
     if (!booking) return null;
 
     return (
         <div className="popup-overlay">
             <div className="popup-content">
                 <h3>אישור סדנא {booking.codeWorkshop}</h3>
-                <p>לקוח: {customerName(booking.codeCustomer)}</p>
+                <p>לקוח: {customer(booking.codeCustomer)?.name}</p>
+                <p>מייל לקוח: {customer(booking.codeCustomer)?.mail}</p>
 
                 <label>תאריך:</label>
                 <input
