@@ -1,19 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    deleteWorkShop,
-    GetDiagnosersOfThisWorkshop,
-    InitWorkShops
-} from './WorkShopSlice';
-
-import {
-    addCustomer,
-    InitCustomer
-} from '../Customers/CustomerSlice';
-
+import { deleteWorkShop, GetDiagnosersOfThisWorkshop, InitWorkShops } from './WorkShopSlice';
+import { addCustomer, InitCustomer } from '../Customers/CustomerSlice';
 import { addReference } from '../References/ReferencesSlice';
 import { deleteLead } from '../Leads/LeadsSlice';
-
 import style from './WorkshopCard.module.css';
 
 function WorkshopCard({ WorkShop }) {

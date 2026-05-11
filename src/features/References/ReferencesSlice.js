@@ -59,21 +59,21 @@ export const pay = createAsyncThunk("pay",
     }
 )
 
-export const sendEmail = createAsyncThunk(
-  "email/sendEmail",
-  async ({ toEmail, subject, body }, { rejectWithValue }) => {
-    try {
-      const res = await axios.post("https://localhost:7082/api/Email/SendEmail", {
-        ToEmail: toEmail,
-        Subject: subject,
-        Body: body,
-      });
-      return res.data;
-    } catch (err) {
-      return rejectWithValue(err.response?.data || err.message);
-    }
-  }
-);
+// export const sendEmail = createAsyncThunk(
+//   "email/sendEmail",
+//   async ({ toEmail, subject, body }, { rejectWithValue }) => {
+//     try {
+//       const res = await axios.post("https://localhost:7082/api/Email/SendEmail", {
+//         ToEmail: toEmail,
+//         Subject: subject,
+//         Body: body,
+//       });
+//       return res.data;
+//     } catch (err) {
+//       return rejectWithValue(err.response?.data || err.message);
+//     }
+//   }
+// );
 
 // --- תיקון של close reducer ---
 const ReferencesSlice = createSlice({

@@ -1,13 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { close, closeOrder, InitReferences, updateReference } from './ReferencesSlice';
-import { InitWorkShops } from '../WorkShop/WorkShopSlice';
+import { GetDiagnosersOfThisWorkshop, InitWorkShops } from '../WorkShop/WorkShopSlice';
 import { fetchStatus } from '../Statuss/StatusSlice';
 import { useNavigate } from 'react-router-dom';
 import './DiagnoserProfil.css';
 import { payToManager } from '../Diagnosers/DiagnoserSlice';
 import BookingPopup from './BookingPopup';
 import BookingPopupDetails from './BookingPopupDetails';
+import CancelPopup from './CancelPopup';
 
 const OdersAndReferences = () => {
     const dispatch = useDispatch();
@@ -21,6 +22,8 @@ const OdersAndReferences = () => {
     const workshops = useSelector(state => state.WorkShop.WorkShops);
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers)
     const statuss = useSelector(state => state.Status.statuss);
+
+    const diagnosersWorkshop = useSelector(state => state.WorkShop.Diagnosers);
 
     const [activeBooking, setActiveBooking] = useState(null);
     const [activeBookingDetails, setActiveBookingDetails] = useState(null);
@@ -73,7 +76,7 @@ const OdersAndReferences = () => {
         return diag?.name + " " +
             diag?.mail + " " +
             d.date +
-            customer(d.codeCustomer)?.name +""+
+            customer(d.codeCustomer)?.name + "" +
             customer(d.codeCustomer)?.mail +
             d.comments + " " + d.adress + " " + d.codeWorkshop
     }
@@ -87,6 +90,105 @@ const OdersAndReferences = () => {
 
     const filtered = useMemo(() =>
         filteredpay.filter(s => string(s).toLowerCase().includes(search.toLowerCase())), [filteredpay, search]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+    const [activeCancelBooking, setActiveCancelBooking] = useState(null);
+
+    const handleOpenCancelPopup = (booking) => {
+        setActiveCancelBooking(booking);
+    };
+
+    const handleCloseCancelPopup = () => {
+        setActiveCancelBooking(null);
+    };
+
+ const handleConfirmCancel = async () => {
+    if (!activeCancelBooking) return;
+
+    const workshop = getWorkshop(activeCancelBooking.codeWorkshop);
+    const morf = workshop.morfology;
+    const graf = workshop.grafology;
+    const chi = workshop.chirology;
+    const typeGroup = workshop.typeGroup;
+
+    // הבאת המאבחנות החלופיות
+    const res = await dispatch(GetDiagnosersOfThisWorkshop(workshop));
+    // const alternativeDiagnosers = res.payload || [];
+
+    // בניית תוכן מייל עם טבלת HTML מעוצבת
+    const tableRows = diagnosersWorkshop.map((d, index) =>
+        `<tr style="background-color: ${index % 2 === 0 ? '#f9f9f9' : '#ffffff'};">
+            <td style="padding: 8px; border: 1px solid #ccc;">${d.name}</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">${d.mail}</td>
+            <td style="padding: 8px; border: 1px solid #ccc; text-align: center;">${d.accontOfPeople || 0}</td>
+            <td style="padding: 8px; border: 1px solid #ccc; text-align: right;">${d.price || 0}</td>
+        </tr>`
+    ).join("");
+
+    const mailBody = `
+<p>שלום ${customer(activeCancelBooking.codeCustomer)?.name},</p>
+
+<p>לצערנו, המאבחנת שנבחרה לסדנא <strong>${workshop.code}</strong> אינה זמינה.</p>
+
+<p>להלן המאבחנות החלופיות עם פרטי הסדנא:</p>
+
+<table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
+    <thead>
+        <tr style="background-color: #007BFF; color: white;">
+            <th style="padding: 8px; border: 1px solid #ccc;">שם</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">מייל</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">כמות משתתפים</th>
+            <th style="padding: 8px; border: 1px solid #ccc;">כסף</th>
+        </tr>
+    </thead>
+    <tbody>
+        ${tableRows}
+    </tbody>
+</table>
+
+<p>בברכה,</p>
+<p>צוות הסדנאות</p>
+`;
+
+    const mailSubject = `ביטול סדנא ${workshop.code}`;
+
+    // שליחת מייל
+
+
+    window.location.href =
+            `mailto:${customer(activeCancelBooking.codeCustomer)?.mail}?subject=${mailSubject}&body=${mailBody}`;
+
+
+    // מחיקת הרפרנס
+    await dispatch(deleteReference(activeCancelBooking));
+
+    // רענון הטבלה והסתרת הפופאפ
+    dispatch(InitReferences());
+    setActiveCancelBooking(null);
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
     if (!status || status === "loading") return <>טוען נתונים...</>;
 
@@ -131,6 +233,7 @@ const OdersAndReferences = () => {
                                 <th>תשלום</th>
                                 <th>אחוזים</th>
                                 <th>סטטוס</th>
+                                <th></th>
                                 {/* <th>הערות</th> */}
                             </tr>
                         </thead>
@@ -186,7 +289,8 @@ const OdersAndReferences = () => {
                                 {statusUser === "Esty" && <th>מאבחנת</th>}
                                 {/* {statusUser === "Esty" && <th>מייל מאבחנת</th>} */}
                                 <th>סדנא</th>
-                                <th>פעולה</th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -204,12 +308,27 @@ const OdersAndReferences = () => {
                                         <td>
                                             <button className="profile-button" onClick={() => handleApprove(r)}>אשר</button>
                                         </td>
+                                        <td>
+                                            <button className="profile-button cancel-button" onClick={() => handleOpenCancelPopup(r)}>
+                                                ביטול
+                                            </button>
+                                        </td>
                                     </tr>
                                 )
                             ))}
                         </tbody>
                     </table>
                 </div>
+
+
+                <CancelPopup
+                    booking={activeCancelBooking}
+                    customer={customer}
+                    handleCancel={handleCloseCancelPopup}
+                    handleConfirm={handleConfirmCancel}
+                />
+
+
 
                 {/* פופאפ */}
                 <BookingPopup
@@ -221,22 +340,7 @@ const OdersAndReferences = () => {
                     setBooking={setActiveBooking}
                 />
 
-                {/* תיבת תשלום למשתמשים שאינם Esty */}
-                {statusUser !== "Esty" && (
-                    <div className="payment-box">
-                        <h3>התחשבנות עם מנהלת</h3>
-                        <div>נותר לתשלום: {remaining}</div>
-                        <input
-                            type="number"
-                            value={amountPaid}
-                            onChange={(e) => setAmountPaid(Number(e.target.value))}
-                            placeholder="הכנס סכום ששולם"
-                        />
-                        <button className="profile-button" onClick={handlePayment}>
-                            אישור תשלום
-                        </button>
-                    </div>
-                )}
+
             </div>
         </div>
     );
