@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteDiagnoser, InitDiagnoser } from './DiagnoserSlice';
+import { deleteDiagnoser, InitDiagnoser, updateDiagnoser } from './DiagnoserSlice';
 import AddDiagnosticianPopup from './AddDiagnosticianPopup';
 import { useNavigate } from 'react-router-dom';
 import style from './Diagnoser.module.css';
@@ -139,12 +139,56 @@ const DiagnoserList = () => {
                             📞 {highlight(d.phone, search)}
                         </p>
 
-                        {/* only show when NOT available */}
+                        {/* only show when NOT available
                         {!d.available && (
                             <span className={style["status-off"]}>
                                 ⛔ לא זמינה כרגע
                             </span>
-                        )}
+                        )} */}
+
+
+
+
+
+
+
+
+
+                        {statusUser === "Esty" && (
+    <button
+    className={d.available ? style["status-on"] : style["status-off"]}
+    onClick={() => {
+        const updatedDiagnoser = { ...d, available: !d.available };
+        dispatch(updateDiagnoser(updatedDiagnoser));
+    }}
+>
+    {d.available ? "✅ זמינה עכשיו" : "⛔ לא זמינה כרגע"}
+</button>
+)}
+
+
+
+                        {/* {statusUser === "Esty" && (
+    <button
+        className={style["primary-btn1"]}
+        onClick={() => {
+            const updatedDiagnoser = { ...d, available: !d.available };
+            dispatch(updateDiagnoser(updatedDiagnoser));
+        }}
+    >
+        {d.available ? "סמן כלא זמינה" : "סמן כזמינה"}
+    </button>
+)} */}
+
+
+
+
+
+
+
+
+
+
 
                         <button
                             className={style["primary-btn1"]}

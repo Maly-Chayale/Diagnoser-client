@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addWorkShop, GetDiagnosersOfConditions, InitWorkShops } from './WorkShopSlice';
 import style from './AddWorkshopModal.module.css';
 import { FaUser, FaDollarSign, FaTimes } from 'react-icons/fa';
+import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
 
 function AddWorkshopModal({ open, onClose }) {
     const dispatch = useDispatch();
-    const diagnosers = useSelector(s => s.WorkShop.Diagnosers);
+    const diagnosers = useSelector(s => s.Diagnoser.Diagnosers);
+    const status = useSelector(s => s.Diagnoser.status);
+    const [diagnosersCan, setDiagnosersCan] = useState([])
     const typeGroups = useSelector(s => s.TypeGroup.groups);
+    const statusUser = useSelector(state => state.LogIn.statusUser);
+    const user = useSelector(state => state.LogIn.thisUser);
+
+    useEffect(() => {
+        if(status==="")
+        dispatch(InitDiagnoser())
+    }, [dispatch, status])
 
     const [form, setForm] = useState({
         code: 0,
@@ -36,11 +46,16 @@ function AddWorkshopModal({ open, onClose }) {
         const { name, value, type, checked } = e.target;
         const updated = { ...form, [name]: type === "checkbox" ? checked : value };
         setForm(updated);
-        dispatch(GetDiagnosersOfConditions({
-            c: updated.chirology,
-            g: updated.grafology,
-            m: updated.morfology
-        }));
+        setDiagnosersCan(diagnosers.filter(d => {
+        if ((updated.chirology==true) && (d.chirology==false)) return false;
+        if ((updated.morfology==true) && (d.morphology==false)) return false;
+        if ((updated.grafology==true) && (d.graphology==false)) return false;
+        return true;
+        }
+
+        ))
+        console.log(diagnosersCan);
+
     };
 
     const handleContinue = () => setShowPreview(true);
@@ -70,7 +85,7 @@ function AddWorkshopModal({ open, onClose }) {
                 {showSuccess && (
                     <div className={style.successMessage}>
                         <svg className={style.successIcon} viewBox="0 0 24 24">
-                            <path className={style.checkmark} fill="none" stroke="#16a34a" strokeWidth="3" d="M20 6L9 17l-5-5"/>
+                            <path className={style.checkmark} fill="none" stroke="#16a34a" strokeWidth="3" d="M20 6L9 17l-5-5" />
                         </svg>
                         הסדנא נוספה בהצלחה !!!
                     </div>
@@ -130,10 +145,13 @@ function AddWorkshopModal({ open, onClose }) {
                         </div>
 
                         <div className={style.field}>
-                            <select className={`${style.select} ${form.codeDiagnoser ? style.filled : ''}`} name="codeDiagnoser" value={form.codeDiagnoser} onChange={handleChange}>
-                                <option value={0}>בחר מאבחנת</option>
-                                {diagnosers.map(d => <option key={d.code} value={d.code}>{d.name}</option>)}
-                            </select>
+                            {statusUser == "Esty" ?
+                                <select className={`${style.select} ${form.codeDiagnoser ? style.filled : ''}`} name="codeDiagnoser"
+                                    value={form.codeDiagnoser} onChange={handleChange}>
+                                    <option value={0}>בחר מאבחנת</option>
+                                    {diagnosersCan?.map(d => <option key={d.code} value={d.code}>{d.name} - {d.mail}</option>)}
+                                </select> :
+                                <p>{user.name}</p>}
                         </div>
 
                         <button
