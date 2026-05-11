@@ -1,29 +1,50 @@
-import React, { useState } from "react";
-import "./ProfileEditor.css";
+import React, { useEffect } from "react";
+import styles from "./ProfileCustomer.module.css";
 import { useSelector, useDispatch } from "react-redux";
-import { updateDiagnoser } from "../Diagnosers/DiagnoserSlice";
-import { UpdateUser } from "../SignIn/LogInSlice";
-import { getType } from "../WorkShop/WorkShopSlice";
+// import { TypeDescription } from "./ProfileSlice"; // נתיב לפי הפרויקט שלך
+import { TypeGroups } from "../TypeGroup/TypeGroupSlice"; // נתיב לפי הפרויקט שלך
+import { fetchTypeGroups } from '../TypeGroup/TypeGroupSlice';
 
-const ProfileEditor = () => {
-  const customer = useSelector(state => state.LogIn.thisUser);
+const ProfileCustomer = () => {
   const dispatch = useDispatch();
-
+  const customer = useSelector(state => state.LogIn.thisUser);
+  // const typeGroups = useSelector(state => state.TypeGroups.groups);
+  const typeGroups = useSelector(s => s.TypeGroup.groups);
 
 
   return (
-    <div className="profile-container">
-      <div className="profile-header2">שם: <br></br></div>
-      <div className="profile-header">{customer.name}</div><br></br>
-      <div className="profile-header2">מייל: <br></br></div>
-      <div className="profile-header">{customer.mail}</div><br></br>
-      <div className="profile-header2">פלאפון: <br></br></div>
-      <div className="profile-header">{customer.phone}</div><br></br>
-      <div className="profile-header2">סוג קבוצה: <br></br></div>
-      
+    <div className={styles.container}>
+      <div className={styles.card}>
+
+        <div className={styles.title}>
+          פרופיל לקוח
+        </div>
+
+        <div className={styles.row}>
+          <span className={styles.label}>שם</span>
+          <span className={styles.value}>{customer.name}</span>
+        </div>
+
+        <div className={styles.row}>
+          <span className={styles.label}>מייל</span>
+          <span className={styles.value}>{customer.mail}</span>
+        </div>
+
+        <div className={styles.row}>
+          <span className={styles.label}>טלפון</span>
+          <span className={styles.value}>{customer.phone}</span>
+        </div>
+
+        <div className={styles.row}>
+          <span className={styles.label}>סוג משתמש</span>
+          <span className={styles.badge}>
+            {typeGroups.find(t =>t.code == customer.codeType).description}
+          </span>
+        </div>
 
       </div>
+    </div>
   );
 };
 
-export default ProfileEditor;
+export default ProfileCustomer;

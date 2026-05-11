@@ -1,0 +1,167 @@
+/* ProfileEditor.module.css */
+
+.profileContainer {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    background: #ffffff;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* הכרטיס הראשי */
+.profileCard {
+    width: 420px;
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: all 0.35s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.profileCard::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    opacity: 0;
+    transition: 0.35s ease;
+}
+
+.profileCard:hover::before {
+    opacity: 0.08;
+}
+
+.profileCard:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 25px 60px rgba(96,165,250,0.25);
+}
+
+/* כותרת */
+.profileHeader {
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* שדות */
+.fieldWrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f3f4f6;
+    transition: 0.3s;
+}
+
+.fieldWrapper.editing {
+    transform: translateX(4px);
+}
+
+.fieldLabel {
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.fieldValue {
+    font-weight: 600;
+    color: #111827;
+}
+
+.editableInput {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 0.95rem;
+    outline: none;
+    transition: 0.2s;
+}
+
+.editableInput:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 5px rgba(96,165,250,0.3);
+}
+
+/* Badge דינמי */
+.badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(96,165,250,0.12);
+    color: #2563eb;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Checkbox */
+.checkboxContainer {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.checkboxContainer.editing input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.checkboxLabel {
+    font-weight: 600;
+    color: #111827;
+}
+
+/* כפתורים */
+.buttonContainer {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.profileButton {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: #60a5fa;
+    color: white;
+    transition: 0.3s;
+}
+
+.profileButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(96,165,250,0.3);
+}
+
+.cancelButton {
+    background: #f87171;
+}
+
+/* תשלום */
+.paymentSection {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 420px;
+}
+
+.paymentSection input[type="number"] {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.paymentSection input[type="number"]:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 5px rgba(96,165,250,0.3);
+}

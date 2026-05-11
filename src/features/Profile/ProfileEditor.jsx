@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./ProfileEditor.css";
+import styles from "./ProfileEditor.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { payToManager, updateDiagnoser } from "../Diagnosers/DiagnoserSlice";
 import { UpdateUser } from "../SignIn/LogInSlice";
@@ -17,11 +17,9 @@ const ProfileEditor = () => {
   const statusUser = useSelector(state => state.LogIn.statusUser);
   const references = useSelector(state => state.Reference.references);
 
-
   useEffect(() => {
     if (references.length && user) {
-      const total = user.precentagePayment
-
+      const total = user.precentagePayment;
       setRemaining(total);
     }
   }, [references, user]);
@@ -37,40 +35,38 @@ const ProfileEditor = () => {
 
   const saveEditing = async () => {
     setProfile({ ...tempProfile });
-    dispatch(UpdateUser(tempProfile))
-    await dispatch(updateDiagnoser(tempProfile))
+    dispatch(UpdateUser(tempProfile));
+    await dispatch(updateDiagnoser(tempProfile));
     setEditing(false);
-    console.log("פרופיל מעודכן:", tempProfile);
   };
 
   const renderField = (label, value, fieldKey, editable = true) => (
-    <div className={`field-wrapper ${editing && editable ? "editing" : ""}`}>
-      <span className="field-label">{label}:</span>
+    <div className={`${styles.fieldWrapper} ${editing && editable ? styles.editing : ""}`}>
+      <span className={styles.fieldLabel}>{label}:</span>
       {editing && editable ? (
         <input
-          className="editable-input"
+          className={styles.editableInput}
           value={tempProfile[fieldKey]}
           onChange={(e) => handleChange(fieldKey, e.target.value)}
         />
       ) : (
-        <span className="field-value">{value}</span>
+        <span className={styles.fieldValue}>{value}</span>
       )}
     </div>
   );
 
   const renderCheckbox = (label, fieldKey) => (
-    <div className={`checkbox-container ${editing ? "editing" : ""}`}>
+    <div className={`${styles.checkboxContainer} ${editing ? styles.editing : ""}`}>
       {editing ? (
         <>
           <input type="checkbox" checked={tempProfile[fieldKey]} onChange={() => handleCheckboxChange(fieldKey)} />
-          <span className="checkbox-label">{label}</span>
+          <span className={styles.checkboxLabel}>{label}</span>
         </>
       ) : (
-        <span className="field-value">{label}: {profile[fieldKey] ? "כן" : "לא"}</span>
+        <span className={styles.fieldValue}>{label}: {profile[fieldKey] ? "כן" : "לא"}</span>
       )}
     </div>
   );
-
 
   const handlePayment = async () => {
     if (!amountPaid || amountPaid <= 0) return;
@@ -81,50 +77,51 @@ const ProfileEditor = () => {
 
   return (
     <>
-      <div className="profile-container">
-        <div className="profile-header">שם: {profile.name}</div>
+      <div className={styles.profileContainer}>
+        <div className={styles.profileCard}>
+          <div className={styles.profileHeader}>שם: {profile.name}</div>
 
-        {renderField("קוד", profile.code, "code", false)}
-        {renderField("אימייל", profile.mail, "mail", false)}
-        {renderField("אחוז תשלום", profile.precentagePayment, "precentagePayment", false)}
-        {renderField("שם", profile.name, "name")}
-        {renderField("טלפון", profile.phone, "phone")}
+          {renderField("קוד", profile.code, "code", false)}
+          {renderField("אימייל", profile.mail, "mail", false)}
+          {renderField("אחוז תשלום", profile.precentagePayment, "precentagePayment", false)}
+          {renderField("שם", profile.name, "name")}
+          {renderField("טלפון", profile.phone, "phone")}
 
-        {renderCheckbox("מורפולוגיה", "morphology")}
-        {renderCheckbox("כירולוגיה", "chirology")}
-        {renderCheckbox("גרפולוגיה", "graphology")}
-        {renderCheckbox("זמינה", "available")}
+          {renderCheckbox("מורפולוגיה", "morphology")}
+          {renderCheckbox("כירולוגיה", "chirology")}
+          {renderCheckbox("גרפולוגיה", "graphology")}
+          {renderCheckbox("זמינה", "available")}
 
-        <div className="button-container">
-          {editing ? (
-            <>
-              <button className="profile-button" onClick={saveEditing}>שמירה</button>
-              <button className="profile-button cancel-button" onClick={cancelEditing}>ביטול</button>
-            </>
-          ) : (
-            <button className="profile-button" onClick={startEditing}>לשנות פרטים?</button>
-          )}
+          <div className={styles.buttonContainer}>
+            {editing ? (
+              <>
+                <button className={styles.profileButton} onClick={saveEditing}>שמירה</button>
+                <button className={`${styles.profileButton} ${styles.cancelButton}`} onClick={cancelEditing}>ביטול</button>
+              </>
+            ) : (
+              <button className={styles.profileButton} onClick={startEditing}>לשנות פרטים?</button>
+            )}
+          </div>
         </div>
+
+        {statusUser !== "Esty" && (
+          <div className={styles.paymentSection}>
+            <h3>התחשבנות עם מנהלת</h3>
+            <div>נותר לתשלום: {remaining}</div>
+
+            <input
+              type="number"
+              value={amountPaid}
+              onChange={(e) => setAmountPaid(Number(e.target.value))}
+              placeholder="הכנס סכום ששולם"
+            />
+
+            <button className={styles.profileButton} onClick={handlePayment}>
+              אישור תשלום
+            </button>
+          </div>
+        )}
       </div>
-
-      {statusUser !== "Esty" && (
-        <div >
-          <h3>התחשבנות עם מנהלת</h3>
-
-          <div>נותר לתשלום: {remaining}</div>
-
-          <input
-            type="number"
-            value={amountPaid}
-            onChange={(e) => setAmountPaid(Number(e.target.value))}
-            placeholder="הכנס סכום ששולם"
-          />
-
-          <button className="profile-button" onClick={handlePayment}>
-            אישור תשלום
-          </button>
-        </div>
-      )}
     </>
   );
 };

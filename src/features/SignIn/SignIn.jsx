@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { addLead, signIn } from './LogInSlice';
-import { fetchTypeGroups } from '../TypeGroup/TypeGroupSlice';
+import { fetchTypeGroups, TypeGroups } from '../TypeGroup/TypeGroupSlice';
 import { InitCustomer } from '../Customers/CustomerSlice';
 import { ProfilelogIn } from '../Profile/ProfileSlice';
 import { InitLeads } from '../Leads/LeadsSlice';
@@ -33,7 +33,7 @@ const SignIn = () => {
     const [err, setErr] = useState(false);
 
     useEffect(() => {
-        if (statusType === "") dispatch(fetchTypeGroups());
+        if (statusType === "") dispatch(TypeGroups());
     }, [statusType]);
 
     useEffect(() => {

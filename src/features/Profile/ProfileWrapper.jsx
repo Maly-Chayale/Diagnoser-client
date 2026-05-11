@@ -5,14 +5,8 @@ import ProfileCustomer from './ProfileCustomer';
 
 
 const ProfileWrapper = () => {
-
-
-    const dispatch = useDispatch()
     const statusUser = useSelector(state => state.LogIn.statusUser)
-    // const statusC = useSelector(state=>state.Customer.status)
-    // const statusD = useSelector(state=>state.Diagnoser.status)
-
-
+    
     return (
         <div className='col'>
           

@@ -14,7 +14,6 @@ import DiagnoserDetails from './features/Diagnosers/DiagnoserDetails';
 import SignIn from './features/SignIn/SignIn';
 import LoginPage from './features/Home/LoginPage';
 import LogIn from './features/SignIn/LogIn';
-// import WorkshopDetails from './features/WorkShop/WorkshopDetails';
 import ProfileWrapper from './features/Profile/ProfileWrapper';
 import OdersAndReferences from './features/References/OdersAndReferences';
 import ManagerPayments from './features/Profile/ManagerPayments';

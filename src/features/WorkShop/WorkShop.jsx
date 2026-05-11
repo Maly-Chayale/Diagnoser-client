@@ -8,7 +8,7 @@ import {
 
 import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
 
-import { fetchTypeGroups } from '../TypeGroup/TypeGroupSlice';
+import { fetchTypeGroups, TypeGroups } from '../TypeGroup/TypeGroupSlice';
 
 import AppointmentCard from './AppointmentCard';
 
@@ -40,7 +40,7 @@ function Workshop() {
 
         dispatch(InitDiagnoser());
 
-        dispatch(fetchTypeGroups());
+        dispatch(TypeGroups());
 
     }, [dispatch, status]);
 
