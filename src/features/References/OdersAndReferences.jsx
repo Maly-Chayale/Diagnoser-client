@@ -64,12 +64,6 @@ const OdersAndReferences = () => {
         await dispatch(InitReferences());
         setActiveBooking(null);
     };
-    const handlePayment = async () => {
-        if (!amountPaid || amountPaid <= 0) return;
-        await dispatch(payToManager({ code: user.code, num: amountPaid }));
-        setRemaining(prev => prev - amountPaid);
-        setAmountPaid(0);
-    };
 
     const string = (d) => {
         const diag = getDiagnoser(d.codeWorkshop);

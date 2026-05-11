@@ -58,9 +58,9 @@ const ProfileEditor = () => {
     </div>
   );
 
-  const renderCheckbox = (label, fieldKey) => (
+  const renderCheckbox = (label, fieldKey, editable = true) => (
     <div className={`checkbox-container ${editing ? "editing" : ""}`}>
-      {editing ? (
+      {editing && editable ? (
         <>
           <input type="checkbox" checked={tempProfile[fieldKey]} onChange={() => handleCheckboxChange(fieldKey)} />
           <span className="checkbox-label">{label}</span>
@@ -93,7 +93,7 @@ const ProfileEditor = () => {
         {renderCheckbox("מורפולוגיה", "morphology")}
         {renderCheckbox("כירולוגיה", "chirology")}
         {renderCheckbox("גרפולוגיה", "graphology")}
-        {renderCheckbox("זמינה", "available")}
+        {renderCheckbox("זמינה", "available", false)}
 
         <div className="button-container">
           {editing ? (

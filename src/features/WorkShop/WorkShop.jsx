@@ -22,6 +22,7 @@ function Workshop() {
     const dispatch = useDispatch();
 
     const workshops = useSelector(s => s.WorkShop.WorkShops);
+    const diagnosers = useSelector(state => state.Diagnoser.Diagnosers)
 
     const status = useSelector(s => s.WorkShop.status);
 
@@ -52,6 +53,9 @@ function Workshop() {
         ),
         [workshops, search]
     );
+
+        const getDiagnoser = (code) => diagnosers.find(d => d.code === code);
+
 
     if (status === "loading") return <div>טוען...</div>;
 
@@ -87,7 +91,7 @@ function Workshop() {
             <div className={style.grid}>
 
                 {
-                    filtered.map(w => (
+                    filtered.filter(w=>getDiagnoser(w.codeDiagnoser).available).map(w => (
 
                         <WorkshopCard
                             key={w.code}
