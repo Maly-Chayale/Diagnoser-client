@@ -132,6 +132,13 @@
     border-radius: 999px;
 }
 
+.status-on {
+    color: #28a745;
+    background: rgba(239,68,68,0.1);
+    padding: 6px 10px;
+    border-radius: 999px;
+}
+
 /* BUTTON */
 .primary-btn1 {
     width: 100%;

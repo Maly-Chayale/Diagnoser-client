@@ -78,7 +78,7 @@ function Workshop() {
 
             {
                 statusUser !== "cust" &&
-                statusUser !== "" && (
+                statusUser !== "cust" && (
 
                     <button
                         className={style.addBtn}
@@ -92,7 +92,7 @@ function Workshop() {
             <div className={style.grid}>
 
                 {
-                    filtered.filter(w=>getDiagnoser(w.codeDiagnoser).available).map(w => (
+                    filtered.filter(w=>getDiagnoser(w.codeDiagnoser)?.available).map(w => (
 
                         <WorkshopCard
                             key={w.code}
