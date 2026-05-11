@@ -139,12 +139,12 @@ const DiagnoserList = () => {
                             📞 {highlight(d.phone, search)}
                         </p>
 
-                        {/* only show when NOT available
+                        {/* only show when NOT available */}
                         {!d.available && (
                             <span className={style["status-off"]}>
                                 ⛔ לא זמינה כרגע
                             </span>
-                        )} */}
+                        )}
 
 
 
@@ -154,7 +154,7 @@ const DiagnoserList = () => {
 
 
 
-                        {statusUser === "Esty" && (
+{statusUser === "Esty" && (
     <button
     className={d.available ? style["status-on"] : style["status-off"]}
     onClick={() => {
