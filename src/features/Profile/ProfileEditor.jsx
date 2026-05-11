@@ -13,19 +13,22 @@ const ProfileEditor = () => {
   const [tempProfile, setTempProfile] = useState({ ...diagnostician });
   const [amountPaid, setAmountPaid] = useState(0);
   const [remaining, setRemaining] = useState(0);
+
   const user = useSelector(state => state.LogIn.thisUser);
   const statusUser = useSelector(state => state.LogIn.statusUser);
   const references = useSelector(state => state.Reference.references);
 
   useEffect(() => {
     if (references.length && user) {
-      const total = user.precentagePayment;
-      setRemaining(total);
+      setRemaining(user.precentagePayment);
     }
   }, [references, user]);
 
-  const handleChange = (field, value) => setTempProfile({ ...tempProfile, [field]: value });
-  const handleCheckboxChange = (field) => setTempProfile({ ...tempProfile, [field]: !tempProfile[field] });
+  const handleChange = (field, value) =>
+    setTempProfile({ ...tempProfile, [field]: value });
+
+  const handleCheckboxChange = (field) =>
+    setTempProfile({ ...tempProfile, [field]: !tempProfile[field] });
 
   const startEditing = () => setEditing(true);
   const cancelEditing = () => {
@@ -41,7 +44,9 @@ const ProfileEditor = () => {
   };
 
   const renderField = (label, value, fieldKey, editable = true) => (
-    <div className={`${styles.fieldWrapper} ${editing && editable ? styles.editing : ""}`}>
+    <div
+      className={`${styles.fieldWrapper} ${editing && editable ? styles.editing : ""}`}
+    >
       <span className={styles.fieldLabel}>{label}:</span>
       {editing && editable ? (
         <input
@@ -56,14 +61,22 @@ const ProfileEditor = () => {
   );
 
   const renderCheckbox = (label, fieldKey, editable = true) => (
-    <div className={`checkbox-container ${editing ? "editing" : ""}`}>
+    <div
+      className={`${styles.checkboxContainer} ${editing && editable ? styles.editing : ""}`}
+    >
       {editing && editable ? (
         <>
-          <input type="checkbox" checked={tempProfile[fieldKey]} onChange={() => handleCheckboxChange(fieldKey)} />
+          <input
+            type="checkbox"
+            checked={tempProfile[fieldKey]}
+            onChange={() => handleCheckboxChange(fieldKey)}
+          />
           <span className={styles.checkboxLabel}>{label}</span>
         </>
       ) : (
-        <span className={styles.fieldValue}>{label}: {profile[fieldKey] ? "כן" : "לא"}</span>
+        <span className={styles.fieldValue}>
+          {label}: {profile[fieldKey] ? "כן" : "לא"}
+        </span>
       )}
     </div>
   );
@@ -71,58 +84,62 @@ const ProfileEditor = () => {
   const handlePayment = async () => {
     if (!amountPaid || amountPaid <= 0) return;
     await dispatch(payToManager({ code: user.code, num: amountPaid }));
-    setRemaining(prev => prev - amountPaid);
+    setRemaining((prev) => prev - amountPaid);
     setAmountPaid(0);
   };
 
   return (
-    <>
-      <div className={styles.profileContainer}>
-        <div className={styles.profileCard}>
-          <div className={styles.profileHeader}>שם: {profile.name}</div>
+    <div className={styles.wrapper}>
+      {statusUser !== "Esty" && (
+        <div className={styles.paymentSection}>
+          <h3>התחשבנות עם מנהלת</h3>
+          <div>נותר לתשלום: {remaining}</div>
 
-          {renderField("קוד", profile.code, "code", false)}
-          {renderField("אימייל", profile.mail, "mail", false)}
-          {renderField("אחוז תשלום", profile.precentagePayment, "precentagePayment", false)}
-          {renderField("שם", profile.name, "name")}
-          {renderField("טלפון", profile.phone, "phone")}
+          <input
+            type="number"
+            value={amountPaid}
+            onChange={(e) => setAmountPaid(Number(e.target.value))}
+            placeholder="הכנס סכום ששולם"
+          />
+
+          <button className={styles.profileButton} onClick={handlePayment}>
+            אישור תשלום
+          </button>
+        </div>
+      )}
+
+      <div className={styles.profileContainer}>
+        <div className={styles.profileHeader}>שם: {profile.name}</div>
+
+        {renderField("קוד", profile.code, "code", false)}
+        {renderField("אימייל", profile.mail, "mail", false)}
+        {renderField("אחוז תשלום", profile.precentagePayment, "precentagePayment", false)}
+        {renderField("שם", profile.name, "name")}
+        {renderField("טלפון", profile.phone, "phone")}
 
         {renderCheckbox("מורפולוגיה", "morphology")}
         {renderCheckbox("כירולוגיה", "chirology")}
         {renderCheckbox("גרפולוגיה", "graphology")}
         {renderCheckbox("זמינה", "available", false)}
 
-          <div className={styles.buttonContainer}>
-            {editing ? (
-              <>
-                <button className={styles.profileButton} onClick={saveEditing}>שמירה</button>
-                <button className={`${styles.profileButton} ${styles.cancelButton}`} onClick={cancelEditing}>ביטול</button>
-              </>
-            ) : (
-              <button className={styles.profileButton} onClick={startEditing}>לשנות פרטים?</button>
-            )}
-          </div>
-        </div>
-
-        {statusUser !== "Esty" && (
-          <div className={styles.paymentSection}>
-            <h3>התחשבנות עם מנהלת</h3>
-            <div>נותר לתשלום: {remaining}</div>
-
-            <input
-              type="number"
-              value={amountPaid}
-              onChange={(e) => setAmountPaid(Number(e.target.value))}
-              placeholder="הכנס סכום ששולם"
-            />
-
-            <button className={styles.profileButton} onClick={handlePayment}>
-              אישור תשלום
+        <div className={styles.buttonContainer}>
+          {editing ? (
+            <>
+              <button className={`${styles.profileButton} ${styles.save}`} onClick={saveEditing}>
+                שמירה
+              </button>
+              <button className={`${styles.profileButton} ${styles.cancelButton}`} onClick={cancelEditing}>
+                ביטול
+              </button>
+            </>
+          ) : (
+            <button className={`${styles.profileButton} ${styles.edit}`} onClick={startEditing}>
+              לשנות פרטים?
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

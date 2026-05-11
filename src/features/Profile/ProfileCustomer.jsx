@@ -3,15 +3,19 @@ import styles from "./ProfileCustomer.module.css";
 import { useSelector, useDispatch } from "react-redux";
 // import { TypeDescription } from "./ProfileSlice"; // נתיב לפי הפרויקט שלך
 import { TypeGroups } from "../TypeGroup/TypeGroupSlice"; // נתיב לפי הפרויקט שלך
-import { fetchTypeGroups } from '../TypeGroup/TypeGroupSlice';
+// import { fetchTypeGroups } from '../TypeGroup/TypeGroupSlice';
 
 const ProfileCustomer = () => {
   const dispatch = useDispatch();
   const customer = useSelector(state => state.LogIn.thisUser);
-  // const typeGroups = useSelector(state => state.TypeGroups.groups);
   const typeGroups = useSelector(s => s.TypeGroup.groups);
+  const status = useSelector(s => s.TypeGroup.status);
 
-
+useEffect(() => {
+        if (status === "") 
+          dispatch(TypeGroups())
+    }, [dispatch, status]);
+    
   return (
     <div className={styles.container}>
       <div className={styles.card}>

@@ -54,7 +54,7 @@ function Workshop() {
         [workshops, search]
     );
 
-        const getDiagnoser = (code) => diagnosers.find(d => d.code === code);
+        const getDiagnoser = (coded) => diagnosers.find(d => d.code === coded);
 
 
     if (status === "loading") return <div>טוען...</div>;
@@ -91,7 +91,7 @@ function Workshop() {
             <div className={style.grid}>
 
                 {
-                    filtered.filter(w=>getDiagnoser(w.codeDiagnoser).available).map(w => (
+                    filtered.filter(w=>getDiagnoser(w.codeDiagnoser)?.available).map(w => (
 
                         <WorkshopCard
                             key={w.code}

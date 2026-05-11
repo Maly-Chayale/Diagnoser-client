@@ -1,167 +1,150 @@
-/* ProfileEditor.module.css */
+.wrapper {
+  display: flex;
+  justify-content: center; /* הכרטיס במרכז המסך */
+  align-items: flex-start;
+  gap: 20px; /* רווח בין ההתחשבנות לכרטיס */
+  margin-top: 50px;
+}
 
 .profileContainer {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 60px;
-    background: #ffffff;
-    font-family: 'Poppins', sans-serif;
+  background-color: #ffffff;
+  border: 3px solid #9333ea;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 400px; /* מעט צר יותר */
+  font-family: 'Poppins', sans-serif;
+  direction: rtl;
+  height: 500px; /* גובה הכרטיס */
 }
 
-/* הכרטיס הראשי */
-.profileCard {
-    width: 420px;
-    background: white;
-    border-radius: 20px;
-    padding: 28px;
-    border: 2px solid #e5e7eb;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    transition: all 0.35s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.profileCard::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #60a5fa, #a78bfa);
-    opacity: 0;
-    transition: 0.35s ease;
-}
-
-.profileCard:hover::before {
-    opacity: 0.08;
-}
-
-.profileCard:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 25px 60px rgba(96,165,250,0.25);
-}
-
-/* כותרת */
 .profileHeader {
-    font-size: 1.6rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 20px;
-    background: linear-gradient(135deg, #60a5fa, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+  font-size: 26px;
+  font-weight: 700;
+  color: #3b82f6;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-/* שדות */
 .fieldWrapper {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #f3f4f6;
-    transition: 0.3s;
-}
-
-.fieldWrapper.editing {
-    transform: translateX(4px);
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
 .fieldLabel {
-    font-weight: 600;
-    color: #6b7280;
+  font-weight: bold;
+  margin-left: 10px;
+  color: #3b82f6;
 }
 
 .fieldValue {
-    font-weight: 600;
-    color: #111827;
+  background-color: #ffffff;
+  color: #111827;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 15px;
+  flex: 1;
 }
 
 .editableInput {
-    padding: 6px 12px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    font-size: 0.95rem;
-    outline: none;
-    transition: 0.2s;
+  width: 100%;
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid #3b82f6;
+  border-radius: 4px;
+  background-color: #e0e7ff;
 }
 
-.editableInput:focus {
-    border-color: #60a5fa;
-    box-shadow: 0 0 5px rgba(96,165,250,0.3);
-}
-
-/* Badge דינמי */
-.badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: rgba(96,165,250,0.12);
-    color: #2563eb;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-/* Checkbox */
 .checkboxContainer {
-    display: flex;
-    align-items: center;
-    margin: 8px 0;
-}
-
-.checkboxContainer.editing input[type="checkbox"] {
-    margin-right: 8px;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
 }
 
 .checkboxLabel {
-    font-weight: 600;
-    color: #111827;
+  margin-left: 8px;
+  color: #3b82f6;
+  font-size: 14px;
 }
 
-/* כפתורים */
+.checkboxContainer input[type="checkbox"] {
+  accent-color: #16a34a;
+}
+
 .buttonContainer {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 
 .profileButton {
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    background: #60a5fa;
-    color: white;
-    transition: 0.3s;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.profileButton:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(96,165,250,0.3);
+.profileButton.edit {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  color: white;
 }
 
-.cancelButton {
-    background: #f87171;
+.profileButton.cancelButton {
+  background-color: #ef4444;
+  color: white;
 }
 
-/* תשלום */
+.profileButton.save {
+  background-color: #16a34a;
+  color: white;
+}
+
 .paymentSection {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* מיקום אנכי במרכז */
+  max-width: 300px; /* רוחב כמו שהיה קודם */
+  margin-right: 150px; /* הזזה שמאלה */
+  padding: 10px; /* כפי שהיה קודם */
+  border-radius: 8px; /* עיגול עדין לפינות, כמו קודם */
+  background-color: #ffffff; /* רקע לבן כמו קודם */
+  /* החזרת כל שאר העיצוב המקורי של התשלום */
 }
 
-.paymentSection input[type="number"] {
-    padding: 6px 12px;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    font-size: 0.95rem;
-    outline: none;
+.paymentSection h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #3b82f6;
+  margin-bottom: 10px;
+  text-align: center; /* שמרנו לפי המקורי */
 }
 
-.paymentSection input[type="number"]:focus {
-    border-color: #60a5fa;
-    box-shadow: 0 0 5px rgba(96,165,250,0.3);
+.paymentSection input {
+  /* width: 100%; */
+  padding: 6px;
+  margin: 6px 0 12px 0;
+  border-radius: 4px;
+  border: 1px solid #3b82f6;
+  background-color: #ffffff;
+}
+
+.paymentSection button {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  background-color: #16a34a; /* ירוק */
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.paymentSection button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(96,165,250,0.3);
 }

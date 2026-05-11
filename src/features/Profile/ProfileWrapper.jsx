@@ -8,7 +8,7 @@ const ProfileWrapper = () => {
     const statusUser = useSelector(state => state.LogIn.statusUser)
     
     return (
-        <div className='col'>
+        <div >
           
             {statusUser == "cust" ?
                 <ProfileCustomer /> :
