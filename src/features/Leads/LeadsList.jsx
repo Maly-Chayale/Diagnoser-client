@@ -1,76 +1,54 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import axios from "axios"
-// import './old.css'
 import { useDispatch, useSelector } from 'react-redux';
 import { InitLeads } from './LeadsSlice';
-import style from '../Customers/CustomersList.module.css'
-
+// import style from './LeadsList.module.css';
+import style from '../Customers/CustomersList.module.css';
 
 const LeadsList = () => {
+  const dispatch = useDispatch();
+  const leads = useSelector(state => state.Lead.Leads);
+  const status = useSelector(state => state.Lead.status);
 
-    const dispatch = useDispatch()
+  const [search, setSearch] = useState("");
 
-    const leads = useSelector(state => state.Lead.Leads)
-    const status = useSelector(state => state.Lead.status)
+  const string = (s) => `${s.name} ${s.mail} ${s.phone}`;
 
-     const string = (s) => {
-        let string = s.name+" "+s.mail+" "+s.phone
-        return string
-    }
-    
-    const [search, setSearch] = useState("");
+  const filteredLeads = useMemo(() =>
+    leads?.filter(s => string(s).toLowerCase().includes(search.toLowerCase())),
+    [leads, search]
+  );
 
-    const filteredSlots = useMemo(() =>
-        leads?.filter(s => (string(s)).toLowerCase().includes(search.toLowerCase())), [leads, search]);
+  useEffect(() => {
+    if (status !== "loaded") dispatch(InitLeads());
+  }, [status, dispatch]);
 
+  return (
+    <div className={style.leadsPage}>
+      <div className={style.searchRow}>
+        <input
+          type="text"
+          className={style.searchInput}
+          placeholder="חיפוש לפי שם, אימייל או טלפון..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+      </div>
 
-
-    useEffect(() => {
-        // if(status=="")
-        console.log(filteredSlots);
-        
-            dispatch(InitLeads())
-    }, [status, dispatch])
-// useEffect(()=>{
-//   if(leads.length>0)
-
-// },[leads])
-    return (
-
-        <div>
-            {/* <button onClick={()=>{fun()}}></button> */}
-            <div className="clients-page">
-                <div className="search-row">
-                    <input type="text" className="search-input" placeholder="חיפוש לפי שם מאבחנת, תחום, תאריך או שעה..." value={search} onChange={e => setSearch(e.target.value)} />
-                </div>
-
-                <div className="clients-grid">
-                    <h1 className="clients-title">מתעניינים</h1>
-                    {filteredSlots?.map(c =>
-                        <div className="client-card">
-                            <div className="client-header">
-                                <h2 className="client-name">{c.name}</h2>
-                                <span className="client-badge">{c.mail}</span>
-                                <span className="client-badge">{c.phone}</span>
-                            </div>
-                            <p className="client-description">אבחון גרפולוגי אישי.</p>
-                            <p className="client-meta">תור אחרון: 10.02.2026 • סטטוס: הושלם</p>
-                            {/* <button className="client-btn">לפרטי לקוח</button> */}
-                        </div>
-                    )}
-                </div>
+      <div className={style.grid}>
+        {filteredLeads?.map((lead, index) => (
+          <div className={style.card} key={lead.id || index}>
+            <h2 className={style.name}>{lead.name}</h2>
+            <div className={style.badges}>
+              <span className={style.badge}>📧 {lead.mail}</span>
+              <span className={style.badge}>📞 {lead.phone}</span>
             </div>
-        </div>
-    );
+            <p className={style.description}>לקוח מרוצה ומעודכן.</p>
+            <button className={style.actionBtn}>הצג הזמנות</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
-
-}
 export default LeadsList;
-
-
-
-
-
-
-
-
