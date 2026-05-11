@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import './BookingPopup.css';
+import './BookingPopupDetails.css';
 
 const BookingPopupDetails = ({ booking, handleCancel }) => {
     return (

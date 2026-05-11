@@ -142,11 +142,11 @@ const OdersAndReferences = () => {
                                         <td>{getTypeGroup(r.status)}</td>
                                         {/* <td>{r.comments}</td> */}
                                         {/* טבלה תורים פעילים */}
-<td>
-    <button className="details-button" onClick={() => setActiveBooking(r)}>
-        פרטים
-    </button>
-</td>
+                                        <td>
+                                            <button className="details-button" onClick={() => setActiveBooking(r)}>
+                                                פרטים
+                                            </button>
+                                        </td>
 
 
                                     </tr>
@@ -157,10 +157,10 @@ const OdersAndReferences = () => {
                 </div>
 
                 {/* פופאפ */}
-<BookingPopupDetails
-    booking={activeBooking}
-    handleCancel={() => setActiveBooking(null)}
-/>
+                <BookingPopupDetails
+                    booking={activeBooking}
+                    handleCancel={() => setActiveBooking(null)}
+                />
 
                 {/* טבלה שמאלית - תורים בהמתנה */}
                 <div className="table-card fade-in delay">
