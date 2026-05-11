@@ -77,7 +77,8 @@ function Workshop() {
             </div>
 
             {
-                statusUser !== "cust" && (
+                statusUser !== "cust" &&
+                statusUser !== "" && (
 
                     <button
                         className={style.addBtn}
@@ -102,10 +103,10 @@ function Workshop() {
 
             </div>
 
-            <AddWorkshopModal
+            {<AddWorkshopModal
                 open={open}
                 onClose={() => setOpen(false)}
-            />
+            />}
 
         </div>
     );

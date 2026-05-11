@@ -8,6 +8,8 @@ function AddWorkshopModal({ open, onClose }) {
     const dispatch = useDispatch();
     const diagnosers = useSelector(s => s.WorkShop.Diagnosers);
     const typeGroups = useSelector(s => s.TypeGroup.groups);
+    const statusUser = useSelector(state => state.LogIn.statusUser);
+    const user = useSelector(state => state.LogIn.thisUser);
 
     const [form, setForm] = useState({
         code: 0,
@@ -130,10 +132,12 @@ function AddWorkshopModal({ open, onClose }) {
                         </div>
 
                         <div className={style.field}>
+                            {statusUser=="Esty"?
                             <select className={`${style.select} ${form.codeDiagnoser ? style.filled : ''}`} name="codeDiagnoser" value={form.codeDiagnoser} onChange={handleChange}>
                                 <option value={0}>בחר מאבחנת</option>
-                                {diagnosers.map(d => <option key={d.code} value={d.code}>{d.name}</option>)}
-                            </select>
+                                {diagnosers.map(d => <option key={d.code} value={d.code}>{d.name} - {d.mail}</option>)}
+                            </select>:
+                            <p>{user.name}</p>}
                         </div>
 
                         <button
