@@ -147,24 +147,17 @@ const DiagnoserList = () => {
                         )} */}
 
 
-
-
-
-
-
-
-
                         {statusUser === "Esty" && (
-    <button
-    className={d.available ? style["status-on"] : style["status-off"]}
-    onClick={() => {
-        const updatedDiagnoser = { ...d, available: !d.available };
-        dispatch(updateDiagnoser(updatedDiagnoser));
-    }}
->
-    {d.available ? "✅ זמינה עכשיו" : "⛔ לא זמינה כרגע"}
-</button>
-)}
+                            <button
+                                className={d.available ? style["status-on"] : style["status-off"]}
+                                onClick={() => {
+                                    const updatedDiagnoser = { ...d, available: !d.available };
+                                    dispatch(updateDiagnoser(updatedDiagnoser));
+                                }}
+                            >
+                                {d.available ? "✅ זמינה עכשיו" : "⛔ לא זמינה כרגע"}
+                            </button>
+                        )}
 
 
 
@@ -179,17 +172,6 @@ const DiagnoserList = () => {
         {d.available ? "סמן כלא זמינה" : "סמן כזמינה"}
     </button>
 )} */}
-
-
-
-
-
-
-
-
-
-
-
                         <button
                             className={style["primary-btn1"]}
                             onClick={() => navigate(`/DiagnoserDetails/${d.code}`)}

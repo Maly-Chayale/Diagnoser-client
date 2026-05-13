@@ -19,6 +19,7 @@ import OdersAndReferences from './features/References/OdersAndReferences';
 import ManagerPayments from './features/Profile/ManagerPayments';
 import LeadsList from './features/Leads/LeadsList';
 import { useLocation } from "react-router-dom";
+import OrderOfCusatomer from './features/Customers/OrderOfCusatomer';
 
 function App() {
   const statusUser = useSelector(state => state.LogIn.statusUser);
@@ -70,6 +71,7 @@ function App() {
             <Route path="/Customers" element={<CustomersList />} />
             <Route path="/Diagnosers" element={<DiagnoserList />} />
             <Route path="/DiagnoserDetails/:code" element={<DiagnoserDetails />} />
+            <Route path="/OrderOfCusatomer/:code" element={<OrderOfCusatomer />} />
             <Route path="/SignIn" element={<SignIn />} />
             <Route path="/LogIn" element={<LogIn />} />
             <Route path="/Orders" element={<OdersAndReferences />} />

@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { InitCustomer } from './CustomerSlice';
 import style from './CustomersList.module.css'
 import { FaEnvelope, FaPhone } from 'react-icons/fa';
+import OrderOfCusatomer from './OrderOfCusatomer';
+import { useNavigate } from 'react-router-dom';
 
 const CustomersList = () => {
     const dispatch = useDispatch();
@@ -10,6 +12,7 @@ const CustomersList = () => {
     const status = useSelector(state => state.Customer.status);
 
     const [search, setSearch] = useState("");
+    const navigate = useNavigate()
 
     const string = (s) => s.name + " " + s.mail + " " + s.phone;
 
@@ -66,7 +69,16 @@ const CustomersList = () => {
                             <span className={style.infoText}>{highlight(c.phone, search)}</span>
                         </div>
                         <p className={style.description}>לקוח מרוצה ומעודכן.</p>
-                        <button className={style.orderBtn}>הצג הזמנות</button>
+                        {/* <button className={style.orderBtn} onClick={
+                            <OrderOfCusatomer />
+                        }>הצג הזמנות</button> */}
+                        <button
+                            className={style.orderBtn}
+                            onClick={() => navigate(`/OrderOfCusatomer/${c.code}`)}
+
+                        >הצג הזמנות </button>
+
+
                     </div>
                 ))}
             </div>
