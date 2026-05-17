@@ -8,6 +8,7 @@ const ManagerPayments = () => {
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
     const string = (s) => `${s.name} ${s.mail} ${s.precentagePayment}`;
     const [search, setSearch] = useState("");
+    const [selectedDiagnoser, setSelectedDiagnoser] = useState(null);
 
     const filteredSlots = useMemo(
         () => diagnosers.filter(s => string(s).toLowerCase().includes(search.toLowerCase())),
@@ -37,7 +38,7 @@ const ManagerPayments = () => {
                             <th><FaEnvelope /> מייל</th>
                             <th><FaPhone /> פלאפון</th>
                             <th><FaDollarSign /> נותר לתשלום</th>
-                            <th><FaEye /> צפייה בתורים</th>
+                            <th><button className={styles["view-btn"]}><FaEye /></button></th>
                         </tr>
                     </thead>
 

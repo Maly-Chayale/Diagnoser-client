@@ -51,6 +51,7 @@
     width: 100%;
     border-collapse: collapse;
     text-align: center;
+    direction: rtl;
 }
 
 .modern-table th, .modern-table td {
