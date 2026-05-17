@@ -19,6 +19,7 @@ import OdersAndReferences from './features/References/OdersAndReferences';
 import ManagerPayments from './features/Profile/ManagerPayments';
 import LeadsList from './features/Leads/LeadsList';
 import { useLocation } from "react-router-dom";
+import WorkshopDetails from './features/WorkShop/WorkshopDetails';
 
 function App() {
   const statusUser = useSelector(state => state.LogIn.statusUser);
@@ -75,7 +76,7 @@ function App() {
             <Route path="/Orders" element={<OdersAndReferences />} />
             <Route path="/Orders/:code" element={<OdersAndReferences />} />
             <Route path="/Profile" element={<ProfileWrapper />} />
-            {/* <Route path="/WorkshopDetails/:code" element={<WorkshopDetails />} /> */}
+            <Route path="/WorkshopDetails/:code" element={<WorkshopDetails />} />
             <Route path="/Payments" element={<ManagerPayments />} />
             <Route path="/Leads" element={<LeadsList />} />
           </>

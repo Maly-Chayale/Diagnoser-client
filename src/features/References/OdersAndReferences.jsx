@@ -259,7 +259,7 @@ const OdersAndReferences = () => {
                                             <button className='link-btn' onClick={() => navigate(`/WorkshopDetails/${r.codeWorkshop}`)}> {r.codeWorkshop} </button>
                                         </td>
                                         <td>{priceWorkshop(r.codeWorkshop)}</td>
-                                        <td>{priceWorkshop(r.codeWorkshop) * 0.1}</td>
+                                        <td>{getDiagnoser(r.codeWorkshop)?.code !== 1009 && <p>{priceWorkshop(r.codeWorkshop) * 0.1}</p>}</td>
                                         <td>{getTypeGroup(r.status)}</td>
                                         {/* <td>{r.comments}</td> */}
                                         {/* טבלה תורים פעילים */}

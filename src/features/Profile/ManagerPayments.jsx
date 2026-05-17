@@ -43,7 +43,7 @@ const ManagerPayments = () => {
 
                     <tbody>
                         {filteredSlots
-                            .filter(d => d.mail !== '22@2' && d.precentagePayment > 0)
+                            .filter(d => d.mail !== '22@2')
                             .map((d, i) => (
                                 <tr key={i} className={styles["table-row"]}>
                                     <td>{d.name}</td>

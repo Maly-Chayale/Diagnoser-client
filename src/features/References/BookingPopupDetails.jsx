@@ -26,9 +26,10 @@ const BookingPopupDetails = ({ booking, customer, getDiagnoser, handleCancel }) 
                         <p>שעה: {booking.time}</p>
                         <p>לקוח: {customer(booking.codeCustomer)?.name}</p>
                         <p>מייל לקוח: {customer(booking.codeCustomer)?.mail}</p>
-                        <p>סדנא: {booking.codeWorkshop}</p>
                         <p>מאבחנת: {getDiagnoser(booking.codeWorkshop)?.name}</p>
                         <p>מייל מאבחנת: {getDiagnoser(booking.codeWorkshop)?.mail}</p>
+                        <p>סדנא: {booking.codeWorkshop}</p>
+                        <p>כתובת: {booking.adress}</p>
                         <p>הערות: {booking.comments}</p>
                         <button onClick={handleCancel}>סגור</button>
                     </motion.div>

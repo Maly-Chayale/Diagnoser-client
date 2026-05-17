@@ -77,7 +77,7 @@ function WorkshopCard({ WorkShop }) {
             w.typeGroup === WorkShop.typeGroup
         )
     }
-
+    
     const handleBooking = async (diagnoser) => {
 
         const today = new Date().toISOString().split('T')[0];
@@ -208,7 +208,7 @@ function WorkshopCard({ WorkShop }) {
 
                         <div className={style.diagnoserGrid}>
 
-                            {diagnosers?.filter(d=>d.available).map((diagnoser) => (
+                            {diagnosers?.map((diagnoser) => (
 
                                 <div
                                     key={diagnoser.code}
