@@ -77,6 +77,24 @@ const CustomersList = () => {
                             onClick={() => navigate(`/OrderOfCusatomer/${c.code}`)}
 
                         >הצג הזמנות </button>
+                        {/* <button
+                            className={style.orderBtn}
+                            onClick={<OrderOfCusatomer 
+                                  code = {code}
+                                />
+                            }
+
+                        >הצג הזמנות </button> */}
+
+                        {/* פופאפ */}
+                        {/* <BookingPopup
+                            booking={activeBooking}
+                            customer={customer}
+                            // getDiagnoser={getDiagnoser}
+                            handleSave={handleSave}
+                            handleCancel={handleCancel}
+                            setBooking={setActiveBooking}
+                        /> */}
 
 
                     </div>

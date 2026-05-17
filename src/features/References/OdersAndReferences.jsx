@@ -85,15 +85,6 @@ const OdersAndReferences = () => {
     const filtered = useMemo(() =>
         filteredpay.filter(s => string(s).toLowerCase().includes(search.toLowerCase())), [filteredpay, search]);
 
-
-
-
-
-
-
-
-
-
     const workshopDiagnoser = (codeDiagnoser) => {
         return workshops.filter(w => w.codeDiagnoser == codeDiagnoser)
     }

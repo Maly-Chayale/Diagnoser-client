@@ -13,7 +13,7 @@ const TypeGroupSlice = createSlice({
     name: 'typeGroups',
     initialState: {
         groups: [],
-        status: ''
+        statusType: ''
     },
     reducers: {},
     extraReducers: (builder) => {
