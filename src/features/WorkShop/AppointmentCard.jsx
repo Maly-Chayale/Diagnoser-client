@@ -24,6 +24,25 @@ function WorkshopCard({ WorkShop }) {
     const [selectedDiagnoser, setSelectedDiagnoser] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+
+
+
+
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
+    const [bookingDiagnoser, setBookingDiagnoser] = useState(null);
+
+    const [bookingData, setBookingData] = useState({
+        date: "",
+        time: "",
+        adress: ""
+    });
+
+
+
+
+
+
     const groups = useSelector(state => state.TypeGroup.groups);
     const diagnosers = useSelector(state => state.WorkShop.Diagnosers);
     const workshops = useSelector(state => state.WorkShop.WorkShops);
@@ -77,10 +96,60 @@ function WorkshopCard({ WorkShop }) {
             w.typeGroup === WorkShop.typeGroup
         )
     }
-    
-    const handleBooking = async (diagnoser) => {
 
-        const today = new Date().toISOString().split('T')[0];
+    // const handleBooking = async (diagnoser) => {
+
+    //     const today = new Date().toISOString().split('T')[0];
+
+    //     if (customers.find(c => c.code === customer.code) == null) {
+    //         dispatch(deleteLead(customer));
+    //         await dispatch(addCustomer(customer));
+    //     }
+
+    //     const newReference = {
+    //         code: 0,
+    //         codeWorkShop: workshops.find(w =>
+    //             w.codeDiagnoser === diagnoser.code &&
+    //             w.morfology === WorkShop.morfology &&
+    //             w.chirology === WorkShop.chirology &&
+    //             w.grafology === WorkShop.grafology &&
+    //             w.typeGroup === WorkShop.typeGroup
+    //         )?.code,
+
+    //         codeCustomer: customer.code,
+    //         date: today,
+    //         time: 0,
+    //         adress: "",
+    //         comments: "",
+    //         status: 1
+    //     };
+
+    //     const mailBody = `שלום ${diagnoser.name}, \n\n יש הזמנה חדשה לסדנא.`;
+    //     const mailSubject = `הזמנה לסדנא ${WorkShop.code}`;
+
+    //     window.location.href =
+    //         `mailto:${diagnoser.mail}?subject=${mailSubject}&body=${mailBody}`;
+
+    //     alert(`ההזמנה למאבחנת ${diagnoser.name} נשלחה בהצלחה!`);
+
+    //     dispatch(addReference(newReference));
+    // };
+
+
+
+
+
+
+
+
+
+
+    const handleBooking = async () => {
+
+        if (!bookingData.date || !bookingData.time || !bookingData.adress) {
+            alert("יש למלא את כל השדות");
+            return;
+        }
 
         if (customers.find(c => c.code === customer.code) == null) {
             dispatch(deleteLead(customer));
@@ -89,8 +158,9 @@ function WorkshopCard({ WorkShop }) {
 
         const newReference = {
             code: 0,
+
             codeWorkShop: workshops.find(w =>
-                w.codeDiagnoser === diagnoser.code &&
+                w.codeDiagnoser === bookingDiagnoser.code &&
                 w.morfology === WorkShop.morfology &&
                 w.chirology === WorkShop.chirology &&
                 w.grafology === WorkShop.grafology &&
@@ -98,23 +168,67 @@ function WorkshopCard({ WorkShop }) {
             )?.code,
 
             codeCustomer: customer.code,
-            date: today,
-            time: 0,
-            adress: "",
+
+            date: bookingData.date,
+
+            time: bookingData.time,
+
+            adress: bookingData.adress,
+
             comments: "",
+
             status: 1
         };
 
-        const mailBody = `שלום ${diagnoser.name}, \n\n יש הזמנה חדשה לסדנא.`;
+        const mailBody =
+            `שלום ${bookingDiagnoser.name},
+        
+יש הזמנה חדשה לסדנא.
+
+תאריך: ${bookingData.date}
+
+שעה: ${bookingData.time}
+
+מיקום: ${bookingData.adress}`;
+
         const mailSubject = `הזמנה לסדנא ${WorkShop.code}`;
 
         window.location.href =
-            `mailto:${diagnoser.mail}?subject=${mailSubject}&body=${mailBody}`;
+            `mailto:${bookingDiagnoser.mail}?subject=${mailSubject}&body=${mailBody}`;
 
-        alert(`ההזמנה למאבחנת ${diagnoser.name} נשלחה בהצלחה!`);
+        await dispatch(addReference(newReference));
 
-        dispatch(addReference(newReference));
+        alert(`ההזמנה נשלחה בהצלחה`);
+
+        setIsBookingModalOpen(false);
     };
+
+    const openBookingModal = (diagnoser) => {
+
+        setBookingDiagnoser(diagnoser);
+
+        setBookingData({
+            date: "",
+            time: "",
+            adress: ""
+        });
+
+        setIsBookingModalOpen(true);
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     return (
         <>
@@ -233,7 +347,8 @@ function WorkshopCard({ WorkShop }) {
 
                                         <button
                                             className={style.primaryBtn}
-                                            onClick={() => handleBooking(diagnoser)}
+                                            // onClick={() => handleBooking(diagnoser)}
+                                            onClick={() => openBookingModal(diagnoser)}
                                         >
                                             הזמנה
                                         </button>
@@ -293,6 +408,90 @@ function WorkshopCard({ WorkShop }) {
 
                 </div>
             )}
+
+
+
+
+
+
+
+
+
+
+            {isBookingModalOpen && (
+
+                <div className={style.modalBackdrop}>
+
+                    <div className={style.modalBox}>
+
+                        <h3>פרטי הזמנה</h3>
+
+                        <input
+                            type="date"
+                            value={bookingData.date}
+                            onChange={(e) =>
+                                setBookingData({
+                                    ...bookingData,
+                                    date: e.target.value
+                                })
+                            }
+                        />
+
+                        <input
+                            type="time"
+                            value={bookingData.time}
+                            onChange={(e) =>
+                                setBookingData({
+                                    ...bookingData,
+                                    time: e.target.value
+                                })
+                            }
+                        />
+
+                        <input
+                            type="text"
+                            placeholder="מיקום"
+                            value={bookingData.adress}
+                            onChange={(e) =>
+                                setBookingData({
+                                    ...bookingData,
+                                    adress: e.target.value
+                                })
+                            }
+                        />
+
+                        <div className={style.modalButtons}>
+
+                            <button
+                                className={style.confirmBtn}
+                                onClick={handleBooking}
+                            >
+                                אישור הזמנה
+                            </button>
+
+                            <button
+                                className={style.cancelBtn}
+                                onClick={() => setIsBookingModalOpen(false)}
+                            >
+                                ביטול
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            )}
+
+
+
+
+
+
+
+
+
+
 
             {/* DELETE MODAL */}
 
