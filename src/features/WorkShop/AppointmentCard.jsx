@@ -279,6 +279,27 @@ function WorkshopCard({ WorkShop }) {
                         מחיקה
                     </button>
                 )}
+{/*                 
+                <div className={style.modalBackdrop}>
+                    <div className={style.modalBox}>
+                        <div className={style.modalIcon}>⚠️</div>
+                        <h3>מחיקה</h3>
+                        <p>למחוק את <strong>{name}</strong>?</p>
+                        <div className={style.modalButtons}>
+                            <button className={style.confirmBtn} onClick={onConfirm}>
+                                כן, מחק
+                            </button>
+                            <button className={style.cancelBtn} onClick={onClose}>
+                                ביטול
+                            </button>
+                        </div>
+                    </div>
+                </div> */}
+
+
+
+
+
 
             </div>
 
@@ -322,7 +343,7 @@ function WorkshopCard({ WorkShop }) {
 
                         <div className={style.diagnoserGrid}>
 
-                            {diagnosers?.map((diagnoser) => (
+                            {diagnosers?.filter(d => d.available).map((diagnoser) => (
 
                                 <div
                                     key={diagnoser.code}

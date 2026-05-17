@@ -179,17 +179,6 @@ const DiagnoserList = () => {
         {d.available ? "סמן כלא זמינה" : "סמן כזמינה"}
     </button>
 )} */}
-
-
-
-
-
-
-
-
-
-
-
                         <button
                             className={style["primary-btn1"]}
                             onClick={() => navigate(`/DiagnoserDetails/${d.code}`)}
