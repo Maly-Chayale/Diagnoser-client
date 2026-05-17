@@ -22,8 +22,8 @@ export const InitReferences = createAsyncThunk("InitReferences",
 
 export const addReference = createAsyncThunk("addReference",
     async (Reference) => {
-        await axios.post('https://localhost:7082/References/Add', Reference, { headers });
-        return Reference;
+        const res = await axios.post('https://localhost:7082/References/Add', Reference, { headers });
+        return res.data; // מחזיר את מה שהשרת מחזיר
     }
 )
 
@@ -93,7 +93,7 @@ const ReferencesSlice = createSlice({
                 state.status = "succesfull";
                 state.references = action.payload;
                 console.log(state.references);
-                
+
             })
             .addCase(InitReferences.rejected, (state) => { state.status = "failed"; })
 

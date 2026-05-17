@@ -12,7 +12,7 @@ const ProfileCustomer = () => {
   const status = useSelector(s => s.TypeGroup.status);
 
 useEffect(() => {
-        if (status === "") 
+        if (!status) 
           dispatch(TypeGroups())
     }, [dispatch, status]);
     
@@ -42,7 +42,7 @@ useEffect(() => {
         <div className={styles.row}>
           <span className={styles.label}>סוג משתמש</span>
           <span className={styles.badge}>
-            {typeGroups.find(t =>t.code == customer.codeType).description}
+            {typeGroups.find(t =>t.code == customer.codeType)?.description}
           </span>
         </div>
 

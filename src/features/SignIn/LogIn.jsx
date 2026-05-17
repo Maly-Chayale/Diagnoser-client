@@ -36,29 +36,51 @@ const LogIn = () => {
         if (statusD === "") dispatch(InitDiagnoser());
         if (statusL === "") dispatch(InitLeads());
 
-        dispatch(ProfilelogIn({
-            thisUser: thisuser,
-            status: status
-        }));
-    }, [statusC, statusD, statusL, thisuser, status, dispatch]);
+        // dispatch(ProfilelogIn({
+        //     thisUser: thisuser,
+        //     status: status
+        // }));
+    }, [statusC, statusD, statusL, thisuser, dispatch]);
+
+    useEffect(() => {
+        if (status === "wrong") {
+            setErr(true);
+        }
+        else if (status) {  // או הערך שמציין הצלחה
+            navigate("../hello");
+            dispatch(ProfilelogIn({
+                thisUser: thisuser,  // הערכים המעודכנים
+                status: status
+            }));
+        }
+    }, [status, navigate]);
 
     async function SignIn() {
-        setErr(false);
+        // setErr(false);
 
-        await dispatch(logIn({
+        // await dispatch(logIn({
+        //     user: { mail, password },
+        //     Customers: customers,
+        //     Diagnosers: diagnosers,
+        //     Leads: leads
+        // }));
+
+        // dispatch(ProfilelogIn({
+        //     thisUser: thisuser,
+        //     status: status
+        // }));
+
+        // if (status === "wrong") setErr(true);
+        // else navigate("../hello");
+
+        const result = await dispatch(logIn({
             user: { mail, password },
             Customers: customers,
             Diagnosers: diagnosers,
             Leads: leads
         }));
 
-        dispatch(ProfilelogIn({
-            thisUser: thisuser,
-            status: status
-        }));
 
-        if (status === "wrong") setErr(true);
-        else navigate("../hello");
     }
 
     const handleGoogleSuccess = (credentialResponse) => {
@@ -82,6 +104,9 @@ const LogIn = () => {
             setErr(true);
         }
     };
+
+    if (statusC == "" || statusD == "" || statusL == "") return <>טוען נתונים...</>
+    // if(statusC.length|| statusD.length|| statusL.length) return <>טוען נתונים...</>
 
     return (
         <div className={styles.container}>

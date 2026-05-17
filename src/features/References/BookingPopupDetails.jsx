@@ -3,6 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import './BookingPopupDetails.css';
 
 const BookingPopupDetails = ({ booking, customer, getDiagnoser, handleCancel }) => {
+
+    const getHour = (time) => {
+        let hour = Math.floor(time)
+        let minute = Math.round((time - hour) * 100)
+        if (minute < 10)
+            minute = "0" + minute
+        if (hour < 10)
+            hour = "0" + hour
+        return hour + ":" + minute
+    }
+
     return (
         <AnimatePresence>
             {booking && (
@@ -23,7 +34,7 @@ const BookingPopupDetails = ({ booking, customer, getDiagnoser, handleCancel }) 
                     >
                         <h3>פרטי הזמנה</h3>
                         <p>תאריך: {booking.date}</p>
-                        <p>שעה: {booking.time}</p>
+                        <p>שעה: {getHour(booking.time)}</p>
                         <p>לקוח: {customer(booking.codeCustomer)?.name}</p>
                         <p>מייל לקוח: {customer(booking.codeCustomer)?.mail}</p>
                         <p>מאבחנת: {getDiagnoser(booking.codeWorkshop)?.name}</p>

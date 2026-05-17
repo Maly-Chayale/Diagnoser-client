@@ -141,24 +141,27 @@ function WorkshopCard({ WorkShop }) {
 
 
 
+const handleBooking = async () => {
+    if (!bookingData.date || !bookingData.time || !bookingData.adress) {
+        alert("יש למלא את כל השדות");
+        return;
+    }
 
+    try {
+        // בדיקה אם הלקוח כבר קיים
+        const existingCustomer = customers.find(c => c.code === customer.code);
 
+        if (!existingCustomer) {
+            // מחיקת ליד
+            await dispatch(deleteLead(customer)).unwrap();
 
-    const handleBooking = async () => {
-
-        if (!bookingData.date || !bookingData.time || !bookingData.adress) {
-            alert("יש למלא את כל השדות");
-            return;
+            // הוספת לקוח חדש
+            await dispatch(addCustomer(customer)).unwrap();
         }
 
-        if (customers.find(c => c.code === customer.code) == null) {
-            dispatch(deleteLead(customer));
-            await dispatch(addCustomer(customer));
-        }
-
+        // בניית ההזמנה החדשה
         const newReference = {
             code: 0,
-
             codeWorkShop: workshops.find(w =>
                 w.codeDiagnoser === bookingDiagnoser.code &&
                 w.morfology === WorkShop.morfology &&
@@ -166,42 +169,42 @@ function WorkshopCard({ WorkShop }) {
                 w.grafology === WorkShop.grafology &&
                 w.typeGroup === WorkShop.typeGroup
             )?.code,
-
             codeCustomer: customer.code,
-
             date: bookingData.date,
-
-            time: bookingData.time,
-
+            time: parseInt(bookingData.time.substring(0, 2)) + 
+            (parseInt(bookingData.time.substring(3, 5)) *1.0 / 100),
             adress: bookingData.adress,
-
             comments: "",
-
             status: 1
         };
 
-        const mailBody =
-            `שלום ${bookingDiagnoser.name},
-        
+        // הוספת ההזמנה
+        await dispatch(addReference(newReference)).unwrap();
+
+        // סגירת המודאל
+        setIsBookingModalOpen(false);
+
+        // פתיחת המייל
+        const mailBody = `שלום ${bookingDiagnoser.name},
+
 יש הזמנה חדשה לסדנא.
 
 תאריך: ${bookingData.date}
-
 שעה: ${bookingData.time}
-
 מיקום: ${bookingData.adress}`;
 
         const mailSubject = `הזמנה לסדנא ${WorkShop.code}`;
 
-        window.location.href =
-            `mailto:${bookingDiagnoser.mail}?subject=${mailSubject}&body=${mailBody}`;
+        window.location.href = `mailto:${bookingDiagnoser.mail}?subject=${mailSubject}&body=${mailBody}`;
 
-        await dispatch(addReference(newReference));
+    } catch (error) {
+        console.error("שגיאה בהזמנה:", error);
+        alert("אירעה שגיאה בהזמנה, נסי שוב.");
+    }
+};
 
-        alert(`ההזמנה נשלחה בהצלחה`);
 
-        setIsBookingModalOpen(false);
-    };
+
 
     const openBookingModal = (diagnoser) => {
 
@@ -279,7 +282,7 @@ function WorkshopCard({ WorkShop }) {
                         מחיקה
                     </button>
                 )}
-{/*                 
+                {/*                 
                 <div className={style.modalBackdrop}>
                     <div className={style.modalBox}>
                         <div className={style.modalIcon}>⚠️</div>

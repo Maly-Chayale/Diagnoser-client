@@ -44,7 +44,7 @@ const LogInSlice = createSlice({
                 state.thisUser=customer
             }
             else if (lead != null) {
-                state.statusUser = "lead"
+                state.statusUser = "cust"
                 state.thisUser=lead
             }
             else {

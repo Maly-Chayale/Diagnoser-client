@@ -35,7 +35,7 @@ const ProfileSlice = createSlice({
     initialState,
     reducers: {
         ProfilelogIn: (state, action) => {
-            state.thisUser = action.payload.user;
+            state.thisUser = action.payload.thisUser;
             state.statusUser = action.payload.status;
         }
     },
