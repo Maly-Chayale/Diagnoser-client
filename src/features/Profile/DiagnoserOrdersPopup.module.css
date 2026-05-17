@@ -1,0 +1,106 @@
+.popupOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popupContent {
+    background: #fff;
+    width: 90%;
+    max-width: 850px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 18px;
+    position: relative;
+}
+
+.closeButton {
+    position: absolute;
+    right: 10px;
+    padding: 6px 14px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.closeButton:hover {
+    background: #1d4ed8;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.table th {
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    color: white;
+    padding: 10px;
+}
+
+.table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* 🔥 צבעים חזקים */
+.paidRow {
+    background-color: #22c55e33;
+}
+
+.unpaidRow {
+    background-color: #ef444433;
+}
+
+/* hover */
+.paidRow:hover {
+    background-color: #22c55e55;
+}
+
+.unpaidRow:hover {
+    background-color: #ef444455;
+}
+.table {
+    direction: rtl;
+    text-align: center;
+}
+.table th {
+    text-align: center;
+}
+
+.workshopLinkBtn {
+    background: transparent;
+    border: none;
+    color: #4f46e5;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: 0.2s ease-in-out;
+    text-decoration: underline;
+}
+
+.workshopLinkBtn:hover {
+    background: rgba(79, 70, 229, 0.1);
+    color: #3730a3;
+}
+
+.workshopLinkBtn:active {
+    transform: scale(0.95);
+}
