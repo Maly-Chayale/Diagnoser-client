@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styles from './b.module.css';
 
-const BookingPopup = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
+const BookingPopupOk = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
 
     // const [flag, setFlag] = useState(false)
 
@@ -91,4 +91,4 @@ const BookingPopup = ({ booking, customer, handleSave, handleCancel, setBooking 
     );
 };
 
-export default BookingPopup;
+export default BookingPopupOk;

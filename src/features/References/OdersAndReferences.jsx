@@ -5,7 +5,7 @@ import { GetDiagnosersOfThisWorkshop, InitWorkShops } from '../WorkShop/WorkShop
 import { fetchStatus } from '../Statuss/StatusSlice';
 import { useNavigate } from 'react-router-dom';
 import styles from './OrdersReferences.module.css';
-import BookingPopup from './BookingPopup';
+import BookingPopup from './BookingPopupOk';
 import BookingPopupDetails from './BookingPopupDetails';
 import CancelPopup from './CancelPopup';
 import { FaUser, FaCalendarAlt } from 'react-icons/fa';
