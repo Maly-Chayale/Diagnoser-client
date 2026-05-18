@@ -68,7 +68,7 @@ const OdersAndReferences = () => {
     const handleCloseCancelPopup = () => setActiveCancelBooking(null);
     const handleConfirmCancel = async () => {
         if (!activeCancelBooking) return;
-        await dispatch(deleteReference(activeCancelBooking));
+        await dispatch(deleteReference(activeCancelBooking)).unwrap();
         dispatch(InitReferences());
         setActiveCancelBooking(null);
     };
