@@ -1,48 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    deleteWorkShop,
-    GetDiagnosersOfThisWorkshop,
-    InitWorkShops
-} from './WorkShopSlice';
-
-import {
-    addCustomer,
-    InitCustomer
-} from '../Customers/CustomerSlice';
-
+import { deleteWorkShop, GetDiagnosersOfThisWorkshop, InitWorkShops } from './WorkShopSlice';
+import { addCustomer, InitCustomer } from '../Customers/CustomerSlice';
 import { addReference } from '../References/ReferencesSlice';
 import { deleteLead } from '../Leads/LeadsSlice';
-
 import style from './WorkshopCard.module.css';
 import { sendEmail } from '../Email/EmailSlice';
+import { useNavigate } from 'react-router-dom';
 
 function WorkshopCard({ WorkShop }) {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDiagnoser, setSelectedDiagnoser] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-
-
-
-
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-
     const [bookingDiagnoser, setBookingDiagnoser] = useState(null);
-
     const [bookingData, setBookingData] = useState({
         date: "",
         time: "",
         adress: ""
     });
-
-
-
-
-
 
     const groups = useSelector(state => state.TypeGroup.groups);
     const diagnosers = useSelector(state => state.WorkShop.Diagnosers);
@@ -140,6 +120,9 @@ function WorkshopCard({ WorkShop }) {
 
             // סגירת המודאל
             setIsBookingModalOpen(false);
+
+            // ניווט לעמוד הלקוח עם קוד המאבחנת
+            navigate(`/OrderOfCusatomer/${newReference.codeCustomer}`);
 
             // פתיחת המייל
             const mailBody = `שלום ${bookingDiagnoser.name},

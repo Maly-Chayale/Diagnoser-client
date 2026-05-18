@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import styles from './b.module.css';
+import styles from './BookingPopupOk.module.css';
 
 const BookingPopupOk = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
 
