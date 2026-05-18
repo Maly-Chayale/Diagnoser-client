@@ -1,0 +1,140 @@
+.diagnoserPage {
+  min-height: 100vh;
+  background-color: #fff;
+  padding: 40px 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* SEARCH + FILTER ROW */
+.searchFiltersRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.searchInput {
+  flex: 1 1 250px;
+  max-width: 350px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  border: 2px solid #a78bfa;
+  outline: none;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.searchInput:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(96,165,250,0.15);
+  transform: scale(1.02);
+}
+
+.filterSelect {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 2px solid #a78bfa;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.filterSelect:hover {
+  border-color: #60a5fa;
+}
+
+/* TABLES WRAPPER */
+.tablesWrapper {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+  direction: rtl; /* שמירה על RTL */
+}
+
+.tableCard {
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 20px;
+  flex: 1 1 300px;
+  min-width: 280px;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tableCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(96,165,250,0.2);
+}
+
+.tableTitle {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #7c3aed;
+  margin-bottom: 14px;
+}
+
+.modernTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modernTable th, .modernTable td {
+  padding: 10px 12px;
+  text-align: center;
+}
+
+.modernTable thead th {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.hoverRow {
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.hoverRow:hover {
+  background-color: rgba(96,165,250,0.1);
+  transform: scale(1.02);
+}
+
+.linkBtn, .detailsButton, .workshopBtn, .profileButton {
+  padding: 6px 12px;
+  border-radius: 12px;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.linkBtn, .detailsButton, .workshopBtn {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+}
+
+.profileButton.approveButton {
+  background-color: #16a34a;
+}
+
+.profileButton.cancelButton {
+  background-color: #ef4444;
+}
+
+.unpaid {
+  color: #ef4444;
+}
+
+.dateCol {
+  min-width: 130px;
+}
+
+/* לקוח עם אייקון */
+.customerCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
