@@ -53,8 +53,8 @@ export const closeOrder = createAsyncThunk("closeOrder",
 )
 
 export const pay = createAsyncThunk("pay",
-    async (payload, { dispatch }) => {
-        await axios.put('https://localhost:7082/References/Pay', payload, { headers });
+    async (code, { dispatch }) => {
+        await axios.put(`https://localhost:7082/References/Pay/${code}`);
         dispatch(InitReferences());
     }
 )
@@ -120,10 +120,3 @@ const ReferencesSlice = createSlice({
 export const { close } = ReferencesSlice.actions;
 export default ReferencesSlice.reducer;
 
-/* 
-✅ תיקונים שבוצעו:
-1. close reducer – תיקון השוואה ל-=== במקום השמה.
-2. deleteReference – תיקון filter ל-!== במקום ==.
-3. closeOrder ו-pay – הוספת dispatch ל-InitReferences לרענון הרשימה.
-4. שינוי סטטוס טעויות מ-"faild" ל-"failed" לאחידות.
-*/

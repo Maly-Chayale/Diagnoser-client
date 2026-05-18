@@ -35,7 +35,8 @@ function App() {
       {/* ניווטים מופיעים רק אחרי לחיצה */}
       {hasAccess && (
         <nav>
-          {user && <NavLink to="/Orders" className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
+          {statusUser && statusUser !== "cust" && <NavLink to="/Orders" className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
+          {statusUser === "cust" && <NavLink to={`/OrderOfCusatomer/${user.code}`} className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
           {user && <NavLink to="/Profile" className={({ isActive }) => isActive ? styles.active : styles.link}>פרופיל</NavLink>}
           {!user && (
             <NavLink

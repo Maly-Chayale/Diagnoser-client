@@ -1,5 +1,5 @@
-import React from 'react';
-import './DiagnoserProfil.css';
+import React, { useEffect } from 'react';
+import styles from './b.module.css';
 
 const BookingPopup = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
 
