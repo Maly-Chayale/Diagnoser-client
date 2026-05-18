@@ -12,7 +12,7 @@ const headers = {
 }
 
 
-    export const InitLeads = createAsyncThunk("InitLeads",
+export const InitLeads = createAsyncThunk("InitLeads",
     async () => {
         const res = await axios.get('https://localhost:7082/Leads/ReadAll');
         console.log(res.data); // חשוב

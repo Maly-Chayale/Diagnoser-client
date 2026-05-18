@@ -15,6 +15,7 @@ import { addReference } from '../References/ReferencesSlice';
 import { deleteLead } from '../Leads/LeadsSlice';
 
 import style from './WorkshopCard.module.css';
+import { sendEmail } from '../Email/EmailSlice';
 
 function WorkshopCard({ WorkShop }) {
 
