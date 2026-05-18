@@ -19,14 +19,14 @@ const headers = {
         return res.data;
     })
 
-export const addLead = createAsyncThunk("addLead",
-    async (Lead) => {
-        await axios.post('https://localhost:7082/Leads/Add', Lead,
-            {
-                headers: headers
-            }).then(res => { })
-        return Lead
-    })
+// export const addLead = createAsyncThunk("addLead",
+//     async (Lead) => {
+//         await axios.post('https://localhost:7082/Leads/Add', Lead,
+//             {
+//                 headers: headers
+//             }).then(res => { })
+//         return Lead
+//     })
 
 export const deleteLead = createAsyncThunk("deleteLead",
     async (Lead) => {
@@ -37,15 +37,15 @@ export const deleteLead = createAsyncThunk("deleteLead",
         return Lead
     })
 
-export const updateLead = createAsyncThunk("updateLead",
-    async (Lead) => {
-        await axios.post('https://localhost:7082/Leads/Update', Lead,
-            {
-                headers: headers
-            }
-        ).then(res => { })
-        return Lead
-    })
+// export const updateLead = createAsyncThunk("updateLead",
+//     async (Lead) => {
+//         await axios.post('https://localhost:7082/Leads/Update', Lead,
+//             {
+//                 headers: headers
+//             }
+//         ).then(res => { })
+//         return Lead
+//     })
 
 const LeadsSlice = createSlice({
     name: "Lead",
@@ -67,11 +67,11 @@ const LeadsSlice = createSlice({
             .addCase(InitLeads.rejected, (state) => {
                 state.status = "faild"
             })
-            .addCase(addLead.fulfilled, (state, action) => {
-                const diagnoser = action.payload;
-                state.status = "succesfull";
-                state.Leads.push(diagnoser)
-            })
+            // .addCase(addLead.fulfilled, (state, action) => {
+            //     const diagnoser = action.payload;
+            //     state.status = "succesfull";
+            //     state.Leads.push(diagnoser)
+            // })
             .addCase(deleteLead.fulfilled, (state, action) => {
                 const diagnoser = action.payload;
                 state.status = "succesfull";
@@ -83,11 +83,11 @@ const LeadsSlice = createSlice({
             .addCase(deleteLead.rejected, (state) => {
                 state.status = "faild"
             })
-            .addCase(updateLead.fulfilled, (state, action) => {
-                const Lead = action.payload;
-                let i = state.Leads.findIndex(d => d.mail == Lead.mail)
-                state.Leads[i] = Lead
-            });
+            // .addCase(updateLead.fulfilled, (state, action) => {
+            //     const Lead = action.payload;
+            //     let i = state.Leads.findIndex(d => d.mail == Lead.mail)
+            //     state.Leads[i] = Lead
+            // });
     }
 })
 

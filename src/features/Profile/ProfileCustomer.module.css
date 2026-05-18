@@ -1,25 +1,28 @@
+/* העמוד עצמו */
 .container {
-    min-height: 100vh;
+    min-height: 100vh;                
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 60px;
-    background: #ffffff;
+    justify-content: center;           /* מרכז אופקי */
+    align-items: flex-start;           /* ממקם את הכרטיס למעלה */
+    padding-top: 80px;                 /* יותר גבוה מהחלק העליון */
+    background: #ffffff;               
     font-family: 'Poppins', sans-serif;
 }
 
+/* הכרטיס */
 .card {
-    width: 420px;
+    width: 420px;                      /* גודל הכרטיס */
     background: white;
     border-radius: 20px;
     padding: 28px;
-    border: 2px solid #e5e7eb;
+    border: 2px solid #e5e7eb;        /* מסגרת כמו למאבחנת */
     box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     transition: all 0.35s ease;
     position: relative;
     overflow: hidden;
 }
 
+/* אפקט רקע על hover */
 .card::before {
     content: "";
     position: absolute;
@@ -27,18 +30,22 @@
     background: linear-gradient(135deg, #60a5fa, #a78bfa);
     opacity: 0;
     transition: 0.35s ease;
+    border-radius: 20px;               /* שמירה על הפינות המעוגלות */
+    pointer-events: none;
 }
 
 .card:hover::before {
     opacity: 0.08;
 }
 
+/* אפקט תזוזה והגדלה על hover */
 .card:hover {
     transform: translateY(-10px) scale(1.02);
     box-shadow: 0 25px 60px rgba(96,165,250,0.25);
+    border-color: #60a5fa;             /* מסגרת כחולה בהובר */
 }
 
-/* HEADER */
+/* כותרת */
 .title {
     font-size: 1.6rem;
     font-weight: 700;
@@ -49,7 +56,7 @@
     -webkit-text-fill-color: transparent;
 }
 
-/* ROW */
+/* שורות עם תצוגת שדות */
 .row {
     display: flex;
     justify-content: space-between;
@@ -62,19 +69,19 @@
     transform: translateX(4px);
 }
 
-/* LABEL */
+/* תוויות */
 .label {
     font-weight: 600;
     color: #6b7280;
 }
 
-/* VALUE */
+/* ערכים */
 .value {
     font-weight: 600;
     color: #111827;
 }
 
-/* BADGE (אם תרצי סוג לקוח) */
+/* בדג’ים */
 .badge {
     display: inline-block;
     padding: 6px 12px;

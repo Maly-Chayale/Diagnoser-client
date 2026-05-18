@@ -15,6 +15,7 @@ import { addReference } from '../References/ReferencesSlice';
 import { deleteLead } from '../Leads/LeadsSlice';
 
 import style from './WorkshopCard.module.css';
+import { sendEmail } from '../Email/EmailSlice';
 
 function WorkshopCard({ WorkShop }) {
 
@@ -88,141 +89,82 @@ function WorkshopCard({ WorkShop }) {
         )
     }
 
-    // const handleBooking = async (diagnoser) => {
-
-    //     const today = new Date().toISOString().split('T')[0];
-
-    //     if (customers.find(c => c.code === customer.code) == null) {
-    //         dispatch(deleteLead(customer));
-    //         await dispatch(addCustomer(customer));
-    //     }
-
-    //     const newReference = {
-    //         code: 0,
-    //         codeWorkShop: workshops.find(w =>
-    //             w.codeDiagnoser === diagnoser.code &&
-    //             w.morfology === WorkShop.morfology &&
-    //             w.chirology === WorkShop.chirology &&
-    //             w.grafology === WorkShop.grafology &&
-    //             w.typeGroup === WorkShop.typeGroup
-    //         )?.code,
-
-    //         codeCustomer: customer.code,
-    //         date: today,
-    //         time: 0,
-    //         adress: "",
-    //         comments: "",
-    //         status: 1
-    //     };
-
-    //     const mailBody = `שלום ${diagnoser.name}, \n\n יש הזמנה חדשה לסדנא.`;
-    //     const mailSubject = `הזמנה לסדנא ${WorkShop.code}`;
-
-    //     window.location.href =
-    //         `mailto:${diagnoser.mail}?subject=${mailSubject}&body=${mailBody}`;
-
-    //     alert(`ההזמנה למאבחנת ${diagnoser.name} נשלחה בהצלחה!`);
-
-    //     dispatch(addReference(newReference));
-    // };
-
-
-
-
-
-
-
-const handleBooking = async () => {
-    if (!bookingData.date || !bookingData.time || !bookingData.adress) {
-        alert("יש למלא את כל השדות");
-        return;
-    }
-
-    try {
-        // בדיקה אם הלקוח כבר קיים
-        const existingCustomer = customers.find(c => c.code === customer.code);
-
-        if (!existingCustomer) {
-            // מחיקת ליד
-            await dispatch(deleteLead(customer)).unwrap();
-
-            // הוספת לקוח חדש
-            await dispatch(addCustomer(customer)).unwrap();
+    const handleBooking = async () => {
+        if (!bookingData.date || !bookingData.time || !bookingData.adress) {
+            alert("יש למלא את כל השדות");
+            return;
         }
 
-        // בניית ההזמנה החדשה
-        const newReference = {
-            code: 0,
-            codeWorkShop: workshops.find(w =>
-                w.codeDiagnoser === bookingDiagnoser.code &&
-                w.morfology === WorkShop.morfology &&
-                w.chirology === WorkShop.chirology &&
-                w.grafology === WorkShop.grafology &&
-                w.typeGroup === WorkShop.typeGroup
-            )?.code,
-            codeCustomer: customer.code,
-            date: bookingData.date,
-            time: parseInt(bookingData.time.substring(0, 2)) + 
-            (parseInt(bookingData.time.substring(3, 5)) *1.0 / 100),
-            adress: bookingData.adress,
-            comments: "",
-            status: 1
-        };
+        try {
+            // בדיקה אם הלקוח כבר קיים
+            const existingCustomer = customers.find(c => c.code === customer.code);
 
-        // הוספת ההזמנה
-        await dispatch(addReference(newReference)).unwrap();
+            if (!existingCustomer) {
+                // מחיקת ליד
+                await dispatch(deleteLead(customer)).unwrap();
 
-        // סגירת המודאל
-        setIsBookingModalOpen(false);
+                // הוספת לקוח חדש
+                await dispatch(addCustomer(customer)).unwrap();
+            }
 
-        // פתיחת המייל
-        const mailBody = `שלום ${bookingDiagnoser.name},
+            // בניית ההזמנה החדשה
+            const newReference = {
+                code: 0,
+                codeWorkShop: workshops.find(w =>
+                    w.codeDiagnoser === bookingDiagnoser.code &&
+                    w.morfology === WorkShop.morfology &&
+                    w.chirology === WorkShop.chirology &&
+                    w.grafology === WorkShop.grafology &&
+                    w.typeGroup === WorkShop.typeGroup
+                )?.code,
+                codeCustomer: customer.code,
+                date: bookingData.date,
+                time: parseInt(bookingData.time.substring(0, 2)) +
+                    (parseInt(bookingData.time.substring(3, 5)) * 1.0 / 100),
+                adress: bookingData.adress,
+                comments: "",
+                status: 1
+            };
 
-יש הזמנה חדשה לסדנא.
+            // הוספת ההזמנה
+            await dispatch(addReference(newReference)).unwrap();
 
-תאריך: ${bookingData.date}
-שעה: ${bookingData.time}
-מיקום: ${bookingData.adress}`;
+            // סגירת המודאל
+            setIsBookingModalOpen(false);
 
-        const mailSubject = `הזמנה לסדנא ${WorkShop.code}`;
+            // פתיחת המייל
+            const mailBody = `שלום ${bookingDiagnoser.name},
 
-        window.location.href = `mailto:${bookingDiagnoser.mail}?subject=${mailSubject}&body=${mailBody}`;
+                    יש הזמנה חדשה לסדנא.
 
-    } catch (error) {
-        console.error("שגיאה בהזמנה:", error);
-        alert("אירעה שגיאה בהזמנה, נסי שוב.");
-    }
-};
+                    תאריך: ${bookingData.date}
+                    שעה: ${bookingData.time}
+                    מיקום: ${bookingData.adress}`;
 
+            const mailSubject = `הזמנה לסדנא ${WorkShop.code}`;
 
+            dispatch(sendEmail({
+                toEmail: bookingDiagnoser.mail,
+                subject: mailSubject,
+                body: mailBody
+            }));
 
+        }
+        catch (error) {
+            console.error("שגיאה בהזמנה:", error);
+            alert("אירעה שגיאה בהזמנה, נסי שוב.");
+        }
+    };
 
     const openBookingModal = (diagnoser) => {
-
         setBookingDiagnoser(diagnoser);
-
         setBookingData({
             date: "",
             time: "",
             adress: ""
         });
-
         setIsBookingModalOpen(true);
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     return (
         <>
