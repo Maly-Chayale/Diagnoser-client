@@ -5,7 +5,7 @@ import { GetDiagnosersOfThisWorkshop, InitWorkShops } from '../WorkShop/WorkShop
 import { fetchStatus } from '../Statuss/StatusSlice';
 import { useNavigate } from 'react-router-dom';
 import styles from './OrdersReferences.module.css';
-import BookingPopup from './BookingPopup';
+import BookingPopupOk from './BookingPopupOk';
 import BookingPopupDetails from './BookingPopupDetails';
 import CancelPopup from './CancelPopup';
 import { FaUser, FaCalendarAlt } from 'react-icons/fa';
@@ -37,6 +37,8 @@ const OdersAndReferences = () => {
         };
         loadData();
     }, [status, dispatch]);
+
+
 
     const customer = code => customers.find(c => c.code === code);
     const getWorkshop = code => workshops.find(w => w.code === code);
@@ -72,6 +74,14 @@ const OdersAndReferences = () => {
         dispatch(InitReferences());
         setActiveCancelBooking(null);
     };
+
+    const handleSave = async () => {
+        await dispatch(updateReference(activeBooking))
+        await dispatch(closeOrder(activeBooking.code))
+        await dispatch(close(activeBooking.code))
+        await dispatch(InitReferences())
+        setActiveBooking(null)
+    }
 
     if (!status || status === "loading") return <>טוען נתונים...</>;
 
@@ -174,7 +184,7 @@ const OdersAndReferences = () => {
 
             <BookingPopupDetails booking={activeBookingDetails} handleCancel={handleCancelDetails} getDiagnoser={getDiagnoser} customer={customer} />
             <CancelPopup booking={activeCancelBooking} customer={customer} handleCancel={handleCloseCancelPopup} handleConfirm={handleConfirmCancel} />
-            <BookingPopup booking={activeBooking} customer={customer} handleSave={() => { }} handleCancel={handleCancel} setBooking={setActiveBooking} />
+            <BookingPopupOk booking={activeBooking} customer={customer} handleSave={handleSave} handleCancel={handleCancel} setBooking={setActiveBooking} />
         </div>
     );
 };

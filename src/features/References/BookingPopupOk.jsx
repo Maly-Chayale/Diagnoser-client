@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
-import styles from './b.module.css';
+import styles from './BookingPopupOk.module.css'
 
-const BookingPopup = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
-
-    // const [flag, setFlag] = useState(false)
+const BookingPopupOk = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
 
     const getHour = (time) => {
         let hour = Math.floor(time)
@@ -15,31 +13,13 @@ const BookingPopup = ({ booking, customer, handleSave, handleCancel, setBooking 
         console.log("time: "+hour + ":" + minute);
         
         return hour + ":" + minute
-        // return `${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}`;
+        
     }
-
-//     const getHour = (time) => {
-//     let hour = Math.floor(time);
-//     let minute = Math.round((time - hour) * 100);
-//     if (hour < 10) hour = "0" + hour;
-//     if (minute < 10) minute = "0" + minute;
-//     return `${hour}:${minute}`; // תמיד במבנה "HH:MM"
-// }
-
-    // useEffect(()=>{
-    //     setFlag(false)
-    // }, [])
-
-    // useEffect(()=> {
-    //     if (!flag && booking)
-    //         setFlag(true)
-    // }, [booking])
 
     useEffect(() => {
         if (booking && typeof booking.time === 'number')
             setBooking({...booking, time: getHour(booking.time)})
     }, [booking])
-
 
     if (!booking) return null;
 
@@ -91,4 +71,4 @@ const BookingPopup = ({ booking, customer, handleSave, handleCancel, setBooking 
     );
 };
 
-export default BookingPopup;
+export default BookingPopupOk;
