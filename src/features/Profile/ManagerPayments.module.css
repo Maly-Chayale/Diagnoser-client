@@ -12,14 +12,15 @@
 }
 
 .search-input {
-    width: 100% ;
-    max-width: 1000px;
-    padding: 16px;
-    border-radius: 16px;
+    width: 300%;
+    max-width: 3000px;
+    padding: 20px 24px;
+    border-radius: 20px;
     border: 2px solid #a78bfa;
     transition: all 0.3s;
     outline: none;
     color: #333;
+    font-size: 1.1rem;
 }
 
 .search-input:focus {
@@ -31,26 +32,17 @@
 
 .table-card {
     background: #ffffff;
-    /* border-radius: 20px; */
     padding: 24px;
-    /* border: 2px solid #a78bfa; */
     max-width: 1000px;
     margin: 0 auto;
     box-shadow: 0 8px 28px rgba(96,165,250,0.1);
-}
-
-.table-title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: linear-gradient(135deg, #60a5fa, #a78bfa);
-    margin-bottom: 20px;
-    text-align: center;
 }
 
 .modern-table {
     width: 100%;
     border-collapse: collapse;
     text-align: center;
+    direction: rtl;
 }
 
 .modern-table th, .modern-table td {
@@ -60,42 +52,53 @@
     color: #333;
 }
 
-/* כותרות אופקיות אחת ליד השנייה */
 .modern-table th {
     background: linear-gradient(135deg, #60a5fa, #a78bfa);
     font-weight: 600;
     color: #ffffff;
-    display: table-cell;
     text-align: center;
 }
 
-.table-row {
-    transition: all 0.4s ease;
-    cursor: pointer;
+/* הדגשת שורה בעת מעבר עכבר */
+.modern-table tbody tr:hover {
+    background: rgba(96,165,250,0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(96,165,250,0.2);
 }
 
-.table-row:hover {
-    background: rgba(96,165,250,0.35);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 24px rgba(96,165,250,0.35);
+/* שורה אדומה אם נותר תשלום */
+.red-row {
+    background-color: rgba(255, 0, 0, 0.1);
+    color: red;
+    font-weight: 600;
 }
 
+/* כפתור צפייה */
+/* כפתור צפייה מוקטן */
+/* כפתור צפייה מוקטן באופן ברור */
+/* כפתור צפייה מינימלי */
 .view-btn {
-    padding: 8px 16px;
-    border-radius: 12px;
+    padding: 3px 6px;         /* מינימום padding */
+    border-radius: 6px;       /* עיגול קטן */
+    font-size: 0.7rem;        /* פונט קטן מאוד */
+    min-width: 30px;          /* רוחב מינימלי */
+    min-height: 25px;         /* גובה מינימלי */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     background: linear-gradient(135deg, #60a5fa, #a78bfa);
     color: white;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    justify-self: center;
 }
 
 .view-btn:hover {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 6px 18px rgba(96,165,250,0.25);
+    transform: translateY(-1px) scale(1.05);
+    box-shadow: 0 3px 8px rgba(96,165,250,0.25);
 }
-
 .search-input::placeholder {
     color: #60a5fa;
     font-weight: 600;
@@ -105,8 +108,13 @@
     background: rgba(96,165,250,0.4);
     color: #1e40af;
     border-radius: 4px;
-    padding: 0 2px;
+    /* padding: 0 2px; */
+     /* הוספה למרכז תוכן אנכית ואופקית */
+    display: flex;
+    justify-content: center; /* מרכז אופקי */
+    align-items: center;     /* מרכז אנכי */
 }
+
 
 @media (max-width: 768px) {
     .search-input {

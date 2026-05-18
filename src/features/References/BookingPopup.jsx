@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './DiagnoserProfil.css';
 
 const BookingPopup = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
@@ -44,43 +44,47 @@ const BookingPopup = ({ booking, customer, handleSave, handleCancel, setBooking 
     if (!booking) return null;
 
     return (
-        <div className="popup-overlay">
-            <div className="popup-content">
-                <h3>אישור סדנא {booking.codeWorkshop}</h3>
+        <div className={styles.overlay}>
+            <div className={styles.content}>
+                <h3 className={styles.title}>אישור סדנא {booking.codeWorkshop}</h3>
                 <p>לקוח: {customer(booking.codeCustomer)?.name}</p>
                 <p>מייל לקוח: {customer(booking.codeCustomer)?.mail}</p>
 
-                <label>תאריך:</label>
+                <label className={styles.label}>תאריך:</label>
                 <input
                     type="date"
+                    className={styles.input}
                     value={booking.date}
                     onChange={e => setBooking({ ...booking, date: e.target.value })}
                 />
 
-                <label>שעה:</label>
+                <label className={styles.label}>שעה:</label>
                 <input
                     type="time"
+                    className={styles.input}
                     value={booking.time}
                     onChange={e => setBooking({ ...booking, time: e.target.value })}
                 />
 
-                <label>כתובת:</label>
+                <label className={styles.label}>כתובת:</label>
                 <input
                     type="text"
+                    className={styles.input}
                     value={booking.adress}
                     onChange={e => setBooking({ ...booking, adress: e.target.value })}
                 />
 
-                <label>הערות:</label>
+                <label className={styles.label}>הערות:</label>
                 <input
                     type="text"
+                    className={styles.input}
                     value={booking.comments}
                     onChange={e => setBooking({ ...booking, comments: e.target.value })}
                 />
 
-                <div className="button-container">
-                    <button className="profile-button" onClick={handleSave}>אישור</button>
-                    <button className="profile-button cancel-button" onClick={handleCancel}>ביטול</button>
+                <div className={styles.buttonContainer}>
+                    <button className={styles.button} onClick={handleSave}>אישור</button>
+                    <button className={`${styles.button} ${styles.cancelButton}`} onClick={handleCancel}>ביטול</button>
                 </div>
             </div>
         </div>

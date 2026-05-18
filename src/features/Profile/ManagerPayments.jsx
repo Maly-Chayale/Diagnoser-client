@@ -1,18 +1,29 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { FaUser, FaEnvelope, FaPhone, FaDollarSign, FaEye } from 'react-icons/fa';
+import DiagnoserOrdersPopup from './DiagnoserOrdersPopup';
 import styles from './ManagerPayments.module.css';
 
 const ManagerPayments = () => {
-
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
-    const string = (s) => `${s.name} ${s.mail} ${s.precentagePayment}`;
-    const [search, setSearch] = useState("");
+    const references = useSelector(state => state.Reference.references);
+    const workshops = useSelector(state => state.WorkShop.WorkShops);
+    const customers = useSelector(state => state.Customer.Customers);
+    const statusUser = useSelector(state => state.LogIn.statusUser);
 
-    const filteredSlots = useMemo(
-        () => diagnosers.filter(s => string(s).toLowerCase().includes(search.toLowerCase())),
-        [diagnosers, search]
-    );
+    const [search, setSearch] = useState("");
+    const [selectedDiagnoser, setSelectedDiagnoser] = useState(null);
+
+    const string = (s) => `${s.name} ${s.mail} ${s.precentagePayment}`;
+
+    const filteredSlots = useMemo(() => {
+        const sortedDiagnosers = [...diagnosers].sort((a, b) => a.name.localeCompare(b.name, 'he'));
+        return sortedDiagnosers.filter(s => string(s).toLowerCase().includes(search.toLowerCase()));
+    }, [diagnosers, search]);
+
+    const handleOpenDiagnoser = (diagnoser) => {
+        setSelectedDiagnoser(diagnoser);
+    };
 
     return (
         <div className={styles["payments-page"]}>
@@ -25,11 +36,8 @@ const ManagerPayments = () => {
                     onChange={e => setSearch(e.target.value)}
                 />
             </div>
+
             <div className={styles["table-card"]}>
-                {/* <div className={styles["table-title"]}>התחשבנות מאבחנות</div> */}
-
-
-
                 <table className={styles["modern-table"]}>
                     <thead>
                         <tr>
@@ -40,24 +48,39 @@ const ManagerPayments = () => {
                             <th><FaEye /> צפייה בתורים</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                        {filteredSlots
-                            .filter(d => d.mail !== '22@2')
-                            .map((d, i) => (
-                                <tr key={i} className={styles["table-row"]}>
-                                    <td>{d.name}</td>
-                                    <td>{d.mail}</td>
-                                    <td>{d.phone}</td>
-                                    <td>{d.precentagePayment}</td>
-                                    <td>
-                                        <button className={styles["view-btn"]}><FaEye /></button>
-                                    </td>
-                                </tr>
-                            ))}
+                        {filteredSlots.filter(d => d.mail !== "22@2").map((d, i) => (
+                            <tr
+                                key={i}
+                                className={Number(d.precentagePayment) > 10000 ? styles["red-row"] : ""}
+                            >
+                                <td>{d.name}</td>
+                                <td>{d.mail}</td>
+                                <td>{d.phone}</td>
+                                <td>{d.precentagePayment}</td>
+                                <td>
+                                    <button
+                                        className={styles["view-btn"]}
+                                        onClick={() => handleOpenDiagnoser(d)}
+                                    >
+                                        <FaEye />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
+
+            {selectedDiagnoser && (
+                <DiagnoserOrdersPopup
+                    booking={selectedDiagnoser}
+                    references={references}
+                    workshops={workshops}
+                    customer={(code) => customers.find(c => c.code === code)}
+                    handleCancel={() => setSelectedDiagnoser(null)}
+                />
+            )}
         </div>
     );
 };
