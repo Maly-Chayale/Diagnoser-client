@@ -141,7 +141,7 @@ const WorkShopSlice = createSlice({
             .addCase(addWorkShop.fulfilled, (state, action) => {
                 const workshop = action.payload;
                 state.status = "succesfull";
-               state.WorkShops=[...state.WorkShops,workshop]// state.WorkShops.push(workshop)
+                state.WorkShops=[...state.WorkShops,workshop]// state.WorkShops.push(workshop)
             })
             .addCase(deleteWorkShop.fulfilled, (state, action) => {
                 const workshop = action.payload;

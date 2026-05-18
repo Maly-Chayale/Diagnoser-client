@@ -3,11 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import style from './WorkshopCard.module.css';
 import { useParams } from 'react-router-dom';
 import { InitWorkShops } from './WorkShopSlice';
+import Confetti from 'react-confetti';
 
 function WorkshopDetails() {
 
-    const params= useParams()
-    const {code} = params
+    const params = useParams()
+    const { code } = params
+    const { con } = params
+
 
     const dispatch = useDispatch();
 
@@ -20,9 +23,8 @@ function WorkshopDetails() {
         if (status === "") {
             dispatch(InitWorkShops());
         }
-        if(workshops!=null)
-        {
-            const w = workshops.find(w=>w.code==code)
+        if (workshops != null) {
+            const w = workshops.find(w => w.code == code)
             setWorkShop(w)
         }
     }, [dispatch, status]);
@@ -34,9 +36,10 @@ function WorkshopDetails() {
     return (
         <>
             <div className={style.card}>
+                {con && <Confetti width={window.innerWidth} height={window.innerHeight} />}
 
                 <h2 className={style.title}>
-                    {getType(WorkShop)}
+                    {getType(WorkShop.typeGroup)}
                 </h2>
 
                 <div className={style.capabilities}>
@@ -67,7 +70,7 @@ function WorkshopDetails() {
 
             </div>
 
-         </>
+        </>
     );
 }
 

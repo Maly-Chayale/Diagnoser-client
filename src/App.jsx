@@ -79,7 +79,7 @@ function App() {
             <Route path="/Orders" element={<OdersAndReferences />} />
             <Route path="/Orders/:code" element={<OdersAndReferences />} />
             <Route path="/Profile" element={<ProfileWrapper />} />
-            <Route path="/WorkshopDetails/:code" element={<WorkshopDetails />} />
+            <Route path="/WorkshopDetails/:code/:con" element={<WorkshopDetails />} />
             <Route path="/Payments" element={<ManagerPayments />} />
             <Route path="/Leads" element={<LeadsList />} />
           </>

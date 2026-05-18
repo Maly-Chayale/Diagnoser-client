@@ -70,8 +70,7 @@ const OrderOfCusatomer = () => {
                                     <div className={style.cell}><span className={style.label}>קוד סדנא</span></div>
                                     <div className={style.cell}><span className={style.label}>סוג הסדנא</span></div>
                                     <div className={style.cell}><span className={style.label}>הערות</span></div>
-                                    {statusUser === "cust" &&
-                                        <div className={style.cell}><span className={style.label}>פעולות</span></div>}
+                                    <div className={style.cell}><span className={style.label}>פעולות</span></div>
                                 </div>
 
                                 <div className={style.tableRow}>
@@ -82,16 +81,15 @@ const OrderOfCusatomer = () => {
                                     <div className={style.cell}><span>{item.codeWorkshop}</span></div>
                                     <div className={style.cell}><span>{type?.description}</span></div>
                                     <div className={style.cell}><span>{item.comments}</span></div>
-                                    {statusUser === "cust" &&
-                                        <div className={style.cell}>
-                                            {item.status === 3 && (
-                                                <button onClick={() => handlePay(item.code)}>
-                                                    {loadingPay.includes(item.code) ? "טוען..." : "תשלום"}
-                                                </button>
-                                            )}
-                                            {item.status === 2 && <span>שולם</span>}
-                                            {item.status === 1 && <span>בהמתנה</span>}
-                                        </div>}
+                                    <div className={style.cell}>
+                                        {item.status === 3 && (
+                                            <button onClick={() => handlePay(item.code)}>
+                                                {loadingPay.includes(item.code) ? "טוען..." : "תשלום"}
+                                            </button>
+                                        )}
+                                        {item.status === 2 && <span>שולם</span>}
+                                        {item.status === 1 && <span>בהמתנה</span>}
+                                    </div>
                                 </div>
                             </div>
                         ))
