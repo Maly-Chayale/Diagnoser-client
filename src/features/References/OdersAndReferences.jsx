@@ -9,6 +9,7 @@ import BookingPopup from './BookingPopup';
 import BookingPopupDetails from './BookingPopupDetails';
 import CancelPopup from './CancelPopup';
 import { FaUser, FaCalendarAlt } from 'react-icons/fa';
+import { sendEmail } from '../Email/EmailSlice';
 
 const OdersAndReferences = () => {
     const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const OdersAndReferences = () => {
     const statusUser = useSelector(state => state.LogIn.statusUser);
     const workshops = useSelector(state => state.WorkShop.WorkShops);
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
+    const diagnosersOfWorkshop = useSelector(state => state.WorkShop.Diagnosers);
     const statuss = useSelector(state => state.Status.statuss);
 
     const [activeBooking, setActiveBooking] = useState(null);
@@ -58,6 +60,11 @@ const OdersAndReferences = () => {
                 .includes(search.toLowerCase())
         ), [filteredpay, search]);
 
+
+    const workshopDiagnoser = (code) => {
+        return workshops.filter(w => w.codeDiagnoser === code)
+    }
+
     const handleApprove = booking => setActiveBooking({ ...booking });
     const handleCancel = () => setActiveBooking(null);
     const handleCancelDetails = () => setActiveBookingDetails(null);
@@ -66,12 +73,92 @@ const OdersAndReferences = () => {
         setActiveCancelBooking(booking);
     };
     const handleCloseCancelPopup = () => setActiveCancelBooking(null);
+
+
     const handleConfirmCancel = async () => {
         if (!activeCancelBooking) return;
+
+        const workshop = getWorkshop(activeCancelBooking.codeWorkshop);
+        const morf = workshop.morfology;
+        const graf = workshop.grafology;
+        const chi = workshop.chirology;
+        const typeGroup = workshop.typeGroup;
+
+        // הבאת המאבחנות החלופיות
+        // const res = await dispatch(GetDiagnosersOfThisWorkshop(workshop));
+        // const alternativeDiagnosers = res.payload || [];
+
+        // בניית תוכן מייל עם טבלת HTML מעוצבת
+        const tableRows = diagnosersOfWorkshop.filter(d => d.code !== workshop.codeDiagnoser).map((d, index) =>
+            `<tr style="background-color: ${index % 2 === 0 ? '#f9f9f9' : '#ffffff'};">
+            <td style="padding: 8px; border: 1px solid #ccc;">${d.name}</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">${d.mail}</td>
+            <td style="padding: 8px; border: 1px solid #ccc; text-align: center;">
+            ${workshopDiagnoser(d.code).find(w =>
+                w.morfology == workshop.morfology &&
+                w.grafology == workshop.grafology &&
+                w.chirology == workshop.chirology &&
+                w.typeGroup == workshop.typeGroup)?.accontOfPeople || 0
+            }</td>
+            <td style="padding: 8px; border: 1px solid #ccc; text-align: right;">
+            ${workshopDiagnoser(d.code).find(w =>
+                w.morfology == workshop.morfology &&
+                w.grafology == workshop.grafology &&
+                w.chirology == workshop.chirology &&
+                w.typeGroup == workshop.typeGroup)?.price || 0
+            }</td>
+        </tr>`
+        ).join("");
+
+        const mailBody = `
+                        <p>שלום ${customer(activeCancelBooking.codeCustomer)?.name},</p>
+
+                        <p>לצערנו, המאבחנת שנבחרה לסדנא <strong>${workshop.code}</strong> אינה זמינה.</p>
+
+                        <p>להלן המאבחנות החלופיות עם פרטי הסדנא:</p>
+
+                        <table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
+                            <thead>
+                                <tr style="background-color: #007BFF; color: white;">
+                                    <th style="padding: 8px; border: 1px solid #ccc;">שם</th>
+                                    <th style="padding: 8px; border: 1px solid #ccc;">מייל</th>
+                                    <th style="padding: 8px; border: 1px solid #ccc;">כמות משתתפים</th>
+                                    <th style="padding: 8px; border: 1px solid #ccc;">כסף</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                        </table>
+
+                        <p>בברכה,</p>
+                        <p>צוות הסדנאות</p>
+                        `;
+
+        const mailSubject = `ביטול סדנא ${workshop.code}`;
+
+        // מחיקת הרפרנס
         await dispatch(deleteReference(activeCancelBooking)).unwrap();
+
+        // רענון הטבלה והסתרת הפופאפ
         dispatch(InitReferences());
         setActiveCancelBooking(null);
+
+
+        // שליחת מייל
+        // window.location.href =
+        //     `mailto:${customer(activeCancelBooking.codeCustomer)?.mail}?subject=${mailSubject}&body=${mailBody}`;
+
+        dispatch(sendEmail(customer(activeCancelBooking.codeCustomer)?.mail, mailSubject, mailBody))
+
+
     };
+
+
+
+
+
+
 
     if (!status || status === "loading") return <>טוען נתונים...</>;
 
@@ -150,23 +237,23 @@ const OdersAndReferences = () => {
                         </thead>
                         <tbody>
                             {filtered.map((r, i) =>
-                             (r.status == 1 && 
-                                (statusUser === "Esty" || codeDiagnoser(r.codeWorkshop) === user.code)) && (
-                                <tr key={i} className={styles.hoverRow}>
-                                    <td>{r.date}</td>
-                                    <td className={styles.customerCell}> {customer(r.codeCustomer)?.name}</td>
-                                    {statusUser === "Esty" && <td>{getDiagnoser(r.codeWorkshop)?.name}</td>}
-                                    <td>
-                                        <button className={styles.workshopBtn} onClick={() => navigate(`/WorkshopDetails/${r.codeWorkshop}`)}>
-                                            {r.codeWorkshop}
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button className={`${styles.profileButton} ${styles.approveButton}`} onClick={() => handleApprove(r)}>אשר</button>
-                                        <button className={`${styles.profileButton} ${styles.cancelButton}`} onClick={() => handleOpenCancelPopup(r)}>ביטול</button>
-                                    </td>
-                                </tr>
-                            ))}
+                                (r.status == 1 &&
+                                    (statusUser === "Esty" || codeDiagnoser(r.codeWorkshop) === user.code)) && (
+                                    <tr key={i} className={styles.hoverRow}>
+                                        <td>{r.date}</td>
+                                        <td className={styles.customerCell}> {customer(r.codeCustomer)?.name}</td>
+                                        {statusUser === "Esty" && <td>{getDiagnoser(r.codeWorkshop)?.name}</td>}
+                                        <td>
+                                            <button className={styles.workshopBtn} onClick={() => navigate(`/WorkshopDetails/${r.codeWorkshop}`)}>
+                                                {r.codeWorkshop}
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button className={`${styles.profileButton} ${styles.approveButton}`} onClick={() => handleApprove(r)}>אשר</button>
+                                            <button className={`${styles.profileButton} ${styles.cancelButton}`} onClick={() => handleOpenCancelPopup(r)}>ביטול</button>
+                                        </td>
+                                    </tr>
+                                ))}
                         </tbody>
                     </table>
                 </div>
