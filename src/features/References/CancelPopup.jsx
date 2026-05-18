@@ -1,5 +1,5 @@
 import React from 'react';
-import './DiagnoserProfil.css';
+import './CancelPopup.css';
 
 const CancelPopup = ({ booking, customer, handleCancel, handleConfirm }) => {
     if (!booking) return null;

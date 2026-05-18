@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './b.module.css'
+import styles from './BookingPopupOk.module.css'
 
-const BookingPopup = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
+const BookingPopupOk = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
     if (!booking) return null;
 
     return (
@@ -52,4 +52,4 @@ const BookingPopup = ({ booking, customer, handleSave, handleCancel, setBooking 
     );
 };
 
-export default BookingPopup;
+export default BookingPopupOk;
