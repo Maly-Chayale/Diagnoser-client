@@ -24,10 +24,6 @@ function WorkshopCard({ WorkShop }) {
     const [selectedDiagnoser, setSelectedDiagnoser] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-
-
-
-
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
     const [bookingDiagnoser, setBookingDiagnoser] = useState(null);
@@ -37,11 +33,6 @@ function WorkshopCard({ WorkShop }) {
         time: "",
         adress: ""
     });
-
-
-
-
-
 
     const groups = useSelector(state => state.TypeGroup.groups);
     const diagnosers = useSelector(state => state.WorkShop.Diagnosers);
