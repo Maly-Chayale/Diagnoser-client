@@ -39,7 +39,7 @@ export const addWorkShop = createAsyncThunk("addWorkShop",
         await axios.post('https://localhost:7082/api/WorkShops/Add', WorkShop,
             {
                 headers: headers
-            }).then(res => { })
+            }).then(res => { WorkShop.code=res.data })
         return WorkShop
     })
 
