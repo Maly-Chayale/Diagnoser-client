@@ -15,7 +15,7 @@ function WorkshopDetails() {
     const dispatch = useDispatch();
 
     const workshops = useSelector(state => state.WorkShop.WorkShops);
-    const status = useSelector(state => state.WorkShop.Status);
+    const status = useSelector(state => state.WorkShop.status);
     const groups = useSelector(state => state.TypeGroup.groups);
     const [WorkShop, setWorkShop] = useState()
 
@@ -24,7 +24,7 @@ function WorkshopDetails() {
             dispatch(InitWorkShops());
         }
         if (workshops != null) {
-            const w = workshops.find(w => w.code == code)
+            const w = workshops.find(w => w.code === parseInt(code))
             setWorkShop(w)
         }
     }, [dispatch, status]);
@@ -33,10 +33,12 @@ function WorkshopDetails() {
         return groups.find(g => g.code === code)?.description;
     };
 
+    if(status != "succesfull" || !WorkShop) return <>טוען נתונים...</>
+
     return (
         <>
             <div className={style.card}>
-                {con && <Confetti width={window.innerWidth} height={window.innerHeight} />}
+                {/* {con && <Confetti width={window.innerWidth} height={window.innerHeight} />} */}
 
                 <h2 className={style.title}>
                     {getType(WorkShop.typeGroup)}

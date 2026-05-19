@@ -83,20 +83,13 @@ function WorkshopCard({ WorkShop }) {
             alert("יש למלא את כל השדות");
             return;
         }
-
         try {
-            // בדיקה אם הלקוח כבר קיים
             const existingCustomer = customers.find(c => c.code === customer.code);
-
             if (!existingCustomer) {
-                // מחיקת ליד
                 await dispatch(deleteLead(customer)).unwrap();
-
-                // הוספת לקוח חדש
-                await dispatch(addCustomer(customer)).unwrap();
+                const c = await dispatch(addCustomer(customer)).unwrap();
+                customer.code = c
             }
-
-            // בניית ההזמנה החדשה
             const newReference = {
                 code: 0,
                 codeWorkShop: workshops.find(w =>
@@ -114,33 +107,20 @@ function WorkshopCard({ WorkShop }) {
                 comments: "",
                 status: 1
             };
-
-            // הוספת ההזמנה
             await dispatch(addReference(newReference)).unwrap();
-
-            // סגירת המודאל
             setIsBookingModalOpen(false);
-
-            // ניווט לעמוד הלקוח עם קוד המאבחנת
             navigate(`/OrderOfCusatomer/${newReference.codeCustomer}`);
-
-            // פתיחת המייל
             const mailBody = `שלום ${bookingDiagnoser.name},
-
                     יש הזמנה חדשה לסדנא.
-
                     תאריך: ${bookingData.date}
                     שעה: ${bookingData.time}
                     מיקום: ${bookingData.adress}`;
-
             const mailSubject = `הזמנה לסדנא ${WorkShop.code}`;
-
             dispatch(sendEmail({
                 toEmail: bookingDiagnoser.mail,
                 subject: mailSubject,
                 body: mailBody
             }));
-
         }
         catch (error) {
             console.error("שגיאה בהזמנה:", error);
@@ -431,18 +411,6 @@ function WorkshopCard({ WorkShop }) {
 
                 </div>
             )}
-
-
-
-
-
-
-
-
-
-
-
-            {/* DELETE MODAL */}
 
             {isDeleteModalOpen && (
 

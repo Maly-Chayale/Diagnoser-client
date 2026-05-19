@@ -12,28 +12,8 @@ const BookingPopupOk = ({ booking, customer, handleSave, handleCancel, setBookin
             minute = "0" + minute
         if (hour < 10)
             hour = "0" + hour
-        console.log("time: "+hour + ":" + minute);
-        
         return hour + ":" + minute
-        // return `${hour < 10 ? '0' : ''}${hour}:${minute < 10 ? '0' : ''}${minute}`;
     }
-
-//     const getHour = (time) => {
-//     let hour = Math.floor(time);
-//     let minute = Math.round((time - hour) * 100);
-//     if (hour < 10) hour = "0" + hour;
-//     if (minute < 10) minute = "0" + minute;
-//     return `${hour}:${minute}`; // תמיד במבנה "HH:MM"
-// }
-
-    // useEffect(()=>{
-    //     setFlag(false)
-    // }, [])
-
-    // useEffect(()=> {
-    //     if (!flag && booking)
-    //         setFlag(true)
-    // }, [booking])
 
     useEffect(() => {
         if (booking && typeof booking.time === 'number')

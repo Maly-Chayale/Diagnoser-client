@@ -75,87 +75,157 @@ const OdersAndReferences = () => {
     const handleCloseCancelPopup = () => setActiveCancelBooking(null);
 
 
+    // const handleConfirmCancel = async () => {
+    //     if (!activeCancelBooking) return;
+
+    //     const workshop = getWorkshop(activeCancelBooking.codeWorkshop);
+    //     const morf = workshop.morfology;
+    //     const graf = workshop.grafology;
+    //     const chi = workshop.chirology;
+    //     const typeGroup = workshop.typeGroup;
+
+    //     const tableRows = diagnosersOfWorkshop.filter(d => d.code !== workshop.codeDiagnoser).map((d, index) =>
+    //         `<tr style="background-color: ${index % 2 === 0 ? '#f9f9f9' : '#ffffff'};">
+    //         <td style="padding: 8px; border: 1px solid #ccc;">${d.name}</td>
+    //         <td style="padding: 8px; border: 1px solid #ccc;">${d.mail}</td>
+    //         <td style="padding: 8px; border: 1px solid #ccc; text-align: center;">
+    //         ${workshopDiagnoser(d.code).find(w =>
+    //             w.morfology == morf &&
+    //             w.grafology == graf &&
+    //             w.chirology == chi &&
+    //             w.typeGroup == typeGroup)?.accontOfPeople || 0
+    //         }</td>
+    //         <td style="padding: 8px; border: 1px solid #ccc; text-align: right;">
+    //         ${workshopDiagnoser(d.code).find(w =>
+    //             w.morfology == morf &&
+    //             w.grafology == graf &&
+    //             w.chirology == chi &&
+    //             w.typeGroup == typeGroup)?.price || 0
+    //         }</td>
+    //     </tr>`
+    //     ).join("");
+
+    //     const mailBody = `
+    //                     <p>שלום ${customer(activeCancelBooking.codeCustomer)?.name},</p>
+
+    //                     <p>לצערנו, המאבחנת שנבחרה לסדנא <strong>${workshop.code}</strong> אינה זמינה.</p>
+
+    //                     ${tableRows != "" ? `<p>להלן המאבחנות החלופיות עם פרטי הסדנא:</p>
+
+    //                     <table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
+    //                         <thead>
+    //                             <tr style="background-color: #007BFF; color: white;">
+    //                                 <th style="padding: 8px; border: 1px solid #ccc;">שם</th>
+    //                                 <th style="padding: 8px; border: 1px solid #ccc;">מייל</th>
+    //                                 <th style="padding: 8px; border: 1px solid #ccc;">כמות משתתפים</th>
+    //                                 <th style="padding: 8px; border: 1px solid #ccc;">כסף</th>
+    //                             </tr>
+    //                         </thead>
+    //                         <tbody>
+    //                             ${tableRows}
+    //                         </tbody>
+    //                     </table>`:
+    //             `<>אין מאבחנות חילופיות</>`}
+
+    //                     <p>בברכה,</p>
+    //                     <p>צוות הסדנאות</p>
+    //                     `;
+
+    //     const mailSubject = `ביטול סדנא ${workshop.code}`;
+
+    //     await dispatch(deleteReference(activeCancelBooking)).unwrap();
+
+    //     dispatch(InitReferences());
+    //     setActiveCancelBooking(null);
+
+    //     dispatch(sendEmail(customer(activeCancelBooking.codeCustomer)?.mail, mailSubject, mailBody))
+    // };
+
+
     const handleConfirmCancel = async () => {
         if (!activeCancelBooking) return;
 
         const workshop = getWorkshop(activeCancelBooking.codeWorkshop);
+        if (!workshop) {
+            console.error("Workshop not found for code:", activeCancelBooking.codeWorkshop);
+            return;
+        }
+
+        const customerData = customer(activeCancelBooking.codeCustomer);
+        if (!customerData) {
+            console.error("Customer not found for code:", activeCancelBooking.codeCustomer);
+            return;
+        }
+
+        try {
+            await dispatch(GetDiagnosersOfThisWorkshop(workshop));
+        } catch (err) {
+            console.error("Error fetching diagnosers:", err);
+            return;
+        }
+
+        if (!Array.isArray(diagnosersOfWorkshop)) {
+            console.warn("No alternative diagnosers available");
+        }
+
         const morf = workshop.morfology;
         const graf = workshop.grafology;
         const chi = workshop.chirology;
         const typeGroup = workshop.typeGroup;
 
-        // הבאת המאבחנות החלופיות
-        // const res = await dispatch(GetDiagnosersOfThisWorkshop(workshop));
-        // const alternativeDiagnosers = res.payload || [];
+        const tableRows = (diagnosersOfWorkshop || []).filter(d => d.code !== workshop.codeDiagnoser)
+            .map((d, index) => {
+                const w = workshopDiagnoser(d.code).find(w =>
+                    w.morfology === morf &&
+                    w.grafology === graf &&
+                    w.chirology === chi &&
+                    w.typeGroup === typeGroup
+                );
 
-        // בניית תוכן מייל עם טבלת HTML מעוצבת
-        const tableRows = diagnosersOfWorkshop.filter(d => d.code !== workshop.codeDiagnoser).map((d, index) =>
-            `<tr style="background-color: ${index % 2 === 0 ? '#f9f9f9' : '#ffffff'};">
-            <td style="padding: 8px; border: 1px solid #ccc;">${d.name}</td>
-            <td style="padding: 8px; border: 1px solid #ccc;">${d.mail}</td>
+                return `<tr style="background-color: ${index % 2 === 0 ? '#f9f9f9' : '#ffffff'};">
+            <td style="padding: 8px; border: 1px solid #ccc;">${d.name || 'N/A'}</td>
+            <td style="padding: 8px; border: 1px solid #ccc;">${d.mail || 'N/A'}</td>
             <td style="padding: 8px; border: 1px solid #ccc; text-align: center;">
-            ${workshopDiagnoser(d.code).find(w =>
-                w.morfology == workshop.morfology &&
-                w.grafology == workshop.grafology &&
-                w.chirology == workshop.chirology &&
-                w.typeGroup == workshop.typeGroup)?.accontOfPeople || 0
-            }</td>
+                ${w?.accontOfPeople || 0}
+            </td>
             <td style="padding: 8px; border: 1px solid #ccc; text-align: right;">
-            ${workshopDiagnoser(d.code).find(w =>
-                w.morfology == workshop.morfology &&
-                w.grafology == workshop.grafology &&
-                w.chirology == workshop.chirology &&
-                w.typeGroup == workshop.typeGroup)?.price || 0
-            }</td>
-        </tr>`
-        ).join("");
+                ${w?.price || 0}
+            </td>
+        </tr>`;
+            }).join("");
 
         const mailBody = `
-                        <p>שלום ${customer(activeCancelBooking.codeCustomer)?.name},</p>
-
-                        <p>לצערנו, המאבחנת שנבחרה לסדנא <strong>${workshop.code}</strong> אינה זמינה.</p>
-
-                        <p>להלן המאבחנות החלופיות עם פרטי הסדנא:</p>
-
-                        <table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
-                            <thead>
-                                <tr style="background-color: #007BFF; color: white;">
-                                    <th style="padding: 8px; border: 1px solid #ccc;">שם</th>
-                                    <th style="padding: 8px; border: 1px solid #ccc;">מייל</th>
-                                    <th style="padding: 8px; border: 1px solid #ccc;">כמות משתתפים</th>
-                                    <th style="padding: 8px; border: 1px solid #ccc;">כסף</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${tableRows}
-                            </tbody>
-                        </table>
-
-                        <p>בברכה,</p>
-                        <p>צוות הסדנאות</p>
-                        `;
+        <p>שלום ${customerData.name},</p>
+        <p>לצערנו, המאבחנת שנבחרה לסדנא <strong>${workshop.code}</strong> אינה זמינה.</p>
+        ${diagnosersOfWorkshop.length === 0 ? `<p>להלן המאבחנות החלופיות עם פרטי הסדנא:</p>
+        <table style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
+            <thead>
+                <tr style="background-color: #007BFF; color: white;">
+                    <th style="padding: 8px; border: 1px solid #ccc;">שם</th>
+                    <th style="padding: 8px; border: 1px solid #ccc;">מייל</th>
+                    <th style="padding: 8px; border: 1px solid #ccc;">כמות משתתפים</th>
+                    <th style="padding: 8px; border: 1px solid #ccc;">כסף</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${tableRows}
+            </tbody>
+        </table>` : `<p>אין מאבחנות חילופיות</p>`}
+        <p>בברכה,</p>
+        <p>צוות הסדנאות</p>
+    `;
 
         const mailSubject = `ביטול סדנא ${workshop.code}`;
 
-        // מחיקת הרפרנס
-        await dispatch(deleteReference(activeCancelBooking)).unwrap();
-
-        // רענון הטבלה והסתרת הפופאפ
-        dispatch(InitReferences());
-        setActiveCancelBooking(null);
-
-
-        // שליחת מייל
-        // window.location.href =
-        //     `mailto:${customer(activeCancelBooking.codeCustomer)?.mail}?subject=${mailSubject}&body=${mailBody}`;
-
-        dispatch(sendEmail(customer(activeCancelBooking.codeCustomer)?.mail, mailSubject, mailBody))
-
-
+        try {
+            await dispatch(deleteReference(activeCancelBooking)).unwrap();
+            // await dispatch(InitReferences());
+            setActiveCancelBooking(null);
+            await dispatch(sendEmail(customerData.mail, mailSubject, mailBody));
+        } catch (err) {
+            console.error("Error in cancel workflow:", err);
+        }
     };
-
-
-
 
 
 

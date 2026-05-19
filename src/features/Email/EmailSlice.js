@@ -12,18 +12,18 @@ const headers = {
 
 // thunk לשליחת מייל דרך השרת
 export const sendEmail = createAsyncThunk(
-    "Email/sendEmail",
+    "sendEmail",
     async ({ toEmail, subject, body }, { rejectWithValue }) => {
-        try {
+        // try {
             const response = await axios.post('https://localhost:7082/api/Email/SendEmail', {
                 ToEmail: toEmail,
                 Subject: subject,
                 Body: body
             }, { headers });
             return response.data;
-        } catch (error) {
-            return rejectWithValue(error.response?.data || error.message);
-        }
+        // } catch (error) {
+        //     return rejectWithValue(error.response?.data || error.message);
+        // }
     }
 );
 

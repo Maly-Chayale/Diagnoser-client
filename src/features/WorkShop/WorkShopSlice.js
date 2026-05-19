@@ -39,16 +39,16 @@ export const addWorkShop = createAsyncThunk("addWorkShop",
         await axios.post('https://localhost:7082/api/WorkShops/Add', WorkShop,
             {
                 headers: headers
-            }).then(res => { WorkShop.code=res.data })
+            }).then(res => { WorkShop.code = res.data })
         return WorkShop
     })
 
 export const deleteWorkShop = createAsyncThunk("deleteWorkShop",
     async (WorkShop) => {
-        await axios.delete('https://localhost:7082/api/WorkShops/Delete', 
+        await axios.delete('https://localhost:7082/api/WorkShops/Delete',
             {
                 headers: headers,
-                data:WorkShop
+                data: WorkShop
             }
         ).then(res => { })
         return WorkShop
@@ -91,7 +91,8 @@ export const getType = createAsyncThunk('getType',
 export const GetDiagnosersOfThisWorkshop = createAsyncThunk("GetDiagnosersOfThisWorkshop",
     async (workshop) => {
         let data
-        await axios.get('https://localhost:7082/api/WorkShops/GetLDiagnosers/' + workshop.morfology + '/' + workshop.grafology + '/' + workshop.chirology + '/' + workshop.typeGroup)
+        await axios.get('https://localhost:7082/api/WorkShops/GetLDiagnosers/' + 
+            workshop.morfology + '/' + workshop.grafology + '/' + workshop.chirology + '/' + workshop.typeGroup)
             .then(res =>
                 data = res.data
             )
@@ -99,8 +100,8 @@ export const GetDiagnosersOfThisWorkshop = createAsyncThunk("GetDiagnosersOfThis
     }
 )
 
-export const GetDiagnosersOfConditions= createAsyncThunk("GetDiagnosersOfConditions",
-    async ({c, g, m}) => {
+export const GetDiagnosersOfConditions = createAsyncThunk("GetDiagnosersOfConditions",
+    async ({ c, g, m }) => {
         let data
         await axios.get('https://localhost:7082/Diagnosers/GetDiagnosers/' + c + '/' + g + '/' + m)
             .then(res =>
@@ -110,10 +111,10 @@ export const GetDiagnosersOfConditions= createAsyncThunk("GetDiagnosersOfConditi
     }
 )
 
-export const GetWorkShops= createAsyncThunk("GetWorkShops",
-    async ({c, g, m, typeGroup}) => {
+export const GetWorkShops = createAsyncThunk("GetWorkShops",
+    async ({ c, g, m, typeGroup }) => {
         let data
-        await axios.get('https://localhost:7082/api/WorkShops/GetWorkShops/' + c + '/' + g + '/' + m+ '/'+ typeGroup)
+        await axios.get('https://localhost:7082/api/WorkShops/GetWorkShops/' + c + '/' + g + '/' + m + '/' + typeGroup)
             .then(res =>
                 data = res.data
             )
@@ -141,7 +142,7 @@ const WorkShopSlice = createSlice({
             .addCase(addWorkShop.fulfilled, (state, action) => {
                 const workshop = action.payload;
                 state.status = "succesfull";
-                state.WorkShops=[...state.WorkShops,workshop]// state.WorkShops.push(workshop)
+                state.WorkShops = [...state.WorkShops, workshop]// state.WorkShops.push(workshop)
             })
             .addCase(deleteWorkShop.fulfilled, (state, action) => {
                 const workshop = action.payload;
@@ -152,8 +153,6 @@ const WorkShopSlice = createSlice({
                 state.status = "loading"
             })
             .addCase(deleteWorkShop.rejected, (state) => {
-                console.log("נכשל");
-                
                 state.status = "faild"
             })
             .addCase(updateWorkShop.fulfilled, (state, action) => {
@@ -179,17 +178,14 @@ const WorkShopSlice = createSlice({
             .addCase(GetWorkShop.fulfilled, (state, action) => {
                 return action.payload;
             })
-            .addCase(GetWorkShop.rejected, (state) => {
-                // console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+            .addCase(GetDiagnosersOfThisWorkshop.fulfilled, (state, action) => {
+                state.Diagnosers = action.payload;
             })
-            .addCase(GetDiagnosersOfThisWorkshop.fulfilled, (state, action)=>{
-                state.Diagnosers=action.payload;
+            .addCase(GetDiagnosersOfConditions.fulfilled, (state, action) => {
+                state.Diagnosers = action.payload;
             })
-            .addCase(GetDiagnosersOfConditions.fulfilled, (state, action)=>{
-                state.Diagnosers=action.payload;
-            })
-            .addCase(GetWorkShops.fulfilled, (state, action)=>{
-                state.WorkshopsOfDiag=action.payload;
+            .addCase(GetWorkShops.fulfilled, (state, action) => {
+                state.WorkshopsOfDiag = action.payload;
             });
     }
 })

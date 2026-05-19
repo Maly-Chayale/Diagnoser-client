@@ -209,10 +209,12 @@ import { FaUser, FaDollarSign, FaTimes } from 'react-icons/fa';
 import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
 import Confetti from 'react-confetti';
 import WorkshopDetails from './WorkshopDetails';
+import { useNavigate } from 'react-router-dom';
 
 function AddWorkshopModal({ open, onClose }) {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate()
 
     const diagnosers = useSelector(s => s.Diagnoser.Diagnosers);
     const status = useSelector(s => s.Diagnoser.status);
@@ -240,7 +242,7 @@ function AddWorkshopModal({ open, onClose }) {
     const [showPreview, setShowPreview] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
-    const [confetti, setConfetti] = useState(false);
+    // const [confetti, setConfetti] = useState(false);
 
     const isFormComplete = () => (
         form.description.trim() &&
@@ -270,23 +272,25 @@ function AddWorkshopModal({ open, onClose }) {
 
         setShowPreview(false);
         setShowSuccess(true);
-        
+
         setTimeout(async () => {
 
-            setShowSuccess(false);
-            setConfetti(true);
-            setShowDetails(true);
+            // setShowSuccess(false);
+            // setConfetti(true);
+            // setShowDetails(true);
 
-            setTimeout(async () => {
+            // setTimeout(async () => {
 
-                setConfetti(false);
-                setShowPreview(false);
-                
-                await dispatch(addWorkShop(form));
-                const w = await dispatch(InitWorkShops()).unwrap();
-                // form.code = w.code
-                onClose();
-            }, 10000);
+            // setConfetti(false);
+            // setShowPreview(false);
+
+            await dispatch(addWorkShop(form));
+            const w = await dispatch(InitWorkShops()).unwrap();
+            navigate(`../WorkshopDetails/${w[w.length - 1].code}`)
+
+            // form.code = w.code
+            // onClose();
+            // }, 10000);
 
         }, 2000);
     };
@@ -312,13 +316,13 @@ function AddWorkshopModal({ open, onClose }) {
                     </div>
                 )}
 
-                {showDetails && ( // NEW: הצגת הפרטים עם קונפטי
+                {/* {showDetails && (
                     <div className={style.preview}>
-                        {confetti && <Confetti width={window.innerWidth} height={window.innerHeight} />} {/* NEW */}
+                        {confetti && <Confetti width={window.innerWidth} height={window.innerHeight} />}
 
                         <WorkshopDetails w={form} />
                     </div>
-                )}
+                )} */}
 
                 {!showPreview && !showSuccess && !showDetails && (
                     <>
