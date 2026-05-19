@@ -3,8 +3,6 @@ import styles from './BookingPopupOk.module.css';
 
 const BookingPopupOk = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
 
-    // const [flag, setFlag] = useState(false)
-
     const getHour = (time) => {
         let hour = Math.floor(time)
         let minute = Math.round((time - hour) * 100)
@@ -19,7 +17,6 @@ const BookingPopupOk = ({ booking, customer, handleSave, handleCancel, setBookin
         if (booking && typeof booking.time === 'number')
             setBooking({...booking, time: getHour(booking.time)})
     }, [booking])
-
 
     if (!booking) return null;
 

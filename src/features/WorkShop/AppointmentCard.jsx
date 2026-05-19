@@ -1,28 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteWorkShop, GetDiagnosersOfThisWorkshop, InitWorkShops } from './WorkShopSlice';
+import WorkshopDiagnosersModal from './WorkshopDiagnosersModal';
 import { addCustomer, InitCustomer } from '../Customers/CustomerSlice';
 import { addReference } from '../References/ReferencesSlice';
 import { deleteLead } from '../Leads/LeadsSlice';
-import style from './WorkshopCard.module.css';
+import style from './AppointmentCard.module.css';
 import { sendEmail } from '../Email/EmailSlice';
-import { useNavigate } from 'react-router-dom';
 
 function WorkshopCard({ WorkShop }) {
-
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDiagnoser, setSelectedDiagnoser] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+
+
+
+
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
     const [bookingDiagnoser, setBookingDiagnoser] = useState(null);
+
     const [bookingData, setBookingData] = useState({
         date: "",
         time: "",
         adress: ""
     });
+
+
+
+
+
 
     const groups = useSelector(state => state.TypeGroup.groups);
     const diagnosers = useSelector(state => state.WorkShop.Diagnosers);
@@ -141,78 +151,21 @@ function WorkshopCard({ WorkShop }) {
     return (
         <>
             <div className={style.card}>
-
-                <h2 className={style.title}>
-                    {getType(WorkShop.typeGroup)}
-                </h2>
-
+                <h2 className={style.title}>{getType(WorkShop.typeGroup)}</h2>
                 <div className={style.capabilities}>
-
-                    {WorkShop?.morfology && (
-                        <span className={`${style.badge} ${style.morphology}`}>
-                            🧠 מורפולוגיה
-                        </span>
-                    )}
-
-                    {WorkShop?.grafology && (
-                        <span className={`${style.badge} ${style.graphology}`}>
-                            ✍️ גרפולוגיה
-                        </span>
-                    )}
-
-                    {WorkShop?.chirology && (
-                        <span className={`${style.badge} ${style.chirology}`}>
-                            ✋ כירולוגיה
-                        </span>
-                    )}
-
+                    {WorkShop?.morfology && <span className={`${style.badge} ${style.morphology}`}>🧠 מורפולוגיה</span>}
+                    {WorkShop?.grafology && <span className={`${style.badge} ${style.graphology}`}>✍️ גרפולוגיה</span>}
+                    {WorkShop?.chirology && <span className={`${style.badge} ${style.chirology}`}>✋ כירולוגיה</span>}
                 </div>
+                <p className={style.description}>{WorkShop?.description}</p>
 
-                <p className={style.description}>
-                    {WorkShop?.description}
-                </p>
-
-                <button
-                    className={style.primaryBtn}
-                    onClick={openModal}
-                >
+                <button className={style.primaryBtn} onClick={() => setIsDiagnosersModalOpen(true)}>
                     לצפייה בפרופיל ותורים
                 </button>
-
-                {statusUser === "Esty" && (
-                    <button
-                        className={style.deleteBtn}
-                        onClick={openDeleteModal}
-                    >
-                        מחיקה
-                    </button>
-                )}
-                {/*                 
-                <div className={style.modalBackdrop}>
-                    <div className={style.modalBox}>
-                        <div className={style.modalIcon}>⚠️</div>
-                        <h3>מחיקה</h3>
-                        <p>למחוק את <strong>{name}</strong>?</p>
-                        <div className={style.modalButtons}>
-                            <button className={style.confirmBtn} onClick={onConfirm}>
-                                כן, מחק
-                            </button>
-                            <button className={style.cancelBtn} onClick={onClose}>
-                                ביטול
-                            </button>
-                        </div>
-                    </div>
-                </div> */}
-
-
-
-
-
-
             </div>
 
             {/* MODAL */}
-
+{/* 
             {isModalOpen && (
                 <div className={style.modalBackdrop}>
 
@@ -443,6 +396,23 @@ function WorkshopCard({ WorkShop }) {
                     </div>
 
                 </div>
+            )} */}
+
+            {/* מודאל מאבחנות */}
+            {isDiagnosersModalOpen && (
+                <WorkshopDiagnosersModal
+                    WorkShop={WorkShop}
+                    onClose={() => setIsDiagnosersModalOpen(false)}
+                    onBooking={(diagnoser) => setBookingDiagnoser(diagnoser)}
+                />
+            )}
+
+            {/* מודאל הזמנה */}
+            {bookingDiagnoser && (
+                <OrderWorkshop
+                    diagnoser={bookingDiagnoser}
+                    onClose={() => setBookingDiagnoser(null)}
+                />
             )}
         </>
     );

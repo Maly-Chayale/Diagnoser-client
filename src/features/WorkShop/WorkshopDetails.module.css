@@ -1,0 +1,204 @@
+/* WorkshopDetails.module.css */
+.detailsPage {
+    min-height: 100vh;
+    background: #ffffff;
+    display: flex;
+    justify-content: flex-start; /* צמוד ללמעלה */
+    align-items: center;
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+    flex-direction: column;
+}
+
+/* CARD */
+/* CARD WITH VELVET HOVER EFFECT */
+/* CARD WITH VELVET & HOVER SCALE EFFECT */
+/* הכרטיס גדל עם האפקט שכבר עשינו */
+.card {
+    background: #ffffff;
+    border: 3px solid #60a5fa;
+    border-radius: 20px;
+    padding: 32px 24px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(96,165,250,0.25);
+    animation: fadeUp 0.6s ease forwards;
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    color: #111827;
+    background-image: radial-gradient(circle at 30% 30%, rgba(96,165,250,0.05), transparent 70%);
+}
+
+/* אפקט Hover – הגדלה + זוהר */
+.card:hover {
+    transform: translateY(-10px) scale(1.08);
+    border-color: #a78bfa;
+    box-shadow:
+        0 25px 60px rgba(96,165,250,0.35),
+        0 10px 25px rgba(167,139,250,0.25),
+        0 0 80px rgba(167,139,250,0.1);
+    background-image: radial-gradient(circle at 30% 30%, rgba(167,139,250,0.08), transparent 70%);
+}
+
+/* אנימציה פנימית לטקסט */
+.card * {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.35s ease, color 0.35s ease;
+}
+
+/* כשמעבירים עכבר על הכרטיס – הטקסט מתרומם קלות */
+.card:hover .title,
+.card:hover .description,
+.card:hover .statBox,
+.card:hover .capabilities {
+    transform: translateY(-3px);
+}
+
+/* הוספת אפקט צבע עדין למחיר ומשתתפים */
+.statBox:hover {
+    transform: scale(1.05);
+    background: rgba(167,139,250,0.12);
+    box-shadow: 0 10px 25px rgba(167,139,250,0.2);
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(150deg, #60a5fa, #a78bfa);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 0;
+}
+
+.card:hover::before {
+    opacity: 0.08;
+}
+
+/* .card * {
+    position: relative;
+    z-index: 1;
+    color: #111827;
+} */
+
+/* TITLE */
+.title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: #111827;
+}
+
+/* DESCRIPTION - דומיננטי */
+.description {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #2563eb;
+    line-height: 1.6;
+}
+
+/* NAME OF DIAGNOSER */
+.diagnoserName {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: #7c3aed;
+    font-style: italic;
+}
+
+/* CAPABILITIES */
+.capabilities {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+/* BADGES */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin: 4px;
+    cursor: default;
+}
+
+.badge:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(96,165,250,0.25);
+}
+
+.morphology {
+    background: rgba(96,165,250,0.12);
+    color: #2563eb;
+    border: 1px solid rgba(96,165,250,0.3);
+}
+
+.graphology {
+    background: rgba(167,139,250,0.12);
+    color: #7c3aed;
+    border: 1px solid rgba(167,139,250,0.3);
+}
+
+.chirology {
+    background: rgba(34,197,94,0.12);
+    color: #16a34a;
+    border: 1px solid rgba(34,197,94,0.3);
+}
+
+/* PRICE & PARTICIPANTS */
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.statBox {
+    background: #f0f9ff;
+    padding: 12px 18px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(96,165,250,0.15);
+    flex: 1 1 45%;
+    transition: transform 0.25s ease;
+}
+/* 
+.statBox:hover {
+    transform: scale(1.1);
+} */
+
+.statLabel {
+    display: block;
+    font-weight: 500;
+    color: #1e3a8a;
+    margin-bottom: 4px;
+}
+
+.statValue {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1e40af;
+}
+
+/* NOT FOUND */
+.notFound {
+    font-size: 1.2rem;
+    color: #ef4444;
+}
+
+/* ANIMATION */
+@keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
