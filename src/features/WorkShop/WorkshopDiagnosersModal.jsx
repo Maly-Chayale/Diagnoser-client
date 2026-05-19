@@ -18,13 +18,14 @@ function WorkshopDiagnosersModal({ WorkShop, onClose, onBooking }) {
         dispatch(GetDiagnosersOfThisWorkshop(WorkShop));
     }, [dispatch, WorkShop]);
 
-    const getWorkshop = (diagnoser) => workshops.find(w =>
-        w.codeDiagnoser === diagnoser.code &&
-        w.morfology === WorkShop.morfology &&
-        w.chirology === WorkShop.chirology &&
-        w.grafology === WorkShop.grafology &&
-        w.typeGroup === WorkShop.typeGroup
-    );
+    const getWorkshop = (diagnoser) =>
+        workshops.find(w =>
+            w.codeDiagnoser === diagnoser.code &&
+            w.morfology === WorkShop.morfology &&
+            w.chirology === WorkShop.chirology &&
+            w.grafology === WorkShop.grafology &&
+            w.typeGroup === WorkShop.typeGroup
+        );
 
     return (
         <div className={style.modalBackdrop}>
@@ -36,7 +37,9 @@ function WorkshopDiagnosersModal({ WorkShop, onClose, onBooking }) {
                     {WorkShop?.grafology && <span className={`${style.badge} ${style.graphology}`}>✍️ גרפולוגיה</span>}
                     {WorkShop?.chirology && <span className={`${style.badge} ${style.chirology}`}>✋ כירולוגיה</span>}
                 </h4>
-                <h2 className={style.workshopTypeTitle}>מיועד ל : {getType(WorkShop.typeGroup)}</h2>                <h3 className={style.modalTitle}>מאבחנות זמינות</h3>
+                <h2 className={style.workshopTypeTitle}>מיועד ל : {getType(WorkShop.typeGroup)}</h2>
+
+                <h3 className={style.modalTitle}>מאבחנות זמינות</h3>
                 <div className={style.diagnoserGrid}>
                     {diagnosers?.filter(d => d.available).map(d => (
                         <div key={d.code} className={style.diagnoserCard}>
@@ -55,7 +58,6 @@ function WorkshopDiagnosersModal({ WorkShop, onClose, onBooking }) {
                     ))}
                 </div>
 
-                {/* ===== פופ-אפ פרטי המאבחנת ===== */}
                 {selectedDiagnoser && (
                     <div className={styleDetails.detailsPopupBackdrop}>
                         <div className={styleDetails.detailsPopupBox}>
