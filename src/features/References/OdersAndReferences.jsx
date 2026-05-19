@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { close, closeOrder, deleteReference, InitReferences, updateReference } from './ReferencesSlice';
+import { deleteReference, InitReferences } from './ReferencesSlice';
 import { GetDiagnosersOfThisWorkshop, InitWorkShops } from '../WorkShop/WorkShopSlice';
 import { fetchStatus } from '../Statuss/StatusSlice';
 import { useNavigate } from 'react-router-dom';
