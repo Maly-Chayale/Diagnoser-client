@@ -55,6 +55,11 @@ const BookingPopupDetails = ({ booking, customer, getDiagnoser, handleCancel }) 
         </div>
 
         <div className={styles.field}>
+          <label className={styles.labelBlue}>כתובת</label>
+          <input type="text" value={booking.adress} readOnly className={styles.input} />
+        </div>
+
+        <div className={styles.field}>
           <label className={styles.labelBlue}>הערות</label>
           <input type="text" value={booking.comments} readOnly className={styles.input} />
         </div>

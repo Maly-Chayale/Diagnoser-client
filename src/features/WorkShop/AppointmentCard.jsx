@@ -1,152 +1,93 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteWorkShop, GetDiagnosersOfThisWorkshop, InitWorkShops } from './WorkShopSlice';
+import { deleteWorkShop, InitWorkShops } from './WorkShopSlice';
 import WorkshopDiagnosersModal from './WorkshopDiagnosersModal';
 import { addCustomer, InitCustomer } from '../Customers/CustomerSlice';
 import { addReference } from '../References/ReferencesSlice';
 import { deleteLead } from '../Leads/LeadsSlice';
 import style from './AppointmentCard.module.css';
 import { sendEmail } from '../Email/EmailSlice';
+import { useNavigate } from 'react-router-dom';
+import OrderWorkshop from './OrderWorkshop'
 
 function WorkshopCard({ WorkShop }) {
+
     const dispatch = useDispatch();
+    // const navigate = useNavigate()
 
+    // const [isModalOpen, setIsModalOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedDiagnoser, setSelectedDiagnoser] = useState(null);
+    // const [selectedDiagnoser, setSelectedDiagnoser] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-
-
-
-
-    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-
+    // const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [bookingDiagnoser, setBookingDiagnoser] = useState(null);
-
-    const [bookingData, setBookingData] = useState({
-        date: "",
-        time: "",
-        adress: ""
-    });
-
-
-
-
-
+    // const [bookingData, setBookingData] = useState({
+    //     date: "",
+    //     time: "",
+    //     adress: ""
+    // });
 
     const groups = useSelector(state => state.TypeGroup.groups);
-    const diagnosers = useSelector(state => state.WorkShop.Diagnosers);
-    const workshops = useSelector(state => state.WorkShop.WorkShops);
+    // const diagnosers = useSelector(state => state.WorkShop.Diagnosers);
+    // const workshops = useSelector(state => state.WorkShop.WorkShops);
+    // const customer = useSelector(state => state.LogIn.thisUser);
+    // const statusUser = useSelector(state => state.LogIn.statusUser);
+    // const customers = useSelector(state => state.Customer.Customers);
+    // const statusCust = useSelector(state => state.Customer.status);
 
-    const customer = useSelector(state => state.LogIn.thisUser);
-    const statusUser = useSelector(state => state.LogIn.statusUser);
-
-    const customers = useSelector(state => state.Customer.Customers);
-    const statusCust = useSelector(state => state.Customer.status);
-
-    useEffect(() => {
-        if (statusCust === "") {
-            dispatch(InitCustomer());
-        }
-    }, [dispatch, statusCust]);
+    // useEffect(() => {
+    //     if (statusCust === "") {
+    //         dispatch(InitCustomer());
+    //     }
+    // }, [dispatch, statusCust]);
 
     const getType = (code) => {
         return groups.find(g => g.code === code)?.description;
     };
 
-    const openModal = async () => {
-        setIsModalOpen(true);
-        await dispatch(GetDiagnosersOfThisWorkshop(WorkShop));
-    };
+    // const openModal = async () => {
+    //     setIsModalOpen(true);
+    //     await dispatch(GetDiagnosersOfThisWorkshop(WorkShop));
+    // };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setSelectedDiagnoser(null);
-    };
+    // const closeModal = () => {
+    //     setIsModalOpen(false);
+    //     setSelectedDiagnoser(null);
+    // };
 
-    const openDeleteModal = () => {
-        setIsDeleteModalOpen(true);
-    };
+    // const openDeleteModal = () => {
+    //     setIsDeleteModalOpen(true);
+    // };
 
-    const closeDeleteModal = () => {
-        setIsDeleteModalOpen(false);
-    };
+    // const closeDeleteModal = () => {
+    //     setIsDeleteModalOpen(false);
+    // };
 
-    const handleDelete = async () => {
-        await dispatch(deleteWorkShop(WorkShop));
-        await dispatch(InitWorkShops());
-        closeDeleteModal();
-    };
+    // const handleDelete = async () => {
+    //     await dispatch(deleteWorkShop(WorkShop));
+    //     await dispatch(InitWorkShops());
+    //     closeDeleteModal();
+    // };
 
-    const getWorkshop = (diagnoser) => {
-        return workshops.find(w =>
-            w.codeDiagnoser === diagnoser.code &&
-            w.morfology === WorkShop.morfology &&
-            w.chirology === WorkShop.chirology &&
-            w.grafology === WorkShop.grafology &&
-            w.typeGroup === WorkShop.typeGroup
-        )
-    }
+    // const getWorkshop = (diagnoser) => {
+    //     return workshops.find(w =>
+    //         w.codeDiagnoser === diagnoser.code &&
+    //         w.morfology === WorkShop.morfology &&
+    //         w.chirology === WorkShop.chirology &&
+    //         w.grafology === WorkShop.grafology &&
+    //         w.typeGroup === WorkShop.typeGroup
+    //     )
+    // }
 
-    const handleBooking = async () => {
-        if (!bookingData.date || !bookingData.time || !bookingData.adress) {
-            alert("יש למלא את כל השדות");
-            return;
-        }
-        try {
-            const existingCustomer = customers.find(c => c.code === customer.code);
-            if (!existingCustomer) {
-                await dispatch(deleteLead(customer)).unwrap();
-                const c = await dispatch(addCustomer(customer)).unwrap();
-                customer.code = c
-            }
-            const newReference = {
-                code: 0,
-                codeWorkShop: workshops.find(w =>
-                    w.codeDiagnoser === bookingDiagnoser.code &&
-                    w.morfology === WorkShop.morfology &&
-                    w.chirology === WorkShop.chirology &&
-                    w.grafology === WorkShop.grafology &&
-                    w.typeGroup === WorkShop.typeGroup
-                )?.code,
-                codeCustomer: customer.code,
-                date: bookingData.date,
-                time: parseInt(bookingData.time.substring(0, 2)) +
-                    (parseInt(bookingData.time.substring(3, 5)) * 1.0 / 100),
-                adress: bookingData.adress,
-                comments: "",
-                status: 1
-            };
-            await dispatch(addReference(newReference)).unwrap();
-            setIsBookingModalOpen(false);
-            navigate(`/OrderOfCusatomer/${newReference.codeCustomer}`);
-            const mailBody = `שלום ${bookingDiagnoser.name},
-                    יש הזמנה חדשה לסדנא.
-                    תאריך: ${bookingData.date}
-                    שעה: ${bookingData.time}
-                    מיקום: ${bookingData.adress}`;
-            const mailSubject = `הזמנה לסדנא ${WorkShop.code}`;
-            dispatch(sendEmail({
-                toEmail: bookingDiagnoser.mail,
-                subject: mailSubject,
-                body: mailBody
-            }));
-        }
-        catch (error) {
-            console.error("שגיאה בהזמנה:", error);
-            alert("אירעה שגיאה בהזמנה, נסי שוב.");
-        }
-    };
-
-    const openBookingModal = (diagnoser) => {
-        setBookingDiagnoser(diagnoser);
-        setBookingData({
-            date: "",
-            time: "",
-            adress: ""
-        });
-        setIsBookingModalOpen(true);
-    };
+    // const openBookingModal = (diagnoser) => {
+    //     setBookingDiagnoser(diagnoser);
+    //     setBookingData({
+    //         date: "",
+    //         time: "",
+    //         adress: ""
+    //     });
+    //     setIsBookingModalOpen(true);
+    // };
 
     return (
         <>
@@ -159,7 +100,7 @@ function WorkshopCard({ WorkShop }) {
                 </div>
                 <p className={style.description}>{WorkShop?.description}</p>
 
-                <button className={style.primaryBtn} onClick={() => setIsDiagnosersModalOpen(true)}>
+                <button className={style.primaryBtn} onClick={() => setIsModalOpen(true)}>
                     לצפייה בפרופיל ותורים
                 </button>
             </div>
@@ -291,15 +232,6 @@ function WorkshopCard({ WorkShop }) {
                 </div>
             )}
 
-
-
-
-
-
-
-
-
-
             {isBookingModalOpen && (
 
                 <div className={style.modalBackdrop}>
@@ -398,11 +330,10 @@ function WorkshopCard({ WorkShop }) {
                 </div>
             )} */}
 
-            {/* מודאל מאבחנות */}
-            {isDiagnosersModalOpen && (
+            {isModalOpen && (
                 <WorkshopDiagnosersModal
                     WorkShop={WorkShop}
-                    onClose={() => setIsDiagnosersModalOpen(false)}
+                    onClose={() => setIsModalOpen(false)}
                     onBooking={(diagnoser) => setBookingDiagnoser(diagnoser)}
                 />
             )}
@@ -410,6 +341,7 @@ function WorkshopCard({ WorkShop }) {
             {/* מודאל הזמנה */}
             {bookingDiagnoser && (
                 <OrderWorkshop
+                    WorkShop={WorkShop}
                     diagnoser={bookingDiagnoser}
                     onClose={() => setBookingDiagnoser(null)}
                 />

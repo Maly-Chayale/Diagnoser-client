@@ -35,8 +35,8 @@ function App() {
       {/* ניווטים מופיעים רק אחרי לחיצה */}
       {hasAccess && (
         <nav>
-          {statusUser && statusUser !== "cust" && <NavLink to="/Orders" className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
-          {statusUser === "cust" && <NavLink to={`/OrderOfCusatomer/${user.code}`} className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
+          {user && statusUser && statusUser !== "cust" && <NavLink to="/Orders" className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
+          {user && statusUser === "cust" && <NavLink to={`/OrderOfCusatomer/${user.code}`} className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
           {user && <NavLink to="/Profile" className={({ isActive }) => isActive ? styles.active : styles.link}>פרופיל</NavLink>}
           {!user && (
             <NavLink
@@ -56,6 +56,7 @@ function App() {
           {(statusUser === "Esty") && <NavLink to="/Payments" className={({ isActive }) => isActive ? styles.active : styles.link}>תשלומים</NavLink>}
           {(statusUser === "Esty") && <NavLink to="/Leads" className={({ isActive }) => isActive ? styles.active : styles.link}>מתעניינים</NavLink>}
           <NavLink to="/Diagnosers" className={({ isActive }) => isActive ? styles.active : styles.link}>מאבחנות</NavLink>
+          <NavLink to="/AI" className={({ isActive }) => isActive ? styles.active : styles.link}>AI</NavLink>
         </nav>
       )}
 
@@ -67,6 +68,7 @@ function App() {
           {/* כל שאר הדפים זמינים רק אחרי לחיצה */}
 
           <>
+            <Route path="/AI" element={<WorkshopAI />} />
             <Route path="/enter" element={<LogIn />} />
             <Route path="/hello" element={<LoginPage setHasAccess={setHasAccess} />} />
             <Route path="/Workshop" element={<Workshop />} />

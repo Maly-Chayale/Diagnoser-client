@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 
-import { logIn } from './LogInSlice';
+import { logIn, signOut } from './LogInSlice';
 import { ProfilelogIn } from '../Profile/ProfileSlice';
 import { InitCustomer } from '../Customers/CustomerSlice';
 import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
@@ -40,6 +40,7 @@ const LogIn = () => {
     useEffect(() => {
         if (status === "wrong") {
             setErr(true);
+            dispatch(signOut())
         }
         else if (status) {  // או הערך שמציין הצלחה
             navigate("../hello");
@@ -78,6 +79,7 @@ const LogIn = () => {
             navigate("../hello");
         } else {
             setErr(true);
+            dispatch(signOut())
         }
     };
 
@@ -122,7 +124,7 @@ const LogIn = () => {
                 <div className={styles.googleBox}>
                     <GoogleLogin
                         onSuccess={handleGoogleSuccess}
-                        onError={() => setErr(true)}
+                        onError={() => {setErr(true); dispatch(signOut())}}
                     />
                 </div>
 

@@ -25,6 +25,9 @@ const LogInSlice = createSlice({
     name: "Customer",
     initialState,
     reducers: {
+        signOut: (state)=>{
+            state.thisUser = null
+        },
         signIn: (state, action) => {
             state.thisUser = action.payload
             state.statusUser = "cust"
@@ -70,5 +73,5 @@ const LogInSlice = createSlice({
     }
 })
 
-export const { signIn, logIn, UpdateUser } = LogInSlice.actions;
+export const { signOut, signIn, logIn, UpdateUser } = LogInSlice.actions;
 export default LogInSlice.reducer;

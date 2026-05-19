@@ -207,8 +207,6 @@ import { addWorkShop, InitWorkShops } from './WorkShopSlice';
 import style from './AddWorkshopModal.module.css';
 import { FaUser, FaDollarSign, FaTimes } from 'react-icons/fa';
 import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
-import Confetti from 'react-confetti';
-import WorkshopDetails from './WorkshopDetails';
 import { useNavigate } from 'react-router-dom';
 
 function AddWorkshopModal({ open, onClose }) {
