@@ -1,0 +1,63 @@
+{
+  "name": "Build Products Array",
+  "type": "BuiltinAppModule",
+  "typeVersion": 1,
+  "position": {
+    "x": 900,
+    "y": 300
+  },
+  "parameters": {
+    "variables": [
+      {
+        "name": "product_pen",
+        "value": "{{if(contains(get(map(1.submission.questions; \"value\"; \"name\"; \"בחירת מוצרים\"); 1); \"עט כדורי שחור\"); {\"name\": \"עט כדורי שחור\", \"product_id\": 2927114756, \"price\": 8, \"quantity\": parseNumber(get(map(1.submission.questions; \"value\"; \"name\"; \"כמות - עט\"); 1)), \"total\": 8 * parseNumber(get(map(1.submission.questions; \"value\"; \"name\"; \"כמות - עט\"); 1))}; null)}}"
+      },
+      {
+        "name": "product_furniture",
+        "value": "{{if(contains(get(map(1.submission.questions; \"value\"; \"name\"; \"בחירת מוצרים\"); 1); \"ערכת ריהוט משרדי\"); {\"name\": \"ערכת ריהוט משרדי\", \"product_id\": 2927104152, \"price\": 1800, \"quantity\": parseNumber(get(map(1.submission.questions; \"value\"; \"name\"; \"כמות - ריהוט\"); 1)), \"total\": 1800 * parseNumber(get(map(1.submission.questions; \"value\"; \"name\"; \"כמות - ריהוט\"); 1))}; null)}}"
+      },
+      {
+        "name": "product_laptop",
+        "value": "{{if(contains(get(map(1.submission.questions; \"value\"; \"name\"; \"בחירת מוצרים\"); 1); \"מחשב נייד עסקי\"); {\"name\": \"מחשב נייד עסקי\", \"product_id\": 2927065306, \"price\": 2500, \"quantity\": parseNumber(get(map(1.submission.questions; \"value\"; \"name\"; \"כמות - מחשב\"); 1)), \"total\": 2500 * parseNumber(get(map(1.submission.questions; \"value\"; \"name\"; \"כמות - מחשב\"); 1))}; null)}}"
+      },
+      {
+        "name": "product_book",
+        "value": "{{if(contains(get(map(1.submission.questions; \"value\"; \"name\"; \"בחירת מוצרים\"); 1); \"ספר עיתונות דיגיטלית\"); {\"name\": \"ספר עיתונות דיגיטלית\", \"product_id\": 2927114597, \"price\": 120, \"quantity\": parseNumber(get(map(1.submission.questions; \"value\"; \"name\"; \"כמות - ספר\"); 1)), \"total\": 120 * parseNumber(get(map(1.submission.questions; \"value\"; \"name\"; \"כמות - ספר\"); 1))}; null)}}"
+      },
+      {
+        "name": "product_consulting",
+        "value": "{{if(contains(get(map(1.submission.questions; \"value\"; \"name\"; \"בחירת מוצרים\"); 1); \"שירות ייעוץ עסקי\"); {\"name\": \"שירות ייעוץ עסקי\", \"product_id\": 2927065255, \"price\": 350, \"quantity\": parseNumber(get(map(1.submission.questions; \"value\"; \"name\"; \"כמות - ייעוץ\"); 1)), \"total\": 350 * parseNumber(get(map(1.submission.questions; \"value\"; \"name\"; \"כמות - ייעוץ\"); 1))}; null)}}"
+      },
+      {
+        "name": "products_array",
+        "value": "{{filter(array(product_pen; product_furniture; product_laptop; product_book; product_consulting); \"length\"; \"greater\"; 0)}}"
+      }
+    ]
+  },
+  "mapper": {},
+  "metadata": {
+    "designer": {
+      "x": 900,
+      "y": 300
+    },
+    "restore": {},
+    "expect": [
+      {
+        "name": "variables",
+        "type": "array",
+        "label": "Variables",
+        "spec": [
+          {
+            "name": "name",
+            "type": "text",
+            "label": "Variable name"
+          },
+          {
+            "name": "value",
+            "label": "Variable value"
+          }
+        ]
+      }
+    ]
+  }
+}
