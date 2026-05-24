@@ -21,6 +21,7 @@ import LeadsList from './features/Leads/LeadsList';
 import { useLocation } from "react-router-dom";
 import WorkshopDetails from './features/WorkShop/WorkshopDetails';
 import OrderOfCusatomer from './features/Customers/OrderOfCusatomer';
+import DiagnoserCalendar from './features/Calendar/DiagnoserCalendar';
 
 function App() {
   const statusUser = useSelector(state => state.LogIn.statusUser);
@@ -56,7 +57,11 @@ function App() {
           {(statusUser === "Esty") && <NavLink to="/Payments" className={({ isActive }) => isActive ? styles.active : styles.link}>תשלומים</NavLink>}
           {(statusUser === "Esty") && <NavLink to="/Leads" className={({ isActive }) => isActive ? styles.active : styles.link}>מתעניינים</NavLink>}
           <NavLink to="/Diagnosers" className={({ isActive }) => isActive ? styles.active : styles.link}>מאבחנות</NavLink>
+          {(statusUser === "diagnoser" || statusUser === "Esty") && <NavLink to="/calendar" className={({ isActive }) => isActive ? styles.active : styles.link}>ליומן האישי</NavLink>}
+
         </nav>
+        
+        
       )}
 
       <div className={styles.pageContent}>
@@ -82,6 +87,7 @@ function App() {
             <Route path="/WorkshopDetails/:code" element={<WorkshopDetails />} />
             <Route path="/Payments" element={<ManagerPayments />} />
             <Route path="/Leads" element={<LeadsList />} />
+            <Route path="/calendar" element={<DiagnoserCalendar />} />
           </>
 
         </Routes>
