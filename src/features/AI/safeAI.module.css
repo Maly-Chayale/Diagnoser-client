@@ -1,4 +1,4 @@
-/* Container של הקומפוננטה */
+Container של הקומפוננטה
 .text-input-container {
   display: flex;
   flex-direction: column;
@@ -64,7 +64,7 @@
 /* WorkshopAI.css */
 
 /* סגנון כללי לקונטיינר */
-.workshop-container {
+.workshopContainer {
   max-width: 600px;
   margin: 0 auto;
   text-align: right; /* לימין */
@@ -74,7 +74,7 @@
 }
 
 /* כפתורים */
-.workshop-button {
+.workshopButton {
   padding: 10px 20px;
   border-radius: 8px;
   border: none;
@@ -84,29 +84,29 @@
 }
 
 /* כפתור התחל */
-.start-button {
+.startButton {
   background: linear-gradient(135deg, #6366f1, #a78bfa);
   color: #fff;
 }
 
-.start-button:hover {
+.startButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
 }
 
 /* כפתור אישור */
-.submit-button {
+.submitButton {
   background-color: #4CAF50;
   color: white;
 }
 
-.submit-button:hover {
+.submitButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(76, 175, 80, 0.35);
 }
 
 /* שדות קלט */
-.workshop-input {
+.workshopInput {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
@@ -118,12 +118,12 @@
 }
 
 /* תיבת שאלות */
-.question-box {
+.questionBox {
   margin-bottom: 20px;
 }
 
 /* תוצאה */
-.result-box {
+.resultBox {
   margin-top: 20px;
   padding: 15px;
   border: 1px solid #ccc;
@@ -131,10 +131,10 @@
   background-color: #f3f4f6;
 }
 
-.result-box h3 {
+.resultBox h3 {
   margin-bottom: 10px;
 }
 
-.result-box p {
+.resultBox p {
   margin: 5px 0;
 }

@@ -21,6 +21,7 @@ import LeadsList from './features/Leads/LeadsList';
 import { useLocation } from "react-router-dom";
 import WorkshopDetails from './features/WorkShop/WorkshopDetails';
 import OrderOfCusatomer from './features/Customers/OrderOfCusatomer';
+import WorkshopAI from './features/AI/WorkshopAI';
 
 function App() {
   const statusUser = useSelector(state => state.LogIn.statusUser);

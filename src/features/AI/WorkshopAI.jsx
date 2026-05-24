@@ -1,140 +1,135 @@
-// import React, { useState } from "react";
-// import styles from './safeAI.module.css'
+// import React, { useEffect, useState } from 'react';
+// import style from './safeAI.module.css';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
+// import httpx
+// import OpenAI from "openai";
 
-// const TextInputComponent = () => {
-//   const [inputText, setInputText] = useState(""); // שדה קלט
-//   const [response, setResponse] = useState("");   // הדיב שמציג תגובה
+// const WorkshopAI = ({ sendToAI }) => {
 
-//   const handleInputChange = (e) => {
-//     setInputText(e.target.value);
+//   const dispatch = useDispatch()
+
+//   const workshops = useSelector(state => state.WorkShop.WorkShops);
+//   const groups = useSelector(state => state.TypeGroup.groups);
+
+//   const client = new OpenAI({
+//     apiKey: "sk-safeai-faab3999e60d8997389cafee6b70c2d971379f5f0330b326",
+//   });
+
+//   const [showQuestions, setShowQuestions] = useState(false);
+//   const [questions, setQuestions] = useState([]);
+//   const [answers, setAnswers] = useState({});
+//   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
+//   const [loading, setLoading] = useState(false);
+
+//   useEffect(() => {
+//     dispatch(TypeGroups())
+//   }, [])
+
+//   const getType = (code) => {
+//     return groups.find(g => g.code === code)?.description;
 //   };
 
-//   const handleSend = () => {
-//     if (!inputText.trim()) {
-//       setResponse("אנא הכנס טקסט לפני שליחה.");
-//       return;
-//     }
+//   const string = () => {
+//     let str = ""
+//     workshops.forEach(w => {
+//       let s = "code: " + w.code + " codeDiagnoser: " + w.codeDiagnoser;
+//       s += " typeGroup: " + getType(w.typeGroup) + " description: " + w.description
+//       if (w.graphology) s += " גרפולוגיה";
+//       if (w.morphology) s += " מורפולוגיה";
+//       if (w.chirology) s += " כירולוגיה";
+//       s += "price: " + w.price + " accontOfPeople: " + w.accountOfPeople
+//       str += "{" + s + "}";
+//     })
+//     return str;
+//   }
 
-//     // כאן אפשר לשים את הקריאה ל-API או כל לוגיקה אחרת
-//     setResponse(`הטקסט נשלח: "${inputText}"`);
+//   const startAIQuestions = async () => {
+//     setLoading(true);
+//     setSelectedWorkshop(null);
+//     setAnswers({});
 
-//     // איפוס שדה הקלט
-//     setInputText("");
+//     const SYSTEM_PROMPT = 'אתה מתפקד כיועץ אישי לסדנאות. יש לך רשימת סדנאות שכל אחת מהן כוללת תכונות: "description", "morfology", "grafology", "chirology", "price", "accontOfPeople". המטרה שלך היא: 1. ליצור 5 שאלות שונות למשתמש כדי להבין מה הכי מתאים לו. 2. השאלות צריכות להתמקד בתחומי עניין, סגנון עבודה, תחביבים, תקציב או העדפות אישיות. 3. אחרי שהמשתמש עונה, תנתח את התשובות ותבחר את הסדנה המתאימה ביותר עבורו. 4. תספק את הסדנה הנבחרת עם כל הפרטים שלה: description, typeGroup, morfology, grafology, chirology, price, accontOfPeople. תן את הפלט בצורה ברורה: - מערך השאלות: ["שאלה1", "שאלה2", ..., "שאלה5"] - אובייקט הסדנה המתאימה:{  "description": "...",  "typeGroup": ...,  "morfology": ...,  "grafology": ...,  "chirology": ...,  "price": ...,  "accontOfPeople": ...}'
+
+//     const response = await client.chat.completions.create({
+//       model: "gpt-4o-mini",
+//       messages =[
+//         { "role": "system", "content": SYSTEM_PROMPT },
+//         { "role": "user", "content": "הסדנאות שיש לנו: " + string() }
+//       ]
+//     });
+
+//     console.log(response);
+    
+
+
+//     // קריאה ל-AI שיחזיר מערך של 5 שאלות
+//     const aiQuestions = await sendToAI({
+//       type: 'generateQuestions',
+//       count: 5
+//     });
+
+//     setQuestions(aiQuestions); // מציבים את השאלות שה-AI ייצר
+//     setShowQuestions(true);
+//     setLoading(false);
+//   };
+
+//   const handleInputChange = (e, index) => {
+//     setAnswers({ ...answers, [index]: e.target.value });
+//   };
+
+//   const submitAnswers = async () => {
+//     setLoading(true);
+
+//     // שולחים את התשובות ל-AI שיחזיר סדנה מתאימה
+//     const workshop = await sendToAI({
+//       type: 'matchWorkshop',
+//       answers
+//     });
+
+//     setSelectedWorkshop(workshop);
+//     setShowQuestions(false);
+//     setLoading(false);
 //   };
 
 //   return (
-//     <div style={styles.container}>
-//       <input
-//         type="text"
-//         value={inputText}
-//         onChange={handleInputChange}
-//         placeholder="הכנס טקסט כאן..."
-//         style={styles.input}
-//       />
-//       <button onClick={handleSend} style={styles.button}>
-//         שלח
+//     <div className={style.workshopContainer}>
+//       <button className={style.workshopButton} onClick={startAIQuestions}>
+//         איזו סדנה הכי מתאימה לי
 //       </button>
 
-//       <div style={styles.responseDiv}>
-//         {response}
-//       </div>
+//       {loading && <p>טוען...</p>}
+
+//       {showQuestions && (
+//         <div className={style.questionBox}>
+//           {questions.map((q, index) => (
+//             <div key={index} className={style.questionItem}>
+//               <label>{q}</label>
+//               <input
+//                 type="text"
+//                 className={style.workshopInput}
+//                 value={answers[index] || ''}
+//                 onChange={(e) => handleInputChange(e, index)}
+//               />
+//             </div>
+//           ))}
+
+//           <button className={style.workshopButton} onClick={submitAnswers}>
+//             אישור
+//           </button>
+//         </div>
+//       )}
+
+//       {selectedWorkshop && (
+//         <div className={style.resultBox}>
+//           <h3>הסדנה שהכי מתאימה לך:</h3>
+//           {Object.entries(selectedWorkshop).map(([key, value]) => (
+//             <p key={key}><strong>{key}:</strong> {value.toString()}</p>
+//           ))}
+//         </div>
+//       )}
 //     </div>
 //   );
 // };
 
-// export default TextInputComponent;
-
-
-
-// WorkshopAI.jsx
-import React, { useState } from 'react';
-import style from './safeAI.module.css';
-import { useSelector } from 'react-redux';
-
-const WorkshopAI = () => {
-
-  const workshopsList = useSelector(state => state.WorkShop.WorkShops);
-
-  const [showQuestions, setShowQuestions] = useState(false);
-  const [answers, setAnswers] = useState({ q1: '', q2: '', q3: '' });
-  const [selectedWorkshop, setSelectedWorkshop] = useState(null);
-
-  const handleInputChange = (e) => {
-    setAnswers({ ...answers, [e.target.name]: e.target.value });
-  };
-
-  const startAIQuestions = () => {
-    setShowQuestions(true);
-    setSelectedWorkshop(null);
-  };
-
-  const submitAnswers = () => {
-    // כאן נוכל להכניס לוגיקה של AI, לדוגמה לפי מילות מפתח
-    let match = workshopsList[0];
-
-    if (answers.q1.includes('גרפולוגיה') || answers.q2.includes('גרפולוגיה')) {
-      match = workshopsList.find(w => w.grafology);
-    } else if (answers.q1.includes('כירולוגיה') || answers.q2.includes('כירולוגיה')) {
-      match = workshopsList.find(w => w.chirology);
-    } else if (answers.q1.includes('מורפולוגיה') || answers.q2.includes('מורפולוגיה')) {
-      match = workshopsList.find(w => w.morfology);
-    }
-
-    setSelectedWorkshop(match);
-    setShowQuestions(false);
-  };
-
-  return (
-    <div className={style.workshop-container}>
-      <button className={`${style.workshop-button} ${style.start-button}`} onClick={startAIQuestions}>
-        איזו סדנה הכי מתאימה לי
-      </button>
-
-      {showQuestions && (
-        <div className={style.question-box}>
-          <label>שאלה 1: איזה תחום מעניין אותך?</label>
-          <input
-            type="text"
-            className={style.workshop-input}
-            name="q1"
-            value={answers.q1}
-            onChange={handleInputChange}
-          />
-
-          <label>שאלה 2: באיזה סגנון עבודה אתה מעדיף?</label>
-          <input
-            type="text"
-            className={style.workshop-input}
-            name="q2"
-            value={answers.q2}
-            onChange={handleInputChange}
-          />
-
-          <label>שאלה 3: מה התקציב שלך?</label>
-          <input
-            type="text"
-            className={style.workshop-input}
-            name="q3"
-            value={answers.q3}
-            onChange={handleInputChange}
-          />
-
-          <button className={`${style.workshop-button} ${style.submit-button}`} onClick={submitAnswers}>
-            אישור
-          </button>
-        </div>
-      )}
-
-      {selectedWorkshop && (
-        <div className={style.result-box}>
-          <h3>הסדנה שהכי מתאימה לך:</h3>
-          <p>{selectedWorkshop.description}</p>
-          <p>מחיר: {selectedWorkshop.price} ₪</p>
-          <p>מספר משתתפים: {selectedWorkshop.accontOfPeople}</p>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default WorkshopAI;
+// export default WorkshopAI;
