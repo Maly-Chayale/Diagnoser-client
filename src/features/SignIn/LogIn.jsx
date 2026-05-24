@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 
-import { logIn } from './LogInSlice';
+import { logIn, signOut } from './LogInSlice';
 import { ProfilelogIn } from '../Profile/ProfileSlice';
 import { InitCustomer } from '../Customers/CustomerSlice';
 import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
@@ -35,16 +35,12 @@ const LogIn = () => {
         if (statusC === "") dispatch(InitCustomer());
         if (statusD === "") dispatch(InitDiagnoser());
         if (statusL === "") dispatch(InitLeads());
-
-        // dispatch(ProfilelogIn({
-        //     thisUser: thisuser,
-        //     status: status
-        // }));
     }, [statusC, statusD, statusL, thisuser, dispatch]);
 
     useEffect(() => {
         if (status === "wrong") {
             setErr(true);
+            dispatch(signOut())
         }
         else if (status) {  // או הערך שמציין הצלחה
             navigate("../hello");
@@ -56,31 +52,12 @@ const LogIn = () => {
     }, [status, navigate]);
 
     async function SignIn() {
-        // setErr(false);
-
-        // await dispatch(logIn({
-        //     user: { mail, password },
-        //     Customers: customers,
-        //     Diagnosers: diagnosers,
-        //     Leads: leads
-        // }));
-
-        // dispatch(ProfilelogIn({
-        //     thisUser: thisuser,
-        //     status: status
-        // }));
-
-        // if (status === "wrong") setErr(true);
-        // else navigate("../hello");
-
         const result = await dispatch(logIn({
             user: { mail, password },
             Customers: customers,
             Diagnosers: diagnosers,
             Leads: leads
         }));
-
-
     }
 
     const handleGoogleSuccess = (credentialResponse) => {
@@ -102,6 +79,7 @@ const LogIn = () => {
             navigate("../hello");
         } else {
             setErr(true);
+            dispatch(signOut())
         }
     };
 
@@ -146,7 +124,7 @@ const LogIn = () => {
                 <div className={styles.googleBox}>
                     <GoogleLogin
                         onSuccess={handleGoogleSuccess}
-                        onError={() => setErr(true)}
+                        onError={() => {setErr(true); dispatch(signOut())}}
                     />
                 </div>
 

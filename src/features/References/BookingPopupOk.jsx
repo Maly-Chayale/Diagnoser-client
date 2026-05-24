@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import styles from './BookingPopupOk.module.css'
+import styles from './BookingPopupOk.module.css';
 
 const BookingPopupOk = ({ booking, customer, handleSave, handleCancel, setBooking }) => {
 
@@ -10,10 +10,7 @@ const BookingPopupOk = ({ booking, customer, handleSave, handleCancel, setBookin
             minute = "0" + minute
         if (hour < 10)
             hour = "0" + hour
-        console.log("time: "+hour + ":" + minute);
-        
         return hour + ":" + minute
-        
     }
 
     useEffect(() => {

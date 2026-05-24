@@ -30,6 +30,8 @@ function translateHebrewMonth(monthName) {
     "adar": "אדר",
     "adar i": "אדר א׳",
     "adar ii": "אדר ב׳",
+    "adar 1": "אדר א׳",
+    "adar 2": "אדר ב׳",
     "adar rishon": "אדר א׳",
     "adar sheni": "אדר ב׳"
   };
@@ -43,26 +45,33 @@ function HebrewDatePicker({ value, onChange }) {
   const [calendarDays, setCalendarDays] = useState([]);
   const [selectedDate, setSelectedDate] = useState(value || null);
 
-  const generateCalendar = (year, month) => {
-    const firstDay = new Date(year, month, 1);
-    const startDayOfWeek = firstDay.getDay();
-    const totalDays = new Date(year, month + 1, 0).getDate();
-    const daysArray = [];
+const generateCalendar = (year, month) => {
+  const firstDay = new Date(year, month, 1);
+  const startDayOfWeek = firstDay.getDay();
+  const totalDays = new Date(year, month + 1, 0).getDate();
+  const daysArray = [];
 
-    for (let i = 0; i < startDayOfWeek; i++) daysArray.push(null);
+  for (let i = 0; i < startDayOfWeek; i++) daysArray.push(null);
 
-    for (let day = 1; day <= totalDays; day++) {
-      const gregDate = new Date(year, month, day);
-      const hDate = new HDate(gregDate);
+  for (let day = 1; day <= totalDays; day++) {
+    const gregDate = new Date(year, month, day);
+    const hDate = new HDate(gregDate);
 
-      const dayHeb = `${toHebrewNumber(hDate.getDate())} ${translateHebrewMonth(hDate.getMonthName())}`;
-      const dayGreg = `${gregDate.getDate()} ${gregDate.toLocaleString("he-IL", { month: 'long' })}`;
+    const dayHeb = `${toHebrewNumber(hDate.getDate())} ${translateHebrewMonth(hDate.getMonthName())}`;
+    const dayGreg = `${gregDate.getDate()} ${gregDate.toLocaleString("he-IL", { month: 'long' })}`;
 
-      daysArray.push({ heb: dayHeb, greg: dayGreg });
-    }
+    const pad = (n) => n.toString().padStart(2, '0');
+    const csharpDate = `${gregDate.getFullYear()}-${pad(gregDate.getMonth()+1)}-${pad(gregDate.getDate())}`;
 
-    return daysArray;
-  };
+    daysArray.push({
+      heb: dayHeb,
+      greg: dayGreg,
+      iso: csharpDate
+    });
+  }
+
+  return daysArray;
+};
 
   useEffect(() => {
     setCalendarDays(generateCalendar(currentYear, currentMonth));

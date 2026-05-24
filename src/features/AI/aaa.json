@@ -1,0 +1,78 @@
+[
+    {
+        "id": "chatcmpl-Dj0sNqsHHv4ZgsPRrJcNpkqPA5jHF",
+        "created": 1779620499,
+        "model": "gpt-4o-mini",
+        "object": "chat.completion",
+        "system_fingerprint": "fp_e2d886d409",
+        "choices": [
+            {
+                "finish_reason": "stop",
+                "index": 0,
+                "message": {
+                    "content": "1. איזה סוג קבוצה אתם מייצגים? (כגון: עסקית, קהילתית, חינוכית, פרטית)\n2. מהו התקציב המיועד לסדנה? \n3. כמה משתתפים צפויים לקחת חלק בסדנה?\n4. מהי המטרה העיקרית של הסדנה? (למשל: הכשרה, בניית צוות, פיתוח אישי)\n5. אילו תחומי עניין רלוונטיים לכם? (כגון: יצירתיות, ניהול זמן, כישורי תקשורת)",
+                    "role": "assistant",
+                    "provider_specific_fields": {
+                        "refusal": null
+                    },
+                    "annotations": []
+                },
+                "provider_specific_fields": {}
+            }
+        ],
+        "usage": {
+            "completion_tokens": 123,
+            "prompt_tokens": 97,
+            "total_tokens": 220,
+            "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 0,
+                "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0
+            }
+        },
+        "service_tier": "default"
+    },
+    {
+        "id": "chatcmpl-Dj0xiLQ0M3nK9fNp9an9sNwEQdDIY",
+        "created": 1779620830,
+        "model": "gpt-4o-mini",
+        "object": "chat.completion",
+        "system_fingerprint": "fp_e2d886d409",
+        "choices": [
+            {
+                "finish_reason": "stop",
+                "index": 0,
+                "message": {
+                    "content": "בהתבסס על המידע שסיפקת, הסדנה הכי מתאימה היא:\n\n- **קוד סדנה**: GIBUSH2023\n- **תיאור קצר**: סדנת גיבוש וחיזוק תחושת שייכות באמצעות פעילויות משותפות ואימון בקבוצות קטנות, שבהן המשתתפים מקבלים משוב חיובי ואמצעים להעצמה אישית.\n- **למה היא מתאימה**: הסדנה מתמקדת בגיבוש בין חברי הקבוצה ומספקת להם כלים לחיזוק התחושה האישית ויכולת ההקשבה, תוך כדי קבלת מחמאות והוקרה זה מזה, דבר שיכול לחזק את הקשרים החברתיים וליצור סביבה positive supportive.",
+                    "role": "assistant",
+                    "provider_specific_fields": {
+                        "refusal": null
+                    },
+                    "annotations": []
+                },
+                "provider_specific_fields": {}
+            }
+        ],
+        "usage": {
+            "completion_tokens": 166,
+            "prompt_tokens": 219,
+            "total_tokens": 385,
+            "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 0,
+                "rejected_prediction_tokens": 0
+            },
+            "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0
+            }
+        },
+        "service_tier": "default"
+    }
+]

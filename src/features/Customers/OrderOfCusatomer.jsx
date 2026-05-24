@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { InitReferences, pay } from '../References/ReferencesSlice';
 import style from './OrderOfCusatomer.module.css';
 import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
 
 const OrderOfCusatomer = () => {
+
+    const navigate = useNavigate()
     const dispatch = useDispatch();
 
     const references = useSelector(state => state.Reference.references);
     const status = useSelector(state => state.Reference.status);
-    const statusUser = useSelector(state => state.LogIn.statusUser)
+    // const statusUser = useSelector(state => state.LogIn.statusUser)
     const customers = useSelector(state => state.Customer.Customers);
     const typeGroups = useSelector(s => s.TypeGroup.groups);
     const statusType = useSelector(s => s.TypeGroup.status);
@@ -70,8 +72,7 @@ const OrderOfCusatomer = () => {
                                     <div className={style.cell}><span className={style.label}>קוד סדנא</span></div>
                                     <div className={style.cell}><span className={style.label}>סוג הסדנא</span></div>
                                     <div className={style.cell}><span className={style.label}>הערות</span></div>
-                                    {statusUser === "cust" &&
-                                        <div className={style.cell}><span className={style.label}>פעולות</span></div>}
+                                    <div className={style.cell}><span className={style.label}>פעולות</span></div>
                                 </div>
 
                                 <div className={style.tableRow}>
@@ -79,19 +80,23 @@ const OrderOfCusatomer = () => {
                                     <div className={style.cell}><span>{item.date}</span></div>
                                     <div className={style.cell}><span>{item.time}</span></div>
                                     <div className={style.cell}><span>{item.adress}</span></div>
-                                    <div className={style.cell}><span>{item.codeWorkshop}</span></div>
+                                    {/* <div className={style.cell}><span>{item.codeWorkshop}</span></div> */}
+                                    <div>
+                                        <button className={style.workshopBtn} onClick={() => navigate(`/WorkshopDetails/${item.codeWorkshop}`)}>
+                                            {item.codeWorkshop}
+                                        </button>
+                                    </div>
                                     <div className={style.cell}><span>{type?.description}</span></div>
                                     <div className={style.cell}><span>{item.comments}</span></div>
-                                    {statusUser === "cust" &&
-                                        <div className={style.cell}>
-                                            {item.status === 3 && (
-                                                <button onClick={() => handlePay(item.code)}>
-                                                    {loadingPay.includes(item.code) ? "טוען..." : "תשלום"}
-                                                </button>
-                                            )}
-                                            {item.status === 2 && <span>שולם</span>}
-                                            {item.status === 1 && <span>בהמתנה</span>}
-                                        </div>}
+                                    <div className={style.cell}>
+                                        {item.status === 3 && (
+                                            <button onClick={() => handlePay(item.code)}>
+                                                {loadingPay.includes(item.code) ? "טוען..." : "תשלום"}
+                                            </button>
+                                        )}
+                                        {item.status === 2 && <span>שולם</span>}
+                                        {item.status === 1 && <span>בהמתנה</span>}
+                                    </div>
                                 </div>
                             </div>
                         ))

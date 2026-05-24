@@ -2,19 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { addLead, signIn } from './LogInSlice';
+import { addLead, signIn, signOut, signout } from './LogInSlice';
 import { fetchTypeGroups, TypeGroups } from '../TypeGroup/TypeGroupSlice';
 import { InitCustomer } from '../Customers/CustomerSlice';
 import { ProfilelogIn } from '../Profile/ProfileSlice';
 import { InitLeads } from '../Leads/LeadsSlice';
-
 import styles from './LogIn.module.css';
+import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
 
 const SignIn = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
+    const statusD = useSelector(state => state.Diagnoser.status);
     const typeGroups = useSelector(state => state.TypeGroup.groups);
     const statusType = useSelector(state => state.TypeGroup.status);
     const customers = useSelector(state => state.Customer.Customers);
@@ -39,12 +41,13 @@ const SignIn = () => {
     useEffect(() => {
         if (statusC === "") dispatch(InitCustomer());
         if (statusL === "") dispatch(InitLeads());
+        if (statusD === "") dispatch(InitDiagnoser());
 
         dispatch(ProfilelogIn({
             thisUser: thisuser,
             status: statusUser
         }));
-    }, [statusC, statusL, dispatch]);
+    }, [statusC, statusD, statusL, thisuser, dispatch]);
 
     function SignInHandler() {
         setErr(false);
@@ -61,6 +64,7 @@ const SignIn = () => {
         let l = leads.find(l => l.mail === mail.toLowerCase());
 
         if (c || l) {
+            dispatch(signOut())
             setErr(true);
             return;
         }

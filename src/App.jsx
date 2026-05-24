@@ -21,7 +21,11 @@ import LeadsList from './features/Leads/LeadsList';
 import { useLocation } from "react-router-dom";
 import WorkshopDetails from './features/WorkShop/WorkshopDetails';
 import OrderOfCusatomer from './features/Customers/OrderOfCusatomer';
+<<<<<<< HEAD
 import DiagnoserCalendar from './features/Calendar/DiagnoserCalendar';
+=======
+import WorkshopAI from './features/AI/WorkshopAI';
+>>>>>>> origin/WR
 
 function App() {
   const statusUser = useSelector(state => state.LogIn.statusUser);
@@ -36,8 +40,8 @@ function App() {
       {/* ניווטים מופיעים רק אחרי לחיצה */}
       {hasAccess && (
         <nav>
-          {statusUser && statusUser !== "cust" && <NavLink to="/Orders" className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
-          {statusUser === "cust" && <NavLink to={`/OrderOfCusatomer/${user.code}`} className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
+          {user && statusUser && statusUser !== "cust" && <NavLink to="/Orders" className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
+          {user && statusUser === "cust" && <NavLink to={`/OrderOfCusatomer/${user.code}`} className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
           {user && <NavLink to="/Profile" className={({ isActive }) => isActive ? styles.active : styles.link}>פרופיל</NavLink>}
           {!user && (
             <NavLink
@@ -58,10 +62,8 @@ function App() {
           {(statusUser === "Esty") && <NavLink to="/Leads" className={({ isActive }) => isActive ? styles.active : styles.link}>מתעניינים</NavLink>}
           <NavLink to="/Diagnosers" className={({ isActive }) => isActive ? styles.active : styles.link}>מאבחנות</NavLink>
           {(statusUser === "diagnoser" || statusUser === "Esty") && <NavLink to="/calendar" className={({ isActive }) => isActive ? styles.active : styles.link}>ליומן האישי</NavLink>}
-
+          <NavLink to="/AI" className={({ isActive }) => isActive ? styles.active : styles.link}>AI</NavLink>
         </nav>
-        
-        
       )}
 
       <div className={styles.pageContent}>
@@ -72,6 +74,7 @@ function App() {
           {/* כל שאר הדפים זמינים רק אחרי לחיצה */}
 
           <>
+            <Route path="/AI" element={<WorkshopAI />} />
             <Route path="/enter" element={<LogIn />} />
             <Route path="/hello" element={<LoginPage setHasAccess={setHasAccess} />} />
             <Route path="/Workshop" element={<Workshop />} />
