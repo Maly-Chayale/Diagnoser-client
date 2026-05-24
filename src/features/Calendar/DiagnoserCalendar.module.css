@@ -1,6 +1,145 @@
 .calendarWrapper {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    background: #f8fafc;
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    border: 1px solid #e5e7eb;
+    font-family: Roboto, Arial, sans-serif;
+}
+
+/* FullCalendar global */
+
+:global(.fc) {
+    direction: rtl;
+}
+
+/* Toolbar */
+
+:global(.fc .fc-toolbar-title) {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* Buttons */
+
+:global(.fc .fc-button) {
+    background: white !important;
+    border: 1px solid #d1d5db !important;
+    color: #374151 !important;
+    border-radius: 10px !important;
+    padding: 6px 12px !important;
+    font-size: 14px !important;
+    transition: 0.2s;
+}
+
+:global(.fc .fc-button:hover) {
+    background: #f3f4f6 !important;
+}
+
+:global(.fc .fc-button-active) {
+    background: #2563eb !important;
+    color: white !important;
+    border-color: #2563eb !important;
+}
+
+/* Day cells */
+
+:global(.fc .fc-daygrid-day) {
+    transition: background 0.2s;
+}
+
+:global(.fc .fc-daygrid-day:hover) {
+    background: #f9fafb;
+}
+
+/* Today */
+
+/* היום הנוכחי */
+
+:global(.fc .fc-day-today) {
+    background: #dcfce7 !important;
+}
+
+/* מספר היום */
+
+:global(.fc .fc-day-today .fc-daygrid-day-number) {
+    background: #16a34a;
+    color: white !important;
+
+    width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    font-weight: 700;
+
+    margin: 4px;
+}
+
+/* גם ב־timeGrid */
+
+:global(.fc .fc-timegrid-col.fc-day-today) {
+    background: #dcfce7 !important;
+}
+/* Events */
+
+:global(.fc .fc-event) {
+    border: none !important;
+    border-radius: 12px;
+    padding: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    overflow: visible !important;
+    cursor: pointer;
+}
+:global(.fc .fc-event-main) {
+    overflow: visible !important;
+    display: block;
+    width: 100%;
+}
+
+:global(.fc .fc-event:hover) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+/* Status colors */
+
+:global(.fc .status-1) {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+    color: white !important;
+}
+
+:global(.fc .status-2) {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: white !important;
+}
+
+:global(.fc .status-3) {
+    background: linear-gradient(135deg, #15803d, #166534) !important;
+    color: white !important;
+}
+
+/* Event content */
+
+.eventBox {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.eventTitle {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.eventHebrewDate {
+    font-size: 11px;
+    opacity: 0.95;
+    line-height: 1.3;
 }

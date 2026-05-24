@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCustomer } from '../Customers/CustomerSlice';
 import { deleteLead } from '../Leads/LeadsSlice';
-import { addReference } from '../References/ReferencesSlice';
+import { addReference, InitReferences } from '../References/ReferencesSlice';
 import { sendEmail } from '../Email/EmailSlice';
 
 function OrderWorkshop({ WorkShop, diagnoser, onClose }) {
@@ -50,6 +50,7 @@ function OrderWorkshop({ WorkShop, diagnoser, onClose }) {
                 status: 1
             };
             await dispatch(addReference(newReference)).unwrap();
+            await dispatch(InitReferences());
             setIsBookingModalOpen(false);
             navigate(`/OrderOfCusatomer/${newReference.codeCustomer}`);
             const mailBody = `שלום ${diagnoser.name},

@@ -1,0 +1,83 @@
+
+/* קונטיינר */
+.calendarWrapper {
+    background: #f5f7fb;
+    border-radius: 14px;
+    padding: 10px;
+    font-family: Roboto, Arial, sans-serif;
+}
+
+/* אירועים */
+.fc .fc-event {
+    border: none !important;
+    border-radius: 10px;
+    padding: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* סטטוסים */
+.fc .status-1 {
+    background: #38bdf8 !important;
+    color: #fff !important;
+}
+
+.fc .status-2 {
+    background: #22c55e !important;
+    color: #fff !important;
+}
+
+.fc .status-3 {
+    background: #15803d !important;
+    color: #fff !important;
+}
+
+/* hover */
+.fc .fc-event:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+/* כותרת */
+.fc .fc-toolbar-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* כפתורים */
+.fc .fc-button {
+    background: #fff !important;
+    border: 1px solid #e5e7eb !important;
+    color: #374151 !important;
+    border-radius: 8px !important;
+}
+
+/* היום */
+.fc .fc-day-today {
+    background: #e8f0fe !important;
+}
+
+/* תא יום */
+.dayCell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hebrewDay {
+    font-size: 10px;
+    opacity: 0.6;
+}
+
+/* אירוע */
+.eventBox {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.eventHebrewDate {
+    font-size: 11px;
+    opacity: 0.8;
+}

@@ -4,103 +4,141 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+
 import heLocale from "@fullcalendar/core/locales/he";
 
-import { useSelector, useDispatch } from "react-redux";
-import { updateReference } from "../References/ReferencesSlice";
+import { useSelector } from "react-redux";
+
+import { HDate } from "hebcal";
 
 import styles from "./DiagnoserCalendar.module.css";
 
+/** Hebcal date formatter */
+const getHebrewDate = (date = new Date()) => {
+    const hdate = new HDate(date);
+
+    const day = hdate.getDate();
+    const month = hdate.getMonthName("h");
+    const year = hdate.getFullYear();
+
+    return `${day} ב${month} ${year}`;
+};
+
+const hebrewFormatter = new Intl.DateTimeFormat("he-u-ca-hebrew", {
+    day: "numeric",
+    month: "long"
+});
+
 const DiagnoserCalendar = () => {
-    const dispatch = useDispatch();
 
     const references = useSelector(s => s.Reference.references);
     const workshops = useSelector(s => s.WorkShop.WorkShops);
-    const customers = useSelector(s => s.Customer.Customers);
-
     const user = useSelector(s => s.LogIn.thisUser);
-    const statusUser = useSelector(s => s.LogIn.statusUser);
+    const customers = useSelector(state => state.Customer.Customers);
 
-    const getWorkshop = code => workshops.find(w => w.code === code);
-    const getCustomer = code => customers.find(c => c.code === code);
+    const todayHebrewDate = useMemo(() => getHebrewDate(new Date()), []);
 
-    // ⭐ EVENTS
-    const events = useMemo(() => {
+    const workshopsById = useMemo(() => {
+        const map = new Map();
+        workshops?.forEach(w => {
+            map.set(w.code, w);
+        });
+        return map;
+    }, [workshops]);
+
+    const customersById = useMemo(() => {
+        const map = new Map();
+        customers?.forEach(c => {
+            map.set(c.code, c);
+        });
+        return map;
+    }, [customers]);
+
+    const filteredReferences = useMemo(() => {
+
         if (!references) return [];
 
-        return references
-            .filter(r => {
-                if (r.status === 1) return false;
+        if (!user?.code) return references;
 
-                const w = getWorkshop(r.codeWorkshop);
-                if (!w) return false;
+        return references.filter(r => {
 
-                if (statusUser !== "Esty") {
-                    return w.codeDiagnoser === user.code;
-                }
+            const workshop = workshopsById.get(r.codeWorkshop);
 
-                return true;
-            })
+            if (!workshop) return false;
+
+            return String(workshop.codeDiagnoser) === String(user.code);
+
+        });
+
+    }, [references, workshopsById, user?.code]);
+
+    const formatTime = (time) => {
+
+        if (typeof time === "string" && time.includes(":")) {
+            return time.slice(0, 5);
+        }
+
+        const hour = Math.floor(time);
+        const minute = Math.round((time - hour) * 60);
+
+        return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+    };
+
+    const events = useMemo(() => {
+
+        if (!filteredReferences) return [];
+
+        return filteredReferences
             .map(r => {
-                const workshop = getWorkshop(r.codeWorkshop);
-                const customer = getCustomer(r.codeCustomer);
 
-                const start = new Date(`${r.date}T${String(r.time || 10).padStart(2, "0")}:00:00`);
+                if (!r.date || r.time == null) return null;
 
-                const end = new Date(start);
-                end.setHours(end.getHours() + 2);
+                const time = formatTime(r.time);
+
+                const [year, month, day] = r.date.split("-");
+                const [hour, minute] = time.split(":");
+
+                const start = new Date(
+                    year,
+                    month - 1,
+                    day,
+                    hour,
+                    minute
+                );
+
+                if (isNaN(start.getTime())) return null;
+
+                const cust = customersById.get(r.codeCustomer);
 
                 return {
-                    id: r.code,
+                    id: String(r.code),
 
-                    title: customer?.name || "לקוח",
+                    title: "הזמנה",
 
                     start,
-                    end,
+
+                    end: new Date(start.getTime() + 60 * 60 * 1000),
+
+                    className: `status-${r.status}`,
 
                     extendedProps: {
-                        workshopCode: r.codeWorkshop,
-                        customer: customer?.name,
-                        address: r.adress,
-                        comments: r.comments,
-                        status: r.status
-                    },
-
-                    backgroundColor:
-                        r.status === 3 ? "#f44336" :
-                        r.status === 2 ? "#4caf50" :
-                        "#ff9800",
-
-                    borderColor: "#222"
+                        status: r.status,
+                        adress: r.adress,
+                        cust: cust?.name || ""
+                    }
                 };
-            });
-    }, [references, workshops, customers, user, statusUser]);
 
-    // ⭐ לחיצה על אירוע
-    const handleEventClick = (info) => {
-        const e = info.event;
-        alert(
-            `לקוח: ${e.extendedProps.customer}
-כתובת: ${e.extendedProps.address}
-הערות: ${e.extendedProps.comments}`
-        );
-    };
+            })
+            .filter(Boolean);
 
-    // ⭐ גרירת אירוע (הופך את זה למערכת אמיתית!)
-    const handleEventDrop = async (info) => {
-        const updated = {
-            code: Number(info.event.id),
-            date: info.event.start.toISOString().split("T")[0],
-            time: info.event.start.getHours()
-        };
-
-        await dispatch(updateReference(updated));
-    };
+    }, [filteredReferences, customersById]);
 
     return (
+
         <div className={styles.calendarWrapper}>
 
             <FullCalendar
+
                 plugins={[
                     dayGridPlugin,
                     timeGridPlugin,
@@ -108,37 +146,67 @@ const DiagnoserCalendar = () => {
                 ]}
 
                 locale={heLocale}
+
                 direction="rtl"
 
-                initialView="timeGridWeek"
+                initialView="dayGridMonth"
+
+                firstDay={0}
+
                 height="85vh"
 
                 events={events}
 
-                eventClick={handleEventClick}
-                eventDrop={handleEventDrop}
-
-                editable={true}
-                selectable={true
-
-                }
-
-                slotMinTime="08:00:00"
-                slotMaxTime="22:00:00"
-
                 headerToolbar={{
                     left: "prev,next today",
                     center: "title",
-                    right: "dayGridMonth,timeGridWeek,timeGridDay"
+                    right: "hebrewDate dayGridMonth,timeGridWeek,timeGridDay"
                 }}
 
                 buttonText={{
                     today: "היום",
                     month: "חודש",
-                    week: "שבוע",
-                    day: "יום"
+                    week: "שבוע נוכחי",
+                    day: " יום נוכחי"
+                }}
+
+                customButtons={{
+                    hebrewDate: {
+                        text: todayHebrewDate
+                    }
+                }}
+
+                eventContent={(arg) => {
+
+                    const date = arg.event.start;
+
+                    const hebrewDate = hebrewFormatter.format(date);
+
+                    return (
+
+                        <div className={styles.eventBox}>
+
+                            <div className={styles.eventTitle}>
+                                {arg.event.title}
+                            </div>
+
+                            <div className={styles.eventHebrewDate}>
+                                לקוח : {arg.event.extendedProps.cust}
+                            </div>
+
+                            <div className={styles.eventHebrewDate}>
+                                תאריך : {hebrewDate}
+                            </div>
+
+                            <div className={styles.eventHebrewDate}>
+                                כתובת : {arg.event.extendedProps.adress}
+                            </div>
+
+                        </div>
+                    );
                 }}
             />
+
         </div>
     );
 };
