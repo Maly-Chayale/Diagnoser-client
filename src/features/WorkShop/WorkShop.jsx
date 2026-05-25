@@ -1,19 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
-
-import {
-    InitWorkShops
-} from './WorkShopSlice';
-
+import { InitWorkShops } from './WorkShopSlice';
 import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
-
-import { fetchTypeGroups, TypeGroups } from '../TypeGroup/TypeGroupSlice';
-
+import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
 import AppointmentCard from './AppointmentCard';
-
 import AddWorkshopModal from './AddWorkshopModal';
-
 import style from './Workshop.module.css';
 import WorkshopCard from './AppointmentCard';
 
@@ -54,7 +45,7 @@ function Workshop() {
         [workshops, search]
     );
 
-        const getDiagnoser = (coded) => diagnosers.find(d => d.code === coded);
+    const getDiagnoser = (coded) => diagnosers.find(d => d.code === coded);
 
 
     if (status === "loading") return <div>טוען...</div>;
@@ -92,7 +83,7 @@ function Workshop() {
             <div className={style.grid}>
 
                 {
-                    filtered.filter(w=>getDiagnoser(w.codeDiagnoser)?.available).map(w => (
+                    filtered.filter(w => getDiagnoser(w.codeDiagnoser)?.available).map(w => (
 
                         <WorkshopCard
                             key={w.code}

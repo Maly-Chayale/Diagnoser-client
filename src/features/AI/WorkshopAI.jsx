@@ -1,135 +1,254 @@
-// import React, { useEffect, useState } from 'react';
-// import style from './safeAI.module.css';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
-// import httpx
-// import OpenAI from "openai";
+import { useDispatch, useSelector } from "react-redux";
+import { GetAIQuestions, ResetAIState, SendAnswersToAI, SetAnswer } from "./WorkshopAISlice";
+import ReactMarkdown from "react-markdown";
+import { useEffect, useState } from "react";
+import { InitWorkShops } from "../WorkShop/WorkShopSlice";
+import { InitDiagnoser } from "../Diagnosers/DiagnoserSlice";
+import { TypeGroups } from "../TypeGroup/TypeGroupSlice";
+import { useNavigate } from "react-router-dom";
+import style from "./safeAI.module.css";
+import remarkGfm from "remark-gfm";
+import OrderWorkshop from "../WorkShop/OrderWorkshop";
 
-// const WorkshopAI = ({ sendToAI }) => {
+const WorkshopAI = () => {
 
-//   const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-//   const workshops = useSelector(state => state.WorkShop.WorkShops);
-//   const groups = useSelector(state => state.TypeGroup.groups);
+  const { questions, answers, result, loading } =
+    useSelector(state => state.WorkshopAI);
 
-//   const client = new OpenAI({
-//     apiKey: "sk-safeai-faab3999e60d8997389cafee6b70c2d971379f5f0330b326",
-//   });
+  const workshops = useSelector(state => state.WorkShop.WorkShops);
+  const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
+  const groups = useSelector(state => state.TypeGroup.groups);
 
-//   const [showQuestions, setShowQuestions] = useState(false);
-//   const [questions, setQuestions] = useState([]);
-//   const [answers, setAnswers] = useState({});
-//   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
-//   const [loading, setLoading] = useState(false);
+  const statusW = useSelector(state => state.WorkShop.status);
+  const statusD = useSelector(state => state.Diagnoser.status);
+  const statusType = useSelector(state => state.TypeGroup.statusType);
 
-//   useEffect(() => {
-//     dispatch(TypeGroups())
-//   }, [])
+  const [open, setOpen] = useState(false);
+  const [step, setStep] = useState(0);
+  const [isOrderOpen, setIsOrderOpen] = useState(false);
 
-//   const getType = (code) => {
-//     return groups.find(g => g.code === code)?.description;
-//   };
+  /* =========================
+     RESET + START CHAT
+  ========================= */
 
-//   const string = () => {
-//     let str = ""
-//     workshops.forEach(w => {
-//       let s = "code: " + w.code + " codeDiagnoser: " + w.codeDiagnoser;
-//       s += " typeGroup: " + getType(w.typeGroup) + " description: " + w.description
-//       if (w.graphology) s += " גרפולוגיה";
-//       if (w.morphology) s += " מורפולוגיה";
-//       if (w.chirology) s += " כירולוגיה";
-//       s += "price: " + w.price + " accontOfPeople: " + w.accountOfPeople
-//       str += "{" + s + "}";
-//     })
-//     return str;
-//   }
-
-//   const startAIQuestions = async () => {
-//     setLoading(true);
-//     setSelectedWorkshop(null);
-//     setAnswers({});
-
-//     const SYSTEM_PROMPT = 'אתה מתפקד כיועץ אישי לסדנאות. יש לך רשימת סדנאות שכל אחת מהן כוללת תכונות: "description", "morfology", "grafology", "chirology", "price", "accontOfPeople". המטרה שלך היא: 1. ליצור 5 שאלות שונות למשתמש כדי להבין מה הכי מתאים לו. 2. השאלות צריכות להתמקד בתחומי עניין, סגנון עבודה, תחביבים, תקציב או העדפות אישיות. 3. אחרי שהמשתמש עונה, תנתח את התשובות ותבחר את הסדנה המתאימה ביותר עבורו. 4. תספק את הסדנה הנבחרת עם כל הפרטים שלה: description, typeGroup, morfology, grafology, chirology, price, accontOfPeople. תן את הפלט בצורה ברורה: - מערך השאלות: ["שאלה1", "שאלה2", ..., "שאלה5"] - אובייקט הסדנה המתאימה:{  "description": "...",  "typeGroup": ...,  "morfology": ...,  "grafology": ...,  "chirology": ...,  "price": ...,  "accontOfPeople": ...}'
-
-//     const response = await client.chat.completions.create({
-//       model: "gpt-4o-mini",
-//       messages =[
-//         { "role": "system", "content": SYSTEM_PROMPT },
-//         { "role": "user", "content": "הסדנאות שיש לנו: " + string() }
-//       ]
-//     });
-
-//     console.log(response);
-    
+  const loadQuestions = async () => {
+    await dispatch(ResetAIState());
+    setOpen(true);
+    setStep(0);
+    dispatch(GetAIQuestions());
+  };
 
 
-//     // קריאה ל-AI שיחזיר מערך של 5 שאלות
-//     const aiQuestions = await sendToAI({
-//       type: 'generateQuestions',
-//       count: 5
-//     });
+  const finish = async () => {
 
-//     setQuestions(aiQuestions); // מציבים את השאלות שה-AI ייצר
-//     setShowQuestions(true);
-//     setLoading(false);
-//   };
+    const payload =
+      questions.map((q, i) => (q + " " + answers[i]));
 
-//   const handleInputChange = (e, index) => {
-//     setAnswers({ ...answers, [index]: e.target.value });
-//   };
+    await dispatch(SendAnswersToAI(payload));
 
-//   const submitAnswers = async () => {
-//     setLoading(true);
+    setOpen(false);
+  };
 
-//     // שולחים את התשובות ל-AI שיחזיר סדנה מתאימה
-//     const workshop = await sendToAI({
-//       type: 'matchWorkshop',
-//       answers
-//     });
+  /* =========================
+     LOAD STORES
+  ========================= */
 
-//     setSelectedWorkshop(workshop);
-//     setShowQuestions(false);
-//     setLoading(false);
-//   };
+  useEffect(() => {
 
-//   return (
-//     <div className={style.workshopContainer}>
-//       <button className={style.workshopButton} onClick={startAIQuestions}>
-//         איזו סדנה הכי מתאימה לי
-//       </button>
+    if (statusW === "")
+      dispatch(InitWorkShops());
 
-//       {loading && <p>טוען...</p>}
+    if (statusD === "")
+      dispatch(InitDiagnoser());
 
-//       {showQuestions && (
-//         <div className={style.questionBox}>
-//           {questions.map((q, index) => (
-//             <div key={index} className={style.questionItem}>
-//               <label>{q}</label>
-//               <input
-//                 type="text"
-//                 className={style.workshopInput}
-//                 value={answers[index] || ''}
-//                 onChange={(e) => handleInputChange(e, index)}
-//               />
-//             </div>
-//           ))}
+    if (statusType === "")
+      dispatch(TypeGroups());
 
-//           <button className={style.workshopButton} onClick={submitAnswers}>
-//             אישור
-//           </button>
-//         </div>
-//       )}
+  }, [dispatch, statusW, statusD, statusType]);
 
-//       {selectedWorkshop && (
-//         <div className={style.resultBox}>
-//           <h3>הסדנה שהכי מתאימה לך:</h3>
-//           {Object.entries(selectedWorkshop).map(([key, value]) => (
-//             <p key={key}><strong>{key}:</strong> {value.toString()}</p>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
+  /* =========================
+     PARSE RESULT
+  ========================= */
 
-// export default WorkshopAI;
+  let workshop = null;
+
+  if (result && typeof result === "string") {
+    console.log(result);
+
+    const match = result.match(/\d+/);
+
+    if (match) {
+
+      workshop = workshops.find(
+        w => w.code === Number(match[0])
+      );
+    }
+  }
+
+  let diagnoser = workshop
+    ? diagnosers.find(d => d.code === workshop.codeDiagnoser)
+    : null;
+
+  let typeGroup = workshop
+    ? groups.find(g => g.code === workshop.typeGroup)
+    : null;
+
+  let cleanResult = result;
+
+  if (typeof cleanResult === "string") {
+    cleanResult = cleanResult
+      .replace(/```markdown/g, "")
+      .replace(/```/g, "")
+      .trim();
+  }
+
+  /* =========================
+     UI
+  ========================= */
+
+  return (
+    <div className={style.safeAIPage}>
+      <div className={style.chatContainer}>
+
+        {/* START BUTTON */}
+        {!open && (
+          <button
+            className={style.startBtn}
+            onClick={loadQuestions}
+          >
+            לעזרה – התאמת סדנה חכמה
+          </button>
+        )}
+
+        {/* LOADING OVERLAY */}
+        {loading && (
+          <div className={style.loadingOverlay}>
+            <div className={style.spinner}></div>
+            <p>המערכת חושבת...</p>
+          </div>
+        )}
+
+        {/* CHAT FLOW */}
+        {open && questions.length > 0 && (
+          <div className={style.chatBox}>
+
+            {/* BOT QUESTION */}
+            <div className={style.botMsg}>
+              {questions[step]}
+            </div>
+
+            {/* USER ANSWER INPUT */}
+            <div className={style.inputRow}>
+
+              <input
+                className={style.input}
+                value={answers[step] || ""}
+                onChange={(e) =>
+                  dispatch(
+                    SetAnswer({
+                      index: step,
+                      value: e.target.value
+                    })
+                  )
+                }
+                onKeyDown={(e) => {
+
+                  if (e.key === "Enter") {
+
+                    if (step < questions.length - 1) {
+
+                      setStep(step + 1);
+
+                    } else {
+
+                      finish();
+                    }
+                  }
+                }}
+              />
+
+              {step < questions.length - 1 ? (
+                <button
+                  className={style.sendBtn}
+                  onClick={() => setStep(step + 1)}
+                >
+                  הבא
+                </button>
+              ) : (
+                <button
+                  className={style.sendBtn}
+                  onClick={finish}
+                >
+                  סיום
+                </button>
+              )}
+
+            </div>
+
+          </div>
+        )}
+
+        {!open && result &&
+          (
+            <div className={style.aiMessage} dir="rtl">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {cleanResult}
+              </ReactMarkdown>
+            </div>
+          )
+        }
+
+        {/* RESULT */}
+        {!open && workshop && (
+          <div className={style.resultBox}>
+
+            <h2>{workshop.description}</h2>
+
+            <p>מחיר: {workshop.price}</p>
+            <p>כמות משתתפים: {workshop.accontOfPeople}</p>
+
+            {typeGroup && (
+              <p>סוג קבוצה: {typeGroup.description}</p>
+            )}
+
+            {diagnoser && (
+              <div>
+                <h3>מאבחנת</h3>
+                <p>{diagnoser.name}</p>
+                <p>{diagnoser.mail}</p>
+              </div>
+            )}
+
+            <button
+              onClick={() =>
+                navigate(`/WorkshopDetails/${workshop.code}`)
+              }
+            >
+              מעבר לפרטי הסדנה
+            </button>
+            <button
+              onClick={() => setIsOrderOpen(true)}
+            >
+              הזמנת סדנה
+            </button>
+
+            {isOrderOpen && workshop && diagnoser && (
+              <OrderWorkshop
+                WorkShop={workshop}
+                diagnoser={diagnoser}
+                onClose={() => setIsOrderOpen(false)}
+              />
+            )}
+
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
+
+export default WorkshopAI;

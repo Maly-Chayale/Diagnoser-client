@@ -26,7 +26,7 @@ function translateHebrewMonth(monthName) {
     "cheshvan": "חשון",
     "kislev": "כסלו",
     "tevet": "טבת",
-    "shevat": "שבט",
+    "sh'vat": "שבט",
     "adar": "אדר",
     "adar i": "אדר א׳",
     "adar ii": "אדר ב׳",

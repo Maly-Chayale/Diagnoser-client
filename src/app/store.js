@@ -8,6 +8,7 @@ import ReferencesSlice from "../features/References/ReferencesSlice"
 import TypeGroupSlice from "../features/TypeGroup/TypeGroupSlice"
 import StatusSlice from "../features/Statuss/StatusSlice"
 import LeadsSlice from "../features/Leads/LeadsSlice"
+import WorkshopAISlice from "../features/AI/WorkshopAISlice";
 
 export const store = configureStore({
     reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
         Reference: ReferencesSlice,
         TypeGroup: TypeGroupSlice,
         Status: StatusSlice,
-        Lead: LeadsSlice
+        Lead: LeadsSlice,
+        WorkshopAI: WorkshopAISlice
     }
 });
