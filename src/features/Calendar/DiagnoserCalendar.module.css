@@ -1,0 +1,206 @@
+.calendarWrapper {
+    background: #f8fafc;
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e2e8f0;
+    font-family: Roboto, Arial, sans-serif;
+}
+
+/* ================= FULLCALENDAR ================= */
+
+:global(.fc) {
+    direction: rtl;
+}
+
+/* Toolbar */
+
+:global(.fc .fc-toolbar-title) {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+/* Buttons */
+
+:global(.fc .fc-button) {
+    background: white !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #334155 !important;
+    border-radius: 12px !important;
+    padding: 6px 12px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    transition: 0.2s;
+}
+
+:global(.fc .fc-button:hover) {
+    background: #eff6ff !important;
+    border-color: #93c5fd !important;
+}
+
+:global(.fc .fc-button-active) {
+    background: #2563eb !important;
+    color: white !important;
+}
+
+/* Day grid */
+
+:global(.fc .fc-daygrid-day) {
+    transition: 0.2s;
+    border-radius: 10px;
+}
+
+:global(.fc .fc-daygrid-day:hover) {
+    background: linear-gradient(135deg, #bfdbfe, #93c5fd) !important;
+    box-shadow: inset 0 0 0 2px #3b82f6;
+}
+
+/* Today */
+
+:global(.fc .fc-day-today) {
+    background: #dcfce7 !important;
+}
+
+:global(.fc .fc-day-today .fc-daygrid-day-number) {
+    background: #16a34a;
+    color: white !important;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+}
+
+/* Events */
+
+:global(.fc .fc-event) {
+    border: none !important;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+:global(.fc .fc-event:hover) {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 18px rgba(0,0,0,0.15);
+}
+
+/* Status colors */
+
+:global(.fc .status-1) {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+    color: white !important;
+}
+
+:global(.fc .status-2) {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: white !important;
+}
+
+:global(.fc .status-3) {
+    background: linear-gradient(135deg, #15803d, #166534) !important;
+    color: white !important;
+}
+
+/* ================= EVENT CARD ================= */
+
+.eventBox {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center; /* מרכז אנכי */
+    align-items: center;     /* מרכז אופקי */
+
+    text-align: center;
+
+    gap: 4px;
+
+    padding: 6px;
+
+    width: 100%;
+    height: 100%;
+}
+
+/* חשוב מאוד ל-FullCalendar */
+:global(.fc .fc-event-main) {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+:global(.fc .fc-event) {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Title */
+
+.eventTitle {
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 6px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.18);
+    width: 100%;
+}
+
+/* Row */
+
+.eventRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    line-height: 1.2;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+/* Label */
+
+.fieldLabel {
+    font-weight: 800;
+    color: #fef9c3;
+}
+
+/* Value */
+
+.fieldValue {
+    font-weight: 500;
+    color: white;
+}
+
+/* Separator */
+
+.fieldSeparator {
+    opacity: 0.6;
+    margin: 0 3px;
+}
+
+/* Button */
+
+.infoButton {
+    border: none;
+    background: rgba(255,255,255,0.18);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: 2px;
+}
+
+.infoButton:hover {
+    background: white;
+    color: #0f172a;
+}
