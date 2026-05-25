@@ -1,135 +1,214 @@
-// import React, { useEffect, useState } from 'react';
-// import style from './safeAI.module.css';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
-// import httpx
-// import OpenAI from "openai";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  GetAIQuestions,
+  ResetAIState,
+  SendAnswersToAI,
+  SetAnswer
+} from "./WorkshopAISlice";
 
-// const WorkshopAI = ({ sendToAI }) => {
+import { useEffect, useState, useRef } from "react";
+import { InitWorkShops } from "../WorkShop/WorkShopSlice";
+import { InitDiagnoser } from "../Diagnosers/DiagnoserSlice";
+import { TypeGroups } from "../TypeGroup/TypeGroupSlice";
+import style from "./safeAI.module.css";
 
-//   const dispatch = useDispatch()
+import WorkshopResult from "./WorkshopResult";
 
-//   const workshops = useSelector(state => state.WorkShop.WorkShops);
-//   const groups = useSelector(state => state.TypeGroup.groups);
+const WorkshopAI = () => {
+  const dispatch = useDispatch();
 
-//   const client = new OpenAI({
-//     apiKey: "sk-safeai-faab3999e60d8997389cafee6b70c2d971379f5f0330b326",
-//   });
+  const { questions, answers, result, loading } =
+    useSelector((state) => state.WorkshopAI);
 
-//   const [showQuestions, setShowQuestions] = useState(false);
-//   const [questions, setQuestions] = useState([]);
-//   const [answers, setAnswers] = useState({});
-//   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
-//   const [loading, setLoading] = useState(false);
+  const workshops = useSelector((state) => state.WorkShop.WorkShops);
+  const diagnosers = useSelector((state) => state.Diagnoser.Diagnosers);
+  const groups = useSelector((state) => state.TypeGroup.groups);
+  const thisuser = useSelector((state) => state.LogIn.thisUser);
 
-//   useEffect(() => {
-//     dispatch(TypeGroups())
-//   }, [])
+  const statusW = useSelector((state) => state.WorkShop.status);
+  const statusD = useSelector((state) => state.Diagnoser.status);
+  const statusType = useSelector((state) => state.TypeGroup.statusType);
 
-//   const getType = (code) => {
-//     return groups.find(g => g.code === code)?.description;
-//   };
+  const [open, setOpen] = useState(false);
+  const [step, setStep] = useState(0);
 
-//   const string = () => {
-//     let str = ""
-//     workshops.forEach(w => {
-//       let s = "code: " + w.code + " codeDiagnoser: " + w.codeDiagnoser;
-//       s += " typeGroup: " + getType(w.typeGroup) + " description: " + w.description
-//       if (w.graphology) s += " גרפולוגיה";
-//       if (w.morphology) s += " מורפולוגיה";
-//       if (w.chirology) s += " כירולוגיה";
-//       s += "price: " + w.price + " accontOfPeople: " + w.accountOfPeople
-//       str += "{" + s + "}";
-//     })
-//     return str;
-//   }
+  const [history, setHistory] = useState([]);
+  const [typing, setTyping] = useState(false);
 
-//   const startAIQuestions = async () => {
-//     setLoading(true);
-//     setSelectedWorkshop(null);
-//     setAnswers({});
+  const chatEndRef = useRef(null);
 
-//     const SYSTEM_PROMPT = 'אתה מתפקד כיועץ אישי לסדנאות. יש לך רשימת סדנאות שכל אחת מהן כוללת תכונות: "description", "morfology", "grafology", "chirology", "price", "accontOfPeople". המטרה שלך היא: 1. ליצור 5 שאלות שונות למשתמש כדי להבין מה הכי מתאים לו. 2. השאלות צריכות להתמקד בתחומי עניין, סגנון עבודה, תחביבים, תקציב או העדפות אישיות. 3. אחרי שהמשתמש עונה, תנתח את התשובות ותבחר את הסדנה המתאימה ביותר עבורו. 4. תספק את הסדנה הנבחרת עם כל הפרטים שלה: description, typeGroup, morfology, grafology, chirology, price, accontOfPeople. תן את הפלט בצורה ברורה: - מערך השאלות: ["שאלה1", "שאלה2", ..., "שאלה5"] - אובייקט הסדנה המתאימה:{  "description": "...",  "typeGroup": ...,  "morfology": ...,  "grafology": ...,  "chirology": ...,  "price": ...,  "accontOfPeople": ...}'
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [history, step, typing, loading]);
 
-//     const response = await client.chat.completions.create({
-//       model: "gpt-4o-mini",
-//       messages =[
-//         { "role": "system", "content": SYSTEM_PROMPT },
-//         { "role": "user", "content": "הסדנאות שיש לנו: " + string() }
-//       ]
-//     });
+  useEffect(() => {
+    if (statusW === "") dispatch(InitWorkShops());
+    if (statusD === "") dispatch(InitDiagnoser());
+    if (statusType === "") dispatch(TypeGroups());
+  }, [dispatch, statusW, statusD, statusType]);
 
-//     console.log(response);
-    
+  const loadQuestions = async () => {
+    await dispatch(ResetAIState());
+    setOpen(true);
+    setStep(0);
+    setHistory([]);
+    dispatch(GetAIQuestions());
+  };
 
+  const finish = async () => {
+    const payload = questions.map((q, i) => q + " " + answers[i]);
+    await dispatch(SendAnswersToAI(payload));
+    setOpen(false);
+  };
 
-//     // קריאה ל-AI שיחזיר מערך של 5 שאלות
-//     const aiQuestions = await sendToAI({
-//       type: 'generateQuestions',
-//       count: 5
-//     });
+  const nextStep = () => {
+    const userAnswer = answers[step] || "";
 
-//     setQuestions(aiQuestions); // מציבים את השאלות שה-AI ייצר
-//     setShowQuestions(true);
-//     setLoading(false);
-//   };
+    setHistory((prev) => [
+      ...prev,
+      { type: "bot", text: questions[step] },
+      { type: "user", text: userAnswer }
+    ]);
 
-//   const handleInputChange = (e, index) => {
-//     setAnswers({ ...answers, [index]: e.target.value });
-//   };
+    setTyping(true);
 
-//   const submitAnswers = async () => {
-//     setLoading(true);
+    setTimeout(() => {
+      setTyping(false);
 
-//     // שולחים את התשובות ל-AI שיחזיר סדנה מתאימה
-//     const workshop = await sendToAI({
-//       type: 'matchWorkshop',
-//       answers
-//     });
+      if (step < questions.length - 1) {
+        setStep(step + 1);
+      } else {
+        finish();
+      }
+    }, 400);
+  };
 
-//     setSelectedWorkshop(workshop);
-//     setShowQuestions(false);
-//     setLoading(false);
-//   };
+  let workshop = null;
 
-//   return (
-//     <div className={style.workshopContainer}>
-//       <button className={style.workshopButton} onClick={startAIQuestions}>
-//         איזו סדנה הכי מתאימה לי
-//       </button>
+  if (result && typeof result === "string") {
+    const match = result.match(/\d+/);
+    if (match) {
+      workshop = workshops.find((w) => w.code === Number(match[0]));
+    }
+  }
 
-//       {loading && <p>טוען...</p>}
+  let diagnoser = workshop
+    ? diagnosers.find((d) => d.code === workshop.codeDiagnoser)
+    : null;
 
-//       {showQuestions && (
-//         <div className={style.questionBox}>
-//           {questions.map((q, index) => (
-//             <div key={index} className={style.questionItem}>
-//               <label>{q}</label>
-//               <input
-//                 type="text"
-//                 className={style.workshopInput}
-//                 value={answers[index] || ''}
-//                 onChange={(e) => handleInputChange(e, index)}
-//               />
-//             </div>
-//           ))}
+  let typeGroup = workshop
+    ? groups.find((g) => g.code === workshop.typeGroup)
+    : null;
 
-//           <button className={style.workshopButton} onClick={submitAnswers}>
-//             אישור
-//           </button>
-//         </div>
-//       )}
+  let cleanResult = result;
 
-//       {selectedWorkshop && (
-//         <div className={style.resultBox}>
-//           <h3>הסדנה שהכי מתאימה לך:</h3>
-//           {Object.entries(selectedWorkshop).map(([key, value]) => (
-//             <p key={key}><strong>{key}:</strong> {value.toString()}</p>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
+  if (typeof cleanResult === "string") {
+    cleanResult = cleanResult
+      .replace(/```markdown/g, "")
+      .replace(/```/g, "")
+      .trim();
 
-// export default WorkshopAI;
+    cleanResult =
+      "**מצאתי לך את הסנא המדויקת ביותר בשבילך על פי מה שביקשת:" +
+      cleanResult.split("למה היא מתאימה:")[1];
+  }
+
+  return (
+    <div className={style.safeAIPage}>
+      <div className={style.chatContainer}>
+
+        {/* ================= LOADING MODE (NEW FIX) ================= */}
+        {loading && (
+          <div className={style.loadingOverlay}>
+            <div className={style.spinner}></div>
+            <p>המערכת חושבת...</p>
+          </div>
+        )}
+
+        {/* ================= CONTENT (hidden while loading) ================= */}
+        {!loading && (
+          <>
+            <div className={style.chatHeader}>
+              <h1 className={style.chatTitle}>התאמת סדנה חכמה</h1>
+              <p className={style.chatSubtitle}>
+                המערכת תעזור לך למצוא את הסדנה המדויקת ביותר עבורך לפי הצרכים,
+                המטרה והקהל שלך.
+              </p>
+            </div>
+
+            {!open && (
+              <button className={style.startBtn} onClick={loadQuestions}>
+                לעזרה – התאמת סדנה חכמה
+              </button>
+            )}
+
+            {open && questions.length > 0 && (
+              <div className={style.chatBox}>
+                {history.map((msg, i) => (
+                  <div
+                    key={i}
+                    className={
+                      msg.type === "user"
+                        ? style.userMsg
+                        : style.botMsg
+                    }
+                  >
+                    {msg.text}
+                  </div>
+                ))}
+
+                <div className={style.botMsg}>
+                  {questions[step]}
+                </div>
+
+                {typing && (
+                  <div className={style.typingBubble}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                )}
+
+                <div className={style.inputRow}>
+                  <input
+                    className={style.input}
+                    value={answers[step] || ""}
+                    onChange={(e) =>
+                      dispatch(
+                        SetAnswer({
+                          index: step,
+                          value: e.target.value
+                        })
+                      )
+                    }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") nextStep();
+                    }}
+                  />
+
+                  <button className={style.sendBtn} onClick={nextStep}>
+                    {step < questions.length - 1 ? "הבא" : "סיום"}
+                  </button>
+                </div>
+
+                <div ref={chatEndRef} />
+              </div>
+            )}
+
+            {!open && result && workshop && (
+              <WorkshopResult
+                workshop={workshop}
+                diagnoser={diagnoser}
+                typeGroup={typeGroup}
+                thisuser={thisuser}
+                cleanResult={cleanResult}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default WorkshopAI;

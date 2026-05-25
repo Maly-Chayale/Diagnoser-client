@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { addLead, signIn, signOut, signout } from './LogInSlice';
-import { fetchTypeGroups, TypeGroups } from '../TypeGroup/TypeGroupSlice';
+import { addLead, signIn, signOut } from './LogInSlice';
+import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
 import { InitCustomer } from '../Customers/CustomerSlice';
 import { ProfilelogIn } from '../Profile/ProfileSlice';
 import { InitLeads } from '../Leads/LeadsSlice';
@@ -15,7 +15,7 @@ const SignIn = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
+    // const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
     const statusD = useSelector(state => state.Diagnoser.status);
     const typeGroups = useSelector(state => state.TypeGroup.groups);
     const statusType = useSelector(state => state.TypeGroup.status);
@@ -42,12 +42,14 @@ const SignIn = () => {
         if (statusC === "") dispatch(InitCustomer());
         if (statusL === "") dispatch(InitLeads());
         if (statusD === "") dispatch(InitDiagnoser());
+    }, [statusC, statusD, statusL, dispatch]);
 
+    useEffect(() => {
         dispatch(ProfilelogIn({
             thisUser: thisuser,
             status: statusUser
         }));
-    }, [statusC, statusD, statusL, thisuser, dispatch]);
+    }, [thisuser, statusUser])
 
     function SignInHandler() {
         setErr(false);

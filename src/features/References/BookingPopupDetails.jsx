@@ -26,7 +26,7 @@ const BookingPopupDetails = ({ booking, customer, getDiagnoser, handleCancel }) 
 
         <div className={styles.field}>
           <label className={styles.labelBlue}>שעה</label>
-          <input type="text" value={booking.time} readOnly className={styles.input} />
+          <input type="text" value={getHour(booking.time)} readOnly className={styles.input} />
         </div>
 
         <div className={styles.field}>

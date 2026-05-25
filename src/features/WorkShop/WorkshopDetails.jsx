@@ -1,4 +1,4 @@
-// WorkshopDetails.jsx
+
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import style from './WorkshopDetails.module.css';
