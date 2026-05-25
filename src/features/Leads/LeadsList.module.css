@@ -35,8 +35,8 @@
 /* GRID - Responsive */
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); /* כרטיסים גמישים */
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
     justify-items: center;
 }
 
@@ -51,8 +51,8 @@
     overflow: hidden;
     transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
     animation: fadeUp 0.5s ease forwards;
-    width: 100%; /* למלא את המרחב האפשרי */
-    max-width: 280px; /* לא יגדל מעבר */
+
+    width: 280px;   /* 🔥 אותו דבר כמו Customers */
 }
 
 .card:hover {
@@ -133,9 +133,28 @@
 /* RESPONSIVE ADJUSTMENTS */
 @media (max-width: 600px) {
     .grid {
-        grid-template-columns: 1fr; /* כרטיס אחד בשורה */
-    }
-    .card {
-        max-width: 90%;
-    }
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    justify-items: center;
+}
+  .card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: fadeUp 0.5s ease forwards;
+    width: 280px;   /* 🔥 אותו דבר כמו Customers */
+}
+}
+
+.badges {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
 }
