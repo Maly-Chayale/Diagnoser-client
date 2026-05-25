@@ -1,17 +1,17 @@
-import React, { useMemo } from "react";
+import React, { useDebugValue, useEffect, useMemo, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
-
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-
 import heLocale from "@fullcalendar/core/locales/he";
-
-import { useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 import { HDate } from "hebcal";
-
 import styles from "./DiagnoserCalendar.module.css";
+import { InitWorkShops } from "../WorkShop/WorkShopSlice";
+import { InitReferences } from "../References/ReferencesSlice";
+import BookingPopupDetails from "../References/BookingPopupDetails";
+
+
 
 /** Hebcal date formatter */
 const getHebrewDate = (date = new Date()) => {
@@ -31,12 +31,25 @@ const hebrewFormatter = new Intl.DateTimeFormat("he-u-ca-hebrew", {
 
 const DiagnoserCalendar = () => {
 
+    const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
     const references = useSelector(s => s.Reference.references);
     const workshops = useSelector(s => s.WorkShop.WorkShops);
     const user = useSelector(s => s.LogIn.thisUser);
     const customers = useSelector(state => state.Customer.Customers);
+    const status = useSelector(state => state.Reference.status);
+    const dispatch = useDispatch()
+    const [activeBookingDetails, setActiveBookingDetails] = useState(null);
 
     const todayHebrewDate = useMemo(() => getHebrewDate(new Date()), []);
+
+    useEffect(() => {
+        const loadData = async () => {
+            if (!status) await dispatch(InitReferences());
+            await dispatch(InitWorkShops());
+            // await dispatch(fetchStatus());
+        };
+        loadData();
+    }, [status, dispatch]);
 
     const workshopsById = useMemo(() => {
         const map = new Map();
@@ -110,6 +123,7 @@ const DiagnoserCalendar = () => {
 
                 const cust = customersById.get(r.codeCustomer);
 
+
                 return {
                     id: String(r.code),
 
@@ -124,8 +138,13 @@ const DiagnoserCalendar = () => {
                     extendedProps: {
                         status: r.status,
                         adress: r.adress,
-                        cust: cust?.name || ""
+                        time: r.time,
+                        cust: cust?.name || "",
+                        customer: cust,
+                        reference: r,
+                        code: r.code
                     }
+
                 };
 
             })
@@ -154,7 +173,6 @@ const DiagnoserCalendar = () => {
                 firstDay={0}
 
                 height="85vh"
-
                 events={events}
 
                 headerToolbar={{
@@ -182,32 +200,87 @@ const DiagnoserCalendar = () => {
 
                     const hebrewDate = hebrewFormatter.format(date);
 
+                    const customer = arg.event.extendedProps.customer;
+
+                    const reference = arg.event.extendedProps.reference;
+
+                    const time = date?.toLocaleTimeString("he-IL", {
+                        hour: "2-digit",
+                        minute: "2-digit"
+                    });
+
                     return (
 
                         <div className={styles.eventBox}>
 
                             <div className={styles.eventTitle}>
-                                {arg.event.title}
+                                הזמנה #{reference?.code || ""}
                             </div>
 
-                            <div className={styles.eventHebrewDate}>
-                                לקוח : {arg.event.extendedProps.cust}
+                            <div className={styles.eventRow}>
+                                <span className={styles.fieldLabel}>לקוח:</span>
+                                <span className={styles.fieldValue}>{customer?.name || ""}</span>
                             </div>
 
-                            <div className={styles.eventHebrewDate}>
-                                תאריך : {hebrewDate}
+                            <div className={styles.eventRow}>
+                                <span className={styles.fieldLabel}>שעה:</span>
+                                <span className={styles.fieldValue}>
+                                    {arg.event.start?.toLocaleTimeString("he-IL", {
+                                        hour: "2-digit",
+                                        minute: "2-digit"
+                                    })}
+                                </span>
+
+                                <span className={styles.fieldSeparator}>|</span>
+
+                                <span className={styles.fieldLabel}>כתובת:</span>
+                                <span className={styles.fieldValue}>
+                                    {reference?.adress || ""}
+                                </span>
                             </div>
 
-                            <div className={styles.eventHebrewDate}>
-                                כתובת : {arg.event.extendedProps.adress}
-                            </div>
+                            <button
+                                className={styles.infoButton}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setActiveBookingDetails({
+                                        ...reference,
+                                        start: arg.event.start,
+                                        end: arg.event.end,
+                                        title: arg.event.title
+                                    });
+                                }}
+                            >
+                                פרטי הזמנה
+                            </button>
 
                         </div>
                     );
                 }}
             />
 
+            <BookingPopupDetails
+                booking={activeBookingDetails}
+                handleCancel={() => setActiveBookingDetails(null)}
+                getDiagnoser={(codeWorkshop) => {
+
+                    const workshop = workshops.find(w => w.code === codeWorkshop);
+
+                    if (!workshop) return null;
+
+                    return diagnosers.find(
+                        d => d.code === workshop.codeDiagnoser
+                    );
+                }}
+                customer={(codeCustomer) =>
+                    customers.find(c => c.code === codeCustomer)
+                }
+            />
+
         </div>
+
+
+
     );
 };
 
