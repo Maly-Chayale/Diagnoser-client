@@ -31,6 +31,13 @@ const LogIn = () => {
     const [password, setPassword] = useState("");
     const [err, setErr] = useState(false);
 
+    const handleEnter = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            SignIn();
+        }
+    };
+
     useEffect(() => {
         if (statusC === "") dispatch(InitCustomer());
         if (statusD === "") dispatch(InitDiagnoser());
@@ -50,6 +57,18 @@ const LogIn = () => {
             }));
         }
     }, [status, navigate]);
+
+    useEffect(() => {
+        const handleKey = (e) => {
+            if (e.key === "Enter") {
+                SignIn();
+            }
+        };
+
+        window.addEventListener("keydown", handleKey);
+
+        return () => window.removeEventListener("keydown", handleKey);
+    }, [mail, password]);
 
     async function SignIn() {
         const result = await dispatch(logIn({
@@ -87,7 +106,11 @@ const LogIn = () => {
     // if(statusC.length|| statusD.length|| statusL.length) return <>טוען נתונים...</>
 
     return (
-        <div className={styles.container}>
+        <div
+            className={styles.container}
+            onKeyDown={handleEnter}
+            tabIndex={0}
+        >
             <div className={styles.card}>
 
                 <h2 className={styles.title}>התחברות</h2>
@@ -124,7 +147,7 @@ const LogIn = () => {
                 <div className={styles.googleBox}>
                     <GoogleLogin
                         onSuccess={handleGoogleSuccess}
-                        onError={() => {setErr(true); dispatch(signOut())}}
+                        onError={() => { setErr(true); dispatch(signOut()) }}
                     />
                 </div>
 

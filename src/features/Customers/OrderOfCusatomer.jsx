@@ -36,6 +36,14 @@ const OrderOfCusatomer = () => {
             dispatch(TypeGroups());
     }, [dispatch, statusType]);
 
+      const getHour = (time) => {
+    let hour = Math.floor(time);
+    let minute = Math.round((time - hour) * 100);
+    if (minute < 10) minute = "0" + minute;
+    if (hour < 10) hour = "0" + hour;
+    return hour + ":" + minute;
+  };
+
     if (status === "" || status === "loading") {
         return <div className={style.loading}>טוען הזמנות...</div>;
     }
@@ -78,7 +86,7 @@ const OrderOfCusatomer = () => {
                                 <div className={style.tableRow}>
                                     <div className={style.cell}><span>{item.code}</span></div>
                                     <div className={style.cell}><span>{item.date}</span></div>
-                                    <div className={style.cell}><span>{item.time}</span></div>
+                                    <div className={style.cell}><span>{getHour(item.time)}</span></div>
                                     <div className={style.cell}><span>{item.adress}</span></div>
                                     {/* <div className={style.cell}><span>{item.codeWorkshop}</span></div> */}
                                     <div>

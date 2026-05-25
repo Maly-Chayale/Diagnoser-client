@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import styles from "./LoginPage.module.css";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useCallback } from "react";
 
 export default function LoginPage({ setHasAccess }) {
   const [logoLoaded, setLogoLoaded] = useState(false);
   const [showContent, setShowContent] = useState(false);
-      const thisuser = useSelector(state => state.LogIn.thisUser);
-    const statusUser = useSelector(state => state.LogIn.statusUser);
+  const thisuser = useSelector(state => state.LogIn.thisUser);
+  // const statusUser = useSelector(state => state.LogIn.statusUser);
 
   const navigate = useNavigate()
 
@@ -16,6 +17,11 @@ export default function LoginPage({ setHasAccess }) {
     { emoji: "✋", title: "כירולוגיה", text: "קריאת כפות ידיים ופרטים מוטוריים", info: "קריאת כפות ידיים ופרטים מוטוריים" },
     { emoji: "✍️", title: "גרפולוגיה", text: "ניתוח כתב יד ואישיות", info: "ניתוח כתב יד ואישיות" },
   ];
+
+  const handleEnter = useCallback(() => {
+    setHasAccess(true);
+    navigate("/enter");
+  }, [navigate, setHasAccess]);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowContent(true), cards.length * 400 + 600);
@@ -27,14 +33,19 @@ export default function LoginPage({ setHasAccess }) {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleEnter = () => {
-    // if (onEnter) onEnter();
-        // ניווט ל-Home
-        setHasAccess(true)
-    navigate("/enter");
-  };
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Enter") {
+        handleEnter();
+      }
+    };
 
-   
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleEnter]);
 
   return (
     <div className={styles["landing-page"]}>
@@ -71,14 +82,16 @@ export default function LoginPage({ setHasAccess }) {
                 <p className={styles["slide-up-delayed"]} style={{ animationDelay: `${cards.length * 0.4 + 0.4}s` }}>
                   במקום לרדוף אחרי תורים – אתה בוחר אבחון, שעה וסוג – והכול נסגר בשתי דקות.
                 </p>
-                <div className={styles["landing-bullets"]}>
-                  <p className={styles["slide-up-delayed"]} style={{ animationDelay: `${cards.length * 0.4 + 0.6}s` }}>• מאבחנות מקצועיות – שנבחרו בקפידה.</p>
-                  <p className={styles["slide-up-delayed"]} style={{ animationDelay: `${cards.length * 0.4 + 0.8}s` }}>• תורים פנויים בזמן אמת – בלי טלפונים.</p>
-                  <p className={styles["slide-up-delayed"]} style={{ animationDelay: `${cards.length * 0.4 + 1.0}s` }}>• כל האבחונים שלך במקום אחד.</p>
-                </div>
-                <div className={styles["landing-steps"]}>
-                  <div className={`${styles["step-pill"]} ${styles["slide-up-delayed"]}`} style={{ animationDelay: `${cards.length * 0.4 + 1.2}s` }}>1. בוחר אבחון</div>
-                  <div className={`${styles["step-pill"]} ${styles["slide-up-delayed"]}`} style={{ animationDelay: `${cards.length * 0.4 + 1.4}s` }}>2. מאשר – מקבל תזכורת</div>
+                <div className={styles.right}>
+                  <div className={styles["landing-bullets"]}>
+                    <p className={styles["slide-up-delayed"]} style={{ animationDelay: `${cards.length * 0.4 + 0.6}s` }}>• מאבחנות מקצועיות – שנבחרו בקפידה.</p>
+                    <p className={styles["slide-up-delayed"]} style={{ animationDelay: `${cards.length * 0.4 + 0.8}s` }}>• תורים פנויים בזמן אמת – בלי טלפונים.</p>
+                    <p className={styles["slide-up-delayed"]} style={{ animationDelay: `${cards.length * 0.4 + 1.0}s` }}>• כל האבחונים שלך במקום אחד.</p>
+                  </div>
+                  <div className={styles["landing-steps"]}>
+                    <div className={`${styles["step-pill"]} ${styles["slide-up-delayed"]}`} style={{ animationDelay: `${cards.length * 0.4 + 1.2}s` }}>1. בוחר אבחון</div>
+                    <div className={`${styles["step-pill"]} ${styles["slide-up-delayed"]}`} style={{ animationDelay: `${cards.length * 0.4 + 1.4}s` }}>2. מאשר – מקבל תזכורת</div>
+                  </div>
                 </div>
                 <div>
                   {!thisuser && <button className={styles["primary-btn"]} onClick={handleEnter}>להיכנס למערכת</button>}
