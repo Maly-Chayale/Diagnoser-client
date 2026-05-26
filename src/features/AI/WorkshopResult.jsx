@@ -79,15 +79,16 @@ const WorkshopResult = ({
                                 else setIsOrderOpen(true);
                             }}
                         >
-                            📅 הזמנת סדנה
-                        </button>
-                    </div>
+                        📅 הזמנת סדנה
+                    </button>
 
                 </div>
 
             </div>
 
-            {showLoginModal && (
+        </div >
+
+            { showLoginModal && (
                 <LoginRequiredModal
                     onClose={() => setShowLoginModal(false)}
                     onLogin={() => {
@@ -95,7 +96,8 @@ const WorkshopResult = ({
                         navigate("/login");
                     }}
                 />
-            )}
+            )
+}
         </>
     );
 };
