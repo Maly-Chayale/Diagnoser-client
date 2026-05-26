@@ -43,7 +43,7 @@ const LogIn = () => {
             dispatch(signOut())
         }
         else if (status) {  // או הערך שמציין הצלחה
-            navigate("../hello");
+            navigate("../AI");
             dispatch(ProfilelogIn({
                 thisUser: thisuser,  // הערכים המעודכנים
                 status: status
@@ -76,7 +76,7 @@ const LogIn = () => {
                 Diagnosers: diagnosers,
                 Leads: leads
             }));
-            navigate("../hello");
+            navigate("../AI");
         } else {
             setErr(true);
             dispatch(signOut())

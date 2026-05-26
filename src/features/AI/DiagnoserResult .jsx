@@ -1,37 +1,25 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import OrderWorkshop from "../WorkShop/OrderWorkshop";
 import LoginRequiredModal from "./LoginRequiredModal";
 import styles from "./WorkshopResult.module.css";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import { useSelector } from "react-redux";
 
-const WorkshopResult = ({
+const DiagnoserResult = ({
     thisuser,
     answer
 }) => {
     const navigate = useNavigate();
 
-    const [isOrderOpen, setIsOrderOpen] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
 
 
+    const diagnosers = useSelector((state) => state.Diagnoser.Diagnosers);
 
+    
 
-
-  const workshops = useSelector((state) => state.WorkShop.WorkShops);
-  const diagnosers = useSelector((state) => state.Diagnoser.Diagnosers);
-  const groups = useSelector((state) => state.TypeGroup.groups);
-
-  let workshop = null;
-  let diagnoser = null;
-
-  let typeGroup = workshop
-    ? groups.find((g) => g.code === workshop.typeGroup)
-    : null;
-
-  let cleanResult = answer;
+let cleanResult = answer;
 
   if (typeof cleanResult === "string") {
     cleanResult = cleanResult
@@ -40,33 +28,22 @@ const WorkshopResult = ({
       .trim();
 
     cleanResult =
-    answer.split("למה היא מתאימה:")[1]?
-      "**מצאתי לך את ההתאמה המדויקת ביותר בשבילך על פי מה שביקשת:** " +
-      answer.split("למה היא מתאימה:")[1]:answer;
+    answer.split("סיבה לבחירה:")[1]?
+      "**מצאתי לך את ההתאמה המדויקת ביותר בשבילך על פי מה שביקשת:" +
+      answer.split("סיבה לבחירה:")[1]:answer;
   }
-
-  
 
   const code = Number(answer?.match?.(/\d+/)?.[0]);
 
-  if (!isNaN(code)) {
-    workshop = workshops.find(
-      (w) => w.code === code
-    );
+  let diagnoser
 
-    diagnoser = workshop
-      ? diagnosers.find(
-        (d) => d.code === workshop.codeDiagnoser
-      )
-      : null;
-  }
+    if (!isNaN(code)) {
+        diagnoser = diagnosers.find(
+            (d) => d.code === code
+        );
+    }
 
-
-
-
-
-
-    if (!workshop) return null;
+    if (!diagnoser) return null;
 
     return (
         <>
@@ -82,57 +59,58 @@ const WorkshopResult = ({
                         </div>
 
                         <div className={styles.suggestionTitle}>
-                            ✨ זו הסדנה שלך
+                            ✨ זו המאבחנת שלך
                         </div>
                     </div>
                 )}
 
-                {/* WORKSHOP CARD */}
+                {/* DIAGNOSER CARD */}
                 <div className={styles.card}>
 
                     <div className={styles.header}>
                         <div className={styles.badge}>
-                             קוד סדנה: {workshop.code}
+                            קוד מאבחנת: {diagnoser.code}
                         </div>
 
                         <h2 className={styles.title}>
-                            📘 {workshop.description}
+                            👤 {diagnoser.name}
                         </h2>
 
                         <div className={styles.meta}>
-                            <span> ₪{workshop.price}  :מחיר💰</span>
-                            <span> משתתפים:   {workshop.accontOfPeople} איש 👥 </span>
-                            {typeGroup && <span> {typeGroup.description} 📌</span>}
+                            <span> 📧 {diagnoser.mail}</span>
+                            <span> 📞 {diagnoser.phone}</span>
+                            {/* <span> 💰 {diagnoser.precentagePayment}% עמלה</span> */}
                         </div>
                     </div>
 
-                    { (
-                        <div className={styles.infoCard}>
-                            <h3 className={styles.sectionTitle}> המאבחנת</h3>
-                            <p> {diagnoser.name}👤</p>
-                            <p> {diagnoser.mail}📧</p>
-                        </div>
-                    )}
+                    <div className={styles.infoCard}>
+                        <h3 className={styles.sectionTitle}>תחומי התמחות</h3>
+
+                        {diagnoser.morphology && <p>🔬 מורפולוגיה</p>}
+                        {diagnoser.graphology && <p>✍️ גרפולוגיה</p>}
+                        {diagnoser.chirology && <p>✋ כירולוגיה</p>}
+                    </div>
 
                     <div className={styles.buttonsRow}>
-                        <button onClick={() =>
-                            navigate(`/WorkshopDetails/${workshop.code}`)
-                        }>
-                            🔍 מעבר לפרטי הסדנה
+                        <button
+                            onClick={() =>
+                                navigate(`/DiagnoserDetails/${diagnoser.code}`)
+                            }
+                        >
+                            🔍 מעבר לפרטי מאבחנת
                         </button>
 
                         <button
                             onClick={() => {
                                 if (!thisuser) setShowLoginModal(true);
-                                else setIsOrderOpen(true);
+                                else navigate(`/DiagnoserOrder/${diagnoser.code}`);
                             }}
                         >
-                            📅 הזמנת סדנה
+                            📅 הזמנת אבחון
                         </button>
                     </div>
 
                 </div>
-
             </div>
 
             {showLoginModal && (
@@ -148,4 +126,4 @@ const WorkshopResult = ({
     );
 };
 
-export default WorkshopResult;
+export default DiagnoserResult;

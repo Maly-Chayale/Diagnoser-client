@@ -70,7 +70,7 @@ function App() {
           <>
             {/* <Route path="/AI" element={<WorkshopAI />} /> */}
             <Route path="/enter" element={<LogIn />} />
-            <Route path="/AI" element={<WorkshopAI setHasAccess={setHasAccess} />} />
+            <Route path="/AI" element={<WorkshopAI/>} />
             <Route path="/Workshop" element={<Workshop />} />
             <Route path="/Customers" element={<CustomersList />} />
             <Route path="/Diagnosers" element={<DiagnoserList />} />

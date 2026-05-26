@@ -73,7 +73,7 @@ const SignIn = () => {
 
         dispatch(signIn(newCustomer));
         dispatch(addLead(newCustomer));
-        navigate("../hello");
+        navigate("../AI");
     }
 
     const isFormValid = name && mail && password && phone && status;
