@@ -23,6 +23,7 @@ import WorkshopDetails from './features/WorkShop/WorkshopDetails';
 import OrderOfCusatomer from './features/Customers/OrderOfCusatomer';
 import DiagnoserCalendar from './features/Calendar/DiagnoserCalendar';
 import WorkshopAI from './features/AI/WorkshopAI';
+import { UserCircle } from "lucide-react";
 
 function App() {
   const statusUser = useSelector(state => state.LogIn.statusUser);
@@ -37,29 +38,25 @@ function App() {
       {/* ניווטים מופיעים רק אחרי לחיצה */}
       {hasAccess && (
         <nav>
+          {user && <NavLink to="/Profile" className={({ isActive }) => isActive ? styles.active : styles.link} > <UserCircle size={28} /> </NavLink>}
+          {!user && (<NavLink to="/enter" className={({ isActive }) => (isActive || authPaths.includes(location.pathname)) ? styles.active : styles.link} > התחברות/הרשמות</NavLink>)}
+          {(statusUser === "diagnoser" || statusUser === "Esty") && <NavLink to="/calendar" className={({ isActive }) => isActive ? styles.active : styles.link}>ליומן האישי</NavLink>}
+          {(statusUser === "Esty") && <NavLink to="/Payments" className={({ isActive }) => isActive ? styles.active : styles.link}>תשלומים</NavLink>}
           {user && statusUser && statusUser !== "cust" && <NavLink to="/Orders" className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
           {user && statusUser === "cust" && <NavLink to={`/OrderOfCusatomer/${user.code}`} className={({ isActive }) => isActive ? styles.active : styles.link}>הזמנות</NavLink>}
-          {user && <NavLink to="/Profile" className={({ isActive }) => isActive ? styles.active : styles.link}>פרופיל</NavLink>}
-          {!user && (
-            <NavLink
-              to="/enter"
-              className={({ isActive }) =>
-                (isActive || authPaths.includes(location.pathname))
-                  ? styles.active
-                  : styles.link
-              }
-            >
-              התחברות/הרשמות
-            </NavLink>
-          )}          {/* {!user && <NavLink to="/SignIn" className={({ isActive }) => isActive ? styles.active : styles.link}>הרשמות </NavLink>} */}
-          {user && <NavLink to="/hello" className={({ isActive }) => isActive ? styles.active : styles.link}>דף הבית</NavLink>}
-          <NavLink to="/Workshop" className={({ isActive }) => isActive ? styles.active : styles.link}>סדנאות</NavLink>
-          {(statusUser === "diagnoser" || statusUser === "Esty") && <NavLink to="/Customers" className={({ isActive }) => isActive ? styles.active : styles.link}>לקוחות</NavLink>}
-          {(statusUser === "Esty") && <NavLink to="/Payments" className={({ isActive }) => isActive ? styles.active : styles.link}>תשלומים</NavLink>}
+
+
+          {/* {!user && <NavLink to="/SignIn" className={({ isActive }) => isActive ? styles.active : styles.link}>הרשמות </NavLink>} */}
+          {/* {user && <NavLink to="/hello" className={({ isActive }) => isActive ? styles.active : styles.link}>דף הבית</NavLink>} */}
+
+
+
           {(statusUser === "Esty") && <NavLink to="/Leads" className={({ isActive }) => isActive ? styles.active : styles.link}>מתעניינים</NavLink>}
+          {(statusUser === "diagnoser" || statusUser === "Esty") && <NavLink to="/Customers" className={({ isActive }) => isActive ? styles.active : styles.link}>לקוחות</NavLink>}
           <NavLink to="/Diagnosers" className={({ isActive }) => isActive ? styles.active : styles.link}>מאבחנות</NavLink>
-          {(statusUser === "diagnoser" || statusUser === "Esty") && <NavLink to="/calendar" className={({ isActive }) => isActive ? styles.active : styles.link}>ליומן האישי</NavLink>}
-          <NavLink to="/AI" className={({ isActive }) => isActive ? styles.active : styles.link}>AI</NavLink>
+          <NavLink to="/Workshop" className={({ isActive }) => isActive ? styles.active : styles.link}>סדנאות</NavLink>
+
+          <NavLink to="/AI" className={({ isActive }) => isActive ? styles.active : styles.link}>לחיפוש מהיר</NavLink>
         </nav>
       )}
 
@@ -71,9 +68,9 @@ function App() {
           {/* כל שאר הדפים זמינים רק אחרי לחיצה */}
 
           <>
-            <Route path="/AI" element={<WorkshopAI />} />
+            {/* <Route path="/AI" element={<WorkshopAI />} /> */}
             <Route path="/enter" element={<LogIn />} />
-            <Route path="/hello" element={<LoginPage setHasAccess={setHasAccess} />} />
+            <Route path="/AI" element={<WorkshopAI setHasAccess={setHasAccess} />} />
             <Route path="/Workshop" element={<Workshop />} />
             <Route path="/Customers" element={<CustomersList />} />
             <Route path="/Diagnosers" element={<DiagnoserList />} />
