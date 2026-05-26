@@ -17,7 +17,7 @@ const OrderOfCusatomer = () => {
     const customers = useSelector(state => state.Customer.Customers);
     const statusC = useSelector(state => state.Customer.status);
     const typeGroups = useSelector(s => s.TypeGroup.groups);
-    const statusType = useSelector(s => s.TypeGroup.status);
+    const statusType = useSelector(s => s.TypeGroup.statusType);
 
     const { code } = useParams();
     const cust = customers.find(c => c.code == code);
@@ -72,7 +72,7 @@ const OrderOfCusatomer = () => {
         return hour + ":" + minute;
     };
 
-        if (statusC !== "succesfull" || statusR !== "succesfull" || statusType !== "success") return <>טוען נתונים...</>
+        if (statusC !== "succesfull" || statusR !== "succesfull" || statusType !== "succesfull") return <>טוען נתונים...</>
 
 
     const handlePay = async (orderCode) => {

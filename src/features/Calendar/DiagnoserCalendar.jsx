@@ -237,9 +237,9 @@ const DiagnoserCalendar = () => {
 
                 buttonText={{
                     today: "היום",
-                    month: "חודש",
-                    week: "שבוע נוכחי",
-                    day: " יום נוכחי"
+                    month: "חודשי",
+                    week: "שבועי",
+                    day: "יומי"
                 }}
 
                 customButtons={{

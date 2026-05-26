@@ -9,7 +9,7 @@ const ProfileCustomer = () => {
   const dispatch = useDispatch();
   const customer = useSelector(state => state.LogIn.thisUser);
   const typeGroups = useSelector(s => s.TypeGroup.groups);
-  const status = useSelector(s => s.TypeGroup.status);
+  const status = useSelector(s => s.TypeGroup.statusType);
 
   useEffect(() => {
     const load = async () => {

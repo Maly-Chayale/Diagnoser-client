@@ -23,6 +23,7 @@ import OrderOfCusatomer from './features/Customers/OrderOfCusatomer';
 import DiagnoserCalendar from './features/Calendar/DiagnoserCalendar';
 import WorkshopAI from './features/AI/WorkshopAI';
 import { UserCircle } from "lucide-react";
+import UserMenu from './features/SignIn/UserMenu';
 
 function App() {
   const statusUser = useSelector(state => state.LogIn.statusUser);
@@ -37,7 +38,8 @@ function App() {
       {/* ניווטים מופיעים רק אחרי לחיצה */}
       {hasAccess && (
         <nav>
-          {user && <NavLink to="/Profile" className={({ isActive }) => isActive ? styles.active : styles.link} > <UserCircle size={28} /> </NavLink>}
+          {/* {user && <NavLink to="/Profile" className={({ isActive }) => isActive ? styles.active : styles.link} > <UserCircle size={28} /> </NavLink>} */}
+          {user && <UserMenu />}
           {!user && (<NavLink to="/enter" className={({ isActive }) => (isActive || authPaths.includes(location.pathname)) ? styles.active : styles.link} > התחברות/הרשמות</NavLink>)}
           {(statusUser === "diagnoser" || statusUser === "Esty") && <NavLink to="/calendar" className={({ isActive }) => isActive ? styles.active : styles.link}>ליומן האישי</NavLink>}
           {(statusUser === "Esty") && <NavLink to="/Payments" className={({ isActive }) => isActive ? styles.active : styles.link}>תשלומים</NavLink>}
