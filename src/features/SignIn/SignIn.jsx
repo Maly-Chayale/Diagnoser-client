@@ -14,7 +14,6 @@ const SignIn = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    // const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
     const statusD = useSelector(state => state.Diagnoser.status);
     const typeGroups = useSelector(state => state.TypeGroup.groups);
     const statusType = useSelector(state => state.TypeGroup.status);
