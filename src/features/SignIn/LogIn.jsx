@@ -31,18 +31,47 @@ const LogIn = () => {
     const [password, setPassword] = useState("");
     const [err, setErr] = useState(false);
 
-    const handleEnter = (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            SignIn();
-        }
-    };
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusC === "faild" || statusC === "") {
+                    const res = await dispatch(InitCustomer()).unwrap();
+                    console.log("customers:", res);
+                }
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        };
+
+        load();
+    }, [statusC, dispatch]);
 
     useEffect(() => {
-        if (statusC === "") dispatch(InitCustomer());
-        if (statusD === "") dispatch(InitDiagnoser());
-        if (statusL === "") dispatch(InitLeads());
-    }, [statusC, statusD, statusL, thisuser, dispatch]);
+        const load = async () => {
+            try {
+                if (statusD === "faild" || statusD === "")
+                    await dispatch(InitDiagnoser()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusD, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusL === "faild" || statusL === "")
+                    await dispatch(InitLeads()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusL, dispatch]);
 
     useEffect(() => {
         if (status === "wrong") {
@@ -50,13 +79,13 @@ const LogIn = () => {
             dispatch(signOut())
         }
         else if (status) {  // או הערך שמציין הצלחה
-            navigate("../hello");
             dispatch(ProfilelogIn({
                 thisUser: thisuser,  // הערכים המעודכנים
                 status: status
             }));
+            navigate("../hello");
         }
-    }, [status, navigate]);
+    }, [status]);
 
     useEffect(() => {
         const handleKey = (e) => {
@@ -64,9 +93,7 @@ const LogIn = () => {
                 SignIn();
             }
         };
-
         window.addEventListener("keydown", handleKey);
-
         return () => window.removeEventListener("keydown", handleKey);
     }, [mail, password]);
 
@@ -103,13 +130,13 @@ const LogIn = () => {
     };
 
     if (statusC == "" || statusD == "" || statusL == "") return <>טוען נתונים...</>
-    // if(statusC.length|| statusD.length|| statusL.length) return <>טוען נתונים...</>
+    if (statusC !== "succesfull" || statusD !== "succesfull" || statusL !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <div
             className={styles.container}
-            onKeyDown={handleEnter}
-            tabIndex={0}
+        // onKeyDown={handleEnter}
+        // tabIndex={0}
         >
             <div className={styles.card}>
 

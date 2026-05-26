@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { addLead, signIn, signOut } from './LogInSlice';
 import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
 import { InitCustomer } from '../Customers/CustomerSlice';
@@ -35,14 +34,56 @@ const SignIn = () => {
     const [err, setErr] = useState(false);
 
     useEffect(() => {
-        if (statusType === "") dispatch(TypeGroups());
-    }, [statusType]);
+        const load = async () => {
+            try {
+                if (statusC === "faild" || statusC === "")
+                    await dispatch(InitCustomer()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusC, dispatch]);
 
     useEffect(() => {
-        if (statusC === "") dispatch(InitCustomer());
-        if (statusL === "") dispatch(InitLeads());
-        if (statusD === "") dispatch(InitDiagnoser());
-    }, [statusC, statusD, statusL, dispatch]);
+        const load = async () => {
+            try {
+                if (statusD === "faild" || statusD === "")
+                    await dispatch(InitDiagnoser()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusD, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusL === "faild" || statusL === "")
+                    await dispatch(InitLeads()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusL, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusType === "faild" || !statusType)
+                    await dispatch(TypeGroups()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusType, dispatch]);
 
     useEffect(() => {
         dispatch(ProfilelogIn({
@@ -51,7 +92,7 @@ const SignIn = () => {
         }));
     }, [thisuser, statusUser])
 
-    function SignInHandler() {
+    async function SignInHandler() {
         setErr(false);
 
         let newCustomer = {
@@ -72,15 +113,16 @@ const SignIn = () => {
         }
 
         dispatch(signIn(newCustomer));
-        dispatch(addLead(newCustomer));
+        await dispatch(addLead(newCustomer)).unwrap();
         navigate("../hello");
     }
 
     const isFormValid = name && mail && password && phone && status;
 
-    if (statusType === "loading") {
+    if (statusType === "loading")
         return <div className={styles.container}>טוען...</div>;
-    }
+
+    if (statusC !== "succesfull" || statusD !== "succesfull" || statusType !== "success" || statusL !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <div className={styles.container}>

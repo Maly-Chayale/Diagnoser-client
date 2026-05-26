@@ -3,6 +3,7 @@ import styles from "./ProfileEditor.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import { payToManager, updateDiagnoser } from "../Diagnosers/DiagnoserSlice";
 import { UpdateUser } from "../SignIn/LogInSlice";
+import { InitReferences } from "../References/ReferencesSlice";
 
 const ProfileEditor = () => {
   const diagnostician = useSelector(state => state.LogIn.thisUser);
@@ -21,6 +22,12 @@ const ProfileEditor = () => {
   useEffect(() => {
     if (references.length && user) {
       setRemaining(user.precentagePayment);
+    }
+  }, [references, user]);
+  
+  useEffect(() => {
+    if (references.length===0) {
+      dispatch(InitReferences())
     }
   }, [references, user]);
 

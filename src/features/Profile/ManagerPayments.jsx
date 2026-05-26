@@ -1,15 +1,21 @@
-import React, { useState, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaUser, FaEnvelope, FaPhone, FaDollarSign, FaEye } from 'react-icons/fa';
 import DiagnoserOrdersPopup from './DiagnoserOrdersPopup';
 import styles from './ManagerPayments.module.css';
+import { InitReferences } from '../References/ReferencesSlice';
+import { InitWorkShops } from '../WorkShop/WorkShopSlice';
 
 const ManagerPayments = () => {
+
+    const dispatch = useDispatch()
+
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
-    const references = useSelector(state => state.Reference.references);
+    const { references, status } = useSelector(state => state.Reference);
     const workshops = useSelector(state => state.WorkShop.WorkShops);
+    const statusW = useSelector(state => state.WorkShop.status);
     const customers = useSelector(state => state.Customer.Customers);
-    const statusUser = useSelector(state => state.LogIn.statusUser);
+    // const statusUser = useSelector(state => state.LogIn.statusUser);
 
     const [search, setSearch] = useState("");
     const [selectedDiagnoser, setSelectedDiagnoser] = useState(null);
@@ -24,6 +30,13 @@ const ManagerPayments = () => {
     const handleOpenDiagnoser = (diagnoser) => {
         setSelectedDiagnoser(diagnoser);
     };
+
+    useEffect(() => {
+        if (status === "")
+            dispatch(InitReferences())
+        if (statusW === "")
+            dispatch(InitWorkShops())
+    }, [status, statusW, dispatch])
 
     return (
         <div className={styles["payments-page"]}>

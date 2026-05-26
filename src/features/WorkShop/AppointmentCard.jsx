@@ -41,7 +41,7 @@ function WorkshopCard({ WorkShop }) {
                     WorkShop={WorkShop}
                     onClose={() => setIsModalOpen(false)}
                     onBooking={(diagnoser) => {
-                        if (!user || !user.code) {
+                        if (!user) {
                             setShowLoginModal(true);
                             return;
                         }
