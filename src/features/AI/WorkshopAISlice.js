@@ -17,7 +17,7 @@ export const GetAIQuestions = createAsyncThunk(
             "https://localhost:7082/api/WorkshopAI/questions"
         );
 
-        return res.data.choices[0].message.content;
+        return res.data;
     }
 );
 
@@ -43,7 +43,7 @@ export const SendAnswersToAI = createAsyncThunk(
             }
         );
 
-        return res.data.choices[0].message.content;
+        return res.data;
     }
 );
 
