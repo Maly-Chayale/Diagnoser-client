@@ -2,11 +2,15 @@
 .modalBackdrop {
     position: fixed;
     inset: 0;
+
     background: rgba(0, 0, 0, 0.5);
+
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 999;
+
+    z-index: 2000;
+
     backdrop-filter: blur(4px);
 }
 
@@ -60,6 +64,10 @@
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
+}
+
+.modalBackdrop {
+    z-index: 2000;
 }
 
 /* כפתור סגירת מודאל */

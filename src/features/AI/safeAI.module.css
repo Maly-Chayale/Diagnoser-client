@@ -1,3 +1,4 @@
+/* <<<<<<< HEAD
 
 
 :root {
@@ -10,9 +11,6 @@
   --radius: 24px;
 }
 
-/* =========================
-   ROOT PAGE
-========================= */
 
 .safeAIPage {
   min-height: 100vh;
@@ -22,9 +20,6 @@
   padding: 40px 20px;
 }
 
-/* =========================
-   CHAT CONTAINER
-========================= */
 
 .chatContainer {
   width: 100%;
@@ -35,9 +30,6 @@
   align-items: center;
 }
 
-/* =========================
-   START BUTTON
-========================= */
 
 .startBtn {
   background: rgba(255, 255, 255, 0.96);
@@ -57,9 +49,6 @@
   background: white;
 }
 
-/* =========================
-   CHAT BOX
-========================= */
 
 .chatBox {
   width: 100%;
@@ -70,9 +59,6 @@
   margin-top: 30px;
 }
 
-/* =========================
-   BOT MESSAGE
-========================= */
 
 .botMsg {
   align-self: flex-start;
@@ -88,9 +74,6 @@
   box-shadow: var(--shadow);
 }
 
-/* =========================
-   INPUT ROW
-========================= */
 
 .inputRow {
   display: flex;
@@ -99,9 +82,6 @@
   width: 100%;
 }
 
-/* =========================
-   INPUT
-========================= */
 
 .input {
   flex: 1;
@@ -119,9 +99,6 @@
   color: #777;
 }
 
-/* =========================
-   SEND BUTTON
-========================= */
 
 .sendBtn {
   border: none;
@@ -140,30 +117,21 @@
   background: #f4f7ff;
 }
 
-/* =========================
-   AI MARKDOWN MESSAGE
-========================= */
 
 .aiMessage {
   width: 100%;
   max-width: 950px;
   margin-top: 35px;
   padding: 34px;
-  /* background: rgba(255, 255, 255, 0.22); */
-  /* border: 1px solid rgba(255, 255, 255, 0.16); */
   backdrop-filter: blur(18px);
   border-radius: 28px;
   color: white;
   direction: rtl;
   text-align: right;
   line-height: 2.1;
-  /* box-shadow: 0 14px 45px rgba(0, 0, 0, 0.20); */
   overflow-wrap: break-word;
 }
 
-/* =========================
-   MARKDOWN HEADERS
-========================= */
 
 .aiMessage h1 {
   font-size: 34px;
@@ -189,9 +157,6 @@
   font-weight: 700;
 }
 
-/* =========================
-   MARKDOWN TEXT
-========================= */
 
 .aiMessage p {
   font-size: 19px;
@@ -199,9 +164,6 @@
   margin-bottom: 16px;
 }
 
-/* =========================
-   MARKDOWN LISTS
-========================= */
 
 .aiMessage ul,
 .aiMessage ol {
@@ -214,18 +176,12 @@
   font-size: 18px;
 }
 
-/* =========================
-   MARKDOWN BOLD
-========================= */
 
 .aiMessage strong {
   color: white;
   font-weight: 800;
 }
 
-/* =========================
-   MARKDOWN CODE
-========================= */
 
 .aiMessage code {
   background: rgba(255, 255, 255, 0.18);
@@ -234,9 +190,6 @@
   font-size: 16px;
 }
 
-/* =========================
-   RESULT CARD
-========================= */
 
 .resultBox {
   width: 100%;
@@ -270,9 +223,6 @@
   color: rgba(255, 255, 255, 0.95);
 }
 
-/* =========================
-   RESULT BUTTON
-========================= */
 
 .resultBox button {
   margin-top: 20px;
@@ -292,9 +242,6 @@
   background: #eef3ff;
 }
 
-/* =========================
-   FULLSCREEN LOADER
-========================= */
 
 .loadingOverlay {
   position: fixed;
@@ -324,9 +271,6 @@
   font-weight: 700;
 }
 
-/* =========================
-   SPINNER
-========================= */
 
 @keyframes spin {
 
@@ -339,9 +283,6 @@
   }
 }
 
-/* =========================
-   MOBILE
-========================= */
 
 @media (max-width: 768px) {
 
@@ -393,7 +334,7 @@
 
   padding: 28px;
 
-  background: rgba(255, 255, 255, 0.12); /* יותר כהה */
+  background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.10);
   backdrop-filter: blur(18px);
 
@@ -408,7 +349,6 @@
   overflow-wrap: break-word;
 }
 
-/* ===== TEXT ===== */
 
 .aiMessage p {
   margin: 0 0 14px 0;
@@ -416,7 +356,6 @@
   color: rgba(255, 255, 255, 0.92);
 }
 
-/* ===== HEADINGS ===== */
 
 .aiMessage h1,
 .aiMessage h2,
@@ -426,7 +365,6 @@
   font-weight: 800;
 }
 
-/* ===== LISTS (הכי חשוב אצלך) ===== */
 
 .aiMessage ul,
 .aiMessage ol {
@@ -440,14 +378,12 @@
   line-height: 1.9;
 }
 
-/* ===== STRONG ===== */
 
 .aiMessage strong {
   font-weight: 800;
   color: #ffffff;
 }
 
-/* ===== CODE ===== */
 
 .aiMessage code {
   background: rgba(255, 255, 255, 0.14);
@@ -456,7 +392,6 @@
   font-size: 15px;
 }
 
-/* ===== BLOCKQUOTE (אם יופיע בעתיד) ===== */
 
 .aiMessage blockquote {
   border-right: 3px solid rgba(255, 255, 255, 0.4);
@@ -471,7 +406,6 @@
   text-align: right;
 }
 
-/* חשוב מאוד לרשימות */
 .aiMessage ul,
 .aiMessage ol {
   padding-right: 20px;
@@ -480,13 +414,229 @@
   text-align: right;
 }
 
-/* כדי שהכוכביות יהיו בצד ימין */
 .aiMessage li {
   text-align: right;
 }
 
-/* קוד בתוך markdown */
 .aiMessage code {
   direction: ltr;
-  display: inline-block;
+  display: inline-block; */
+/* ======= */
+.safeAIPage {
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
+}
+
+/* מרכז את כל הצ'אט */
+.chatContainer {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* אזור ההודעות */
+.chatBox {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 25px;
+  width: 100%;
+
+  padding-bottom: 90px;
+}
+
+/* ===== BOT ===== */
+.botMsg {
+  align-self: flex-start;
+  background: #f3f4f6;
+  color: #111827;
+  padding: 14px 18px;
+  border-radius: 18px 18px 18px 6px;
+  max-width: 75%;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  text-align: left;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ===== USER ===== */
+.userMsg {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  color: white;
+  padding: 14px 18px;
+  border-radius: 18px 18px 6px 18px;
+  max-width: 75%;
+  box-shadow: 0 6px 18px rgba(96, 165, 250, 0.25);
+  text-align: left;
+  animation: fadeIn 0.2s ease;
+}
+
+/* ===== INPUT ===== */
+.inputRow {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  background: #ffffff;
+
+  padding: 12px 0;
+  display: flex;
+  gap: 10px;
+}
+
+.input {
+  flex: 1;
+  padding: 14px;
+  border-radius: 14px;
+  border: 2px solid #e5e7eb;
+  outline: none;
+}
+
+.input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
+}
+
+/* ===== BUTTONS ===== */
+.sendBtn {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.startBtn {
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  color: white;
+  padding: 16px 26px;
+  border-radius: 16px;
+  border: none;
+  font-weight: 700;
+}
+
+/* ===== LOADING ===== */
+.loadingOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #e5e7eb;
+  border-top: 5px solid #60a5fa;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* ===== TYPING ===== */
+.typingBubble {
+  display: flex;
+  gap: 6px;
+  padding: 10px 14px;
+  background: #f3f4f6;
+  border-radius: 16px;
+  width: fit-content;
+}
+
+.typingBubble span {
+  width: 7px;
+  height: 7px;
+  background: #9ca3af;
+  border-radius: 50%;
+  animation: blink 1.2s infinite;
+}
+
+.typingBubble span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typingBubble span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+/* ===== CHAT HEADER ===== */
+.chatHeader {
+  text-align: center;
+  margin-bottom: 20px;
+
+  padding: 24px 18px;
+  border-radius: 18px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(96,165,250,0.08),
+    rgba(167,139,250,0.08)
+  );
+
+  border: 1px solid rgba(96,165,250,0.15);
+
+  animation: fadeIn 0.4s ease;
+}
+
+/* כותרת ראשית */
+.chatTitle {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 900;
+
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* תיאור */
+.chatSubtitle {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #374151;
+
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+/* >>>>>>> origin/All */
 }
