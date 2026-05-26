@@ -5,6 +5,7 @@ import style from './WorkshopDetails.module.css';
 import { useParams } from 'react-router-dom';
 import { InitWorkShops } from './WorkShopSlice';
 import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
+import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
 
 function WorkshopDetails() {
     const { code } = useParams();
@@ -12,18 +13,16 @@ function WorkshopDetails() {
     const dispatch = useDispatch();
 
     const workshops = useSelector(state => state.WorkShop.WorkShops);
-    const status = useSelector(state => state.WorkShop.status);
+    const statusW = useSelector(state => state.WorkShop.status);
     const statusD = useSelector(s => s.Diagnoser.status);
     const diagnosers = useSelector(s => s.Diagnoser.Diagnosers);
     const groups = useSelector(state => state.TypeGroup.groups);
+    const statusType = useSelector(state => state.TypeGroup.statusType);
 
     const [workShop, setWorkShop] = useState(null);
     const [diagnoser, setDiagnoser] = useState(null);
 
     useEffect(() => {
-        if (status === "") dispatch(InitWorkShops());
-        if (statusD === "") dispatch(InitDiagnoser());
-
         if (workshops) {
             const w = workshops.find(w => w.code === codeNumber);
             setWorkShop(w);
@@ -32,11 +31,53 @@ function WorkshopDetails() {
                 setDiagnoser(d);
             }
         }
-    }, [dispatch, status, workshops, codeNumber, diagnosers, statusD]);
+    }, [dispatch, statusW, codeNumber, statusD]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusD === "faild" || statusD === "")
+                    await dispatch(InitDiagnoser()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusD, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusW === "faild" || statusW === "")
+                    await dispatch(InitWorkShops()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusW, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusType === "faild" || statusType === "")
+                    await dispatch(TypeGroups()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusType, dispatch]);
 
     const getType = (ws) => ws && groups
         ? groups.find(g => g.code === ws.code)?.description || ""
         : "";
+
+    if (statusType !== "succesfull" || statusW !== "succesfull" || statusD !== "succesfull") return <>טוען נתונים...</>
+
 
     return (
         <div className={style.detailsPage}>

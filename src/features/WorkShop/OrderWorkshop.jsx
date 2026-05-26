@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import HebrewDatePicker from '../Calendar/HebrewDatePicker';
 import style from './OrderWorksop.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCustomer } from '../Customers/CustomerSlice';
+import { addCustomer, InitCustomer } from '../Customers/CustomerSlice';
 import { deleteLead } from '../Leads/LeadsSlice';
-import { addReference, InitReferences } from '../References/ReferencesSlice';
+import { addReference } from '../References/ReferencesSlice';
 import { sendEmail } from '../Email/EmailSlice';
+import { InitWorkShops } from './WorkShopSlice';
 
 function OrderWorkshop({ WorkShop, diagnoser, onClose }) {
 
@@ -14,12 +15,40 @@ function OrderWorkshop({ WorkShop, diagnoser, onClose }) {
     const navigate = useNavigate();
 
     const workshops = useSelector(state => state.WorkShop.WorkShops);
+    const statusW = useSelector(state => state.WorkShop.status);
     const customer = useSelector(state => state.LogIn.thisUser);
     const customers = useSelector(state => state.Customer.Customers);
+    const statusC = useSelector(state => state.Customer.status);
 
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [bookingData, setBookingData] = useState({ date: null, time: "", adress: "" });
     const [calendarOpen, setCalendarOpen] = useState(false);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusC === "faild" || statusC === "")
+                    await dispatch(InitCustomer()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusC, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusW === "faild" || statusW === "")
+                    await dispatch(InitWorkShops()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusW, dispatch]);
 
     const handleBooking = async () => {
         if (!bookingData.date || !bookingData.time || !bookingData.adress) {
@@ -50,7 +79,6 @@ function OrderWorkshop({ WorkShop, diagnoser, onClose }) {
                 status: 1
             };
             await dispatch(addReference(newReference)).unwrap();
-            await dispatch(InitReferences());
             setIsBookingModalOpen(false);
             navigate(`/OrderOfCusatomer/${newReference.codeCustomer}`);
             const mailBody = `שלום ${diagnoser.name},
@@ -71,6 +99,7 @@ function OrderWorkshop({ WorkShop, diagnoser, onClose }) {
         }
     };
 
+    if (statusC !== "succesfull" || statusW !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <div className={style.modalBackdrop}>

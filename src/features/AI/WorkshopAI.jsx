@@ -3,9 +3,7 @@ import {
   GetAIQuestions,
   ResetAIState,
   SendAnswersToAI,
-  SetAnswer,
-  SetMode,
-  SetResultType
+  SetAnswer
 } from "./WorkshopAISlice";
 
 import { useEffect, useState, useRef } from "react";
@@ -13,29 +11,33 @@ import { InitWorkShops } from "../WorkShop/WorkShopSlice";
 import { InitDiagnoser } from "../Diagnosers/DiagnoserSlice";
 import { TypeGroups } from "../TypeGroup/TypeGroupSlice";
 import style from "./safeAI.module.css";
-
 import WorkshopResult from "./WorkshopResult";
+import ReactMarkdown from "react-markdown";
+import { useNavigate } from "react-router-dom";
+import remarkGfm from "remark-gfm";
+import OrderWorkshop from "../WorkShop/OrderWorkshop";
+import LoginRequiredModal from "./LoginRequiredModal";
 import DiagnoserResult from "./DiagnoserResult ";
+
 
 const WorkshopAI = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { questions, answers, result, loading, mode } = useSelector((state) => state.WorkshopAI);
+    const { questions, answers, result, loading, mode } = useSelector((state) => state.WorkshopAI);
+
 
   const workshops = useSelector((state) => state.WorkShop.WorkShops);
-  const diagnosers = useSelector((state) => state.Diagnoser.Diagnosers);
-  const groups = useSelector((state) => state.TypeGroup.groups);
-  const thisuser = useSelector((state) => state.LogIn.thisUser);
-  // const { loading } = useSelector((state) => state.WorkshopAI);
-
   const statusW = useSelector((state) => state.WorkShop.status);
+  const diagnosers = useSelector((state) => state.Diagnoser.Diagnosers);
   const statusD = useSelector((state) => state.Diagnoser.status);
+  const groups = useSelector((state) => state.TypeGroup.groups);
   const statusType = useSelector((state) => state.TypeGroup.statusType);
+  const thisuser = useSelector((state) => state.LogIn.thisUser);
   const resultType = useSelector((state) => state.WorkshopAI.resultType);
 
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
-
   const [history, setHistory] = useState([]);
   const [typing, setTyping] = useState(false);
 
@@ -49,10 +51,44 @@ const WorkshopAI = () => {
   }, [history, step, typing, loading]);
 
   useEffect(() => {
-    if (statusW === "") dispatch(InitWorkShops());
-    if (statusD === "") dispatch(InitDiagnoser());
-    if (statusType === "") dispatch(TypeGroups());
-  }, [dispatch, statusW, statusD, statusType]);
+    const load = async () => {
+      try {
+        if (statusW === "faild" || statusW === "")
+          await dispatch(InitWorkShops()).unwrap();
+      }
+      catch (err) {
+        console.error("InitCustomer ERROR:", err);
+      }
+    }
+    load()
+  }, [statusW, dispatch]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        if (statusD === "faild" || statusD === "")
+          await dispatch(InitDiagnoser()).unwrap();
+      }
+      catch (err) {
+        console.error("InitCustomer ERROR:", err);
+      }
+    }
+    load()
+  }, [statusD, dispatch]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        if (statusType === "faild" || statusType === "")
+          await dispatch(TypeGroups()).unwrap();
+      }
+      catch (err) {
+        console.error("InitCustomer ERROR:", err);
+      }
+    }
+    load()
+  }, [statusType, dispatch]);
+
 
   // =========================
   // בחירת סוג חיפוש
@@ -78,7 +114,7 @@ const WorkshopAI = () => {
   // סיום ושליחה
   // =========================
   const finish = async () => {
-    const payload = questions.map((q, i) => q + " " + answers[i]);
+    const payload = questions.map((q, i) => q + "? " + answers[i]);
 
     await dispatch(
       SendAnswersToAI({
@@ -93,18 +129,14 @@ const WorkshopAI = () => {
 
   const nextStep = () => {
     const userAnswer = answers[step] || "";
-
     setHistory((prev) => [
       ...prev,
       { type: "bot", text: questions[step] },
       { type: "user", text: userAnswer }
     ]);
-
     setTyping(true);
-
     setTimeout(() => {
       setTyping(false);
-
       if (step < questions.length - 1) {
         setStep(step + 1);
       } else {
@@ -145,7 +177,7 @@ const WorkshopAI = () => {
   //     .trim();
 
   //   cleanResult =
-  //     "**מצאתי לך את ההתאמה המדויקת ביותר בשבילך על פי מה שביקשת:** " +
+  //     "**מצאתי לך את הסנא המדויקת ביותר בשבילך על פי מה שביקשת:" +
   //     cleanResult.split("למה היא מתאימה:")[1];
   // }
 

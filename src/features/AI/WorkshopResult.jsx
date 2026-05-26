@@ -92,7 +92,7 @@ const WorkshopResult = ({
 
                     <div className={styles.header}>
                         <div className={styles.badge}>
-                             קוד סדנה: {workshop.code}
+                            קוד סדנה: {workshop.code}
                         </div>
 
                         <h2 className={styles.title}>
@@ -129,11 +129,20 @@ const WorkshopResult = ({
                         >
                             📅 הזמנת סדנה
                         </button>
+
                     </div>
 
                 </div>
 
-            </div>
+            </div >
+
+            {isOrderOpen && workshop && diagnoser && (
+                <OrderWorkshop
+                    WorkShop={workshop}
+                    diagnoser={diagnoser}
+                    onClose={() => setIsOrderOpen(false)}
+                />
+            )}
 
             {showLoginModal && (
                 <LoginRequiredModal
@@ -143,7 +152,8 @@ const WorkshopResult = ({
                         navigate("/login");
                     }}
                 />
-            )}
+            )
+            }
         </>
     );
 };

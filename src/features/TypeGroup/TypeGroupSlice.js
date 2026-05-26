@@ -19,14 +19,14 @@ const TypeGroupSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(TypeGroups.pending, (state) => {
-                state.status = 'loading';
+                state.statusType = 'loading';
             })
             .addCase(TypeGroups.fulfilled, (state, action) => {
+                state.statusType = 'succesfull';
                 state.groups = action.payload;
-                state.status = 'success';
             })
             .addCase(TypeGroups.rejected, (state) => {
-                state.status = 'failed';
+                state.statusType = 'failed';
             });
     }
 });

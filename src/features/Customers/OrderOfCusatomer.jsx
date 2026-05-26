@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { InitReferences, pay } from '../References/ReferencesSlice';
 import style from './OrderOfCusatomer.module.css';
 import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
+import { InitCustomer } from './CustomerSlice';
 
 const OrderOfCusatomer = () => {
 
@@ -11,11 +12,12 @@ const OrderOfCusatomer = () => {
     const dispatch = useDispatch();
 
     const references = useSelector(state => state.Reference.references);
-    const status = useSelector(state => state.Reference.status);
+    const statusR = useSelector(state => state.Reference.status);
     // const statusUser = useSelector(state => state.LogIn.statusUser)
     const customers = useSelector(state => state.Customer.Customers);
+    const statusC = useSelector(state => state.Customer.status);
     const typeGroups = useSelector(s => s.TypeGroup.groups);
-    const statusType = useSelector(s => s.TypeGroup.status);
+    const statusType = useSelector(s => s.TypeGroup.statusType);
 
     const { code } = useParams();
     const cust = customers.find(c => c.code == code);
@@ -24,25 +26,54 @@ const OrderOfCusatomer = () => {
     const [loadingPay, setLoadingPay] = useState([]); // מערך הזמנות שטוענות תשלום
 
     useEffect(() => {
-        const loading = async () => {
-            if (!status)
-                await dispatch(InitReferences());
-        };
-        loading();
-    }, [status, dispatch]);
+        const load = async () => {
+            try {
+                if (statusR === "faild" || statusR === "")
+                    await dispatch(InitReferences()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusR, dispatch]);
 
     useEffect(() => {
-        if (statusType === "")
-            dispatch(TypeGroups());
-    }, [dispatch, statusType]);
+        const load = async () => {
+            try {
+                if (statusC === "faild" || statusC === "")
+                    await dispatch(InitCustomer()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusC, dispatch]);
 
-    if (status === "" || status === "loading") {
-        return <div className={style.loading}>טוען הזמנות...</div>;
-    }
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusType === "faild" || statusType === "")
+                    await dispatch(TypeGroups()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusType, dispatch]);
 
-    if (status === "faild") {
-        return <div className={style.error}>שגיאה בטעינת הזמנות</div>;
-    }
+    const getHour = (time) => {
+        let hour = Math.floor(time);
+        let minute = Math.round((time - hour) * 100);
+        if (minute < 10) minute = "0" + minute;
+        if (hour < 10) hour = "0" + hour;
+        return hour + ":" + minute;
+    };
+
+        if (statusC !== "succesfull" || statusR !== "succesfull" || statusType !== "succesfull") return <>טוען נתונים...</>
+
 
     const handlePay = async (orderCode) => {
         setLoadingPay(prev => [...prev, orderCode]); // מסמן שהזמנה נטענת
@@ -78,7 +109,7 @@ const OrderOfCusatomer = () => {
                                 <div className={style.tableRow}>
                                     <div className={style.cell}><span>{item.code}</span></div>
                                     <div className={style.cell}><span>{item.date}</span></div>
-                                    <div className={style.cell}><span>{item.time}</span></div>
+                                    <div className={style.cell}><span>{getHour(item.time)}</span></div>
                                     <div className={style.cell}><span>{item.adress}</span></div>
                                     {/* <div className={style.cell}><span>{item.codeWorkshop}</span></div> */}
                                     <div>

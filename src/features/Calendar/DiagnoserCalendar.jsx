@@ -10,6 +10,8 @@ import styles from "./DiagnoserCalendar.module.css";
 import { InitWorkShops } from "../WorkShop/WorkShopSlice";
 import { InitReferences } from "../References/ReferencesSlice";
 import BookingPopupDetails from "../References/BookingPopupDetails";
+import { InitDiagnoser } from "../Diagnosers/DiagnoserSlice";
+import { InitCustomer } from "../Customers/CustomerSlice";
 
 
 
@@ -31,25 +33,74 @@ const hebrewFormatter = new Intl.DateTimeFormat("he-u-ca-hebrew", {
 
 const DiagnoserCalendar = () => {
 
-    const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
-    const references = useSelector(s => s.Reference.references);
-    const workshops = useSelector(s => s.WorkShop.WorkShops);
-    const user = useSelector(s => s.LogIn.thisUser);
-    const customers = useSelector(state => state.Customer.Customers);
-    const status = useSelector(state => state.Reference.status);
     const dispatch = useDispatch()
+
+    const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
+    const statusD = useSelector(state => state.Diagnoser.status);
+    const references = useSelector(s => s.Reference.references);
+    const statusR = useSelector(state => state.Reference.status);
+    const workshops = useSelector(s => s.WorkShop.WorkShops);
+    const statusW = useSelector(s => s.WorkShop.status);
+    const customers = useSelector(state => state.Customer.Customers);
+    const statusC = useSelector(state => state.Customer.status);
+    const user = useSelector(s => s.LogIn.thisUser);
+
     const [activeBookingDetails, setActiveBookingDetails] = useState(null);
 
     const todayHebrewDate = useMemo(() => getHebrewDate(new Date()), []);
 
     useEffect(() => {
-        const loadData = async () => {
-            if (!status) await dispatch(InitReferences());
-            await dispatch(InitWorkShops());
-            // await dispatch(fetchStatus());
-        };
-        loadData();
-    }, [status, dispatch]);
+        const load = async () => {
+            try {
+                if (statusC === "faild" || statusC === "")
+                    await dispatch(InitCustomer()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusC, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusD === "faild" || statusD === "")
+                    await dispatch(InitDiagnoser()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusD, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusW === "faild" || statusW === "")
+                    await dispatch(InitWorkShops()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusW, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusR === "faild" || !statusR)
+                    await dispatch(InitReferences()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusR, dispatch]);
+
 
     const workshopsById = useMemo(() => {
         const map = new Map();
@@ -152,6 +203,9 @@ const DiagnoserCalendar = () => {
 
     }, [filteredReferences, customersById]);
 
+    if (statusR !== "succesfull" || statusD !== "succesfull" || statusW !== "succesfull" || statusC !== "succesfull") return <>טוען נתונים...</>
+
+
     return (
 
         <div className={styles.calendarWrapper}>
@@ -183,9 +237,9 @@ const DiagnoserCalendar = () => {
 
                 buttonText={{
                     today: "היום",
-                    month: "חודש",
-                    week: "שבוע נוכחי",
-                    day: " יום נוכחי"
+                    month: "חודשי",
+                    week: "שבועי",
+                    day: "יומי"
                 }}
 
                 customButtons={{

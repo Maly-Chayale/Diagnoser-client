@@ -77,7 +77,9 @@ const ReferencesSlice = createSlice({
                 state.status = "succesfull";
                 state.references = action.payload;
             })
-            .addCase(InitReferences.rejected, (state) => { state.status = "failed"; })
+            .addCase(InitReferences.rejected, (state) => {
+                state.status = "failed";
+            })
 
             .addCase(addReference.fulfilled, (state, action) => {
                 state.status = "succesfull";
@@ -89,9 +91,12 @@ const ReferencesSlice = createSlice({
                 // 🔹 קודם היה ==, עכשיו משתמשים != כדי למחוק
                 state.references = state.references.filter(r => r.code !== action.payload.code);
             })
-            .addCase(deleteReference.pending, (state) => { state.status = "loading"; })
-            .addCase(deleteReference.rejected, (state) => { state.status = "failed"; })
-
+            .addCase(deleteReference.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(deleteReference.rejected, (state) => {
+                state.status = "failed";
+            })
             .addCase(updateReference.fulfilled, (state, action) => {
                 const idx = state.references.findIndex(r => r.code === action.payload.code);
                 if (idx !== -1) state.references[idx] = action.payload;

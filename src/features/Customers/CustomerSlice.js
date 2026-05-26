@@ -31,11 +31,10 @@ export const addCustomer = createAsyncThunk("addCustomer",
 
 export const deleteCustomer = createAsyncThunk("deleteCustomer",
     async (Customer) => {
-        await axios.delete('https://localhost:7082/Customers/Delete', Customer,
-            {
-                headers: headers
-            }
-        ).then(res => { })
+        axios.delete('https://localhost:7082/Customers/Delete', {
+            data: Customer,
+            headers
+        }).then(res => { })
         return Customer
     })
 

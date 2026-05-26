@@ -73,8 +73,8 @@ const LeadsSlice = createSlice({
             //     state.Leads.push(diagnoser)
             // })
             .addCase(deleteLead.fulfilled, (state, action) => {
-                const diagnoser = action.payload;
                 state.status = "succesfull";
+                const diagnoser = action.payload;
                 state.Leads = state.Leads.filter(d => d.mail != diagnoser.mail)
             })
             .addCase(deleteLead.pending, (state) => {

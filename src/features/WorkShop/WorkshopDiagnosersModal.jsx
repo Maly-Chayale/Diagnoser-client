@@ -1,18 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { GetDiagnosersOfThisWorkshop } from './WorkShopSlice';
+import { GetDiagnosersOfThisWorkshop, InitWorkShops } from './WorkShopSlice';
 import style from './WorkshopDiagnosersModal.module.css';
 import styleDetails from './WorkshopDiagnosersModalDetails.module.css';
+import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
+import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
 
 function WorkshopDiagnosersModal({ WorkShop, onClose, onBooking }) {
     const dispatch = useDispatch();
+
     const [selectedDiagnoser, setSelectedDiagnoser] = useState(null);
 
-    const diagnosers = useSelector(state => state.WorkShop.Diagnosers);
     const workshops = useSelector(state => state.WorkShop.WorkShops);
-    const groups = useSelector(state => state.TypeGroup.groups);
+    const statusW = useSelector(state => state.WorkShop.status);
+    const diagnosers = useSelector(s => s.WorkShop.Diagnosers);
+    const groups = useSelector(s => s.TypeGroup.groups);
+    const statusType = useSelector(s => s.TypeGroup.statusType);
 
     const getType = (code) => groups.find(g => g.code === code)?.description;
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusW === "faild" || statusW === "")
+                    await dispatch(InitWorkShops()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusW, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusType === "faild" || statusType === "")
+                    await dispatch(TypeGroups()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusType, dispatch]);
+
 
     useEffect(() => {
         dispatch(GetDiagnosersOfThisWorkshop(WorkShop));
@@ -26,6 +58,8 @@ function WorkshopDiagnosersModal({ WorkShop, onClose, onBooking }) {
             w.grafology === WorkShop.grafology &&
             w.typeGroup === WorkShop.typeGroup
         );
+
+    if (statusType !== "succesfull" || statusW !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <div className={style.modalBackdrop}>

@@ -32,10 +32,46 @@ const LogIn = () => {
     const [err, setErr] = useState(false);
 
     useEffect(() => {
-        if (statusC === "") dispatch(InitCustomer());
-        if (statusD === "") dispatch(InitDiagnoser());
-        if (statusL === "") dispatch(InitLeads());
-    }, [statusC, statusD, statusL, thisuser, dispatch]);
+        const load = async () => {
+            try {
+                if (statusC === "faild" || statusC === "") {
+                    const res = await dispatch(InitCustomer()).unwrap();
+                    console.log("customers:", res);
+                }
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        };
+
+        load();
+    }, [statusC, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusD === "faild" || statusD === "")
+                    await dispatch(InitDiagnoser()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusD, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusL === "faild" || statusL === "")
+                    await dispatch(InitLeads()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusL, dispatch]);
 
     useEffect(() => {
         if (status === "wrong") {
@@ -43,13 +79,23 @@ const LogIn = () => {
             dispatch(signOut())
         }
         else if (status) {  // או הערך שמציין הצלחה
-            navigate("../AI");
             dispatch(ProfilelogIn({
                 thisUser: thisuser,  // הערכים המעודכנים
                 status: status
             }));
+            navigate("../AI");
         }
-    }, [status, navigate]);
+    }, [status]);
+
+    useEffect(() => {
+        const handleKey = (e) => {
+            if (e.key === "Enter") {
+                SignIn();
+            }
+        };
+        window.addEventListener("keydown", handleKey);
+        return () => window.removeEventListener("keydown", handleKey);
+    }, [mail, password]);
 
     async function SignIn() {
         const result = await dispatch(logIn({
@@ -84,10 +130,14 @@ const LogIn = () => {
     };
 
     if (statusC == "" || statusD == "" || statusL == "") return <>טוען נתונים...</>
-    // if(statusC.length|| statusD.length|| statusL.length) return <>טוען נתונים...</>
+    if (statusC !== "succesfull" || statusD !== "succesfull" || statusL !== "succesfull") return <>טוען נתונים...</>
 
     return (
-        <div className={styles.container}>
+        <div
+            className={styles.container}
+        // onKeyDown={handleEnter}
+        // tabIndex={0}
+        >
             <div className={styles.card}>
 
                 <h2 className={styles.title}>התחברות</h2>
@@ -124,7 +174,7 @@ const LogIn = () => {
                 <div className={styles.googleBox}>
                     <GoogleLogin
                         onSuccess={handleGoogleSuccess}
-                        onError={() => {setErr(true); dispatch(signOut())}}
+                        onError={() => { setErr(true); dispatch(signOut()) }}
                     />
                 </div>
 

@@ -1,22 +1,52 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import style from './WorkshopDiagnosersModal.module.css';
 import OrderWorkshop from '../WorkShop/OrderWorkshop';
 import LoginRequiredModal from '../AI/LoginRequiredModal';
 import { useNavigate } from 'react-router-dom';
+import { InitWorkShops } from '../WorkShop/WorkShopSlice';
+import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
 
 
 function DiagnoserWorkshopsModal({ diagnoser, onClose }) {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const workshops = useSelector(state => state.WorkShop.WorkShops);
+    const statusW = useSelector(state => state.WorkShop.status);
     const groups = useSelector(state => state.TypeGroup.groups);
+    const statusType = useSelector(state => state.TypeGroup.statusType);
     const user = useSelector(state => state.LogIn.thisUser);
 
-    // NEW
     const [selectedWorkshop, setSelectedWorkshop] = useState(null);
     const [showLoginModal, setShowLoginModal] = useState(false);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusW === "faild" || statusW === "")
+                    await dispatch(InitWorkShops()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusW, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusType === "faild" || statusType === "")
+                    await dispatch(TypeGroups()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusType, dispatch]);
 
     const getType = (code) =>
         groups.find(g => g.code === code)?.description;
@@ -24,6 +54,8 @@ function DiagnoserWorkshopsModal({ diagnoser, onClose }) {
     const filteredWorkshops = workshops?.filter(
         w => String(w.codeDiagnoser) === String(diagnoser.code)
     );
+
+  if (statusType !== "succesfull" || statusW !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <>

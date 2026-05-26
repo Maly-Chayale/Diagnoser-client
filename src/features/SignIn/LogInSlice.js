@@ -13,20 +13,23 @@ const headers = {
 
 export const addLead = createAsyncThunk("addLead",
     async (lead) => {
+        let data
         await axios.post('https://localhost:7082/Leads/Add', lead,
             {
                 headers: headers
             }).then(res => {
-                return res.data
+                data = res.data
             })
+        return data
     })
 
 const LogInSlice = createSlice({
     name: "Customer",
     initialState,
     reducers: {
-        signOut: (state)=>{
+        signOut: (state) => {
             state.thisUser = null
+            state.statusUser = null
         },
         signIn: (state, action) => {
             state.thisUser = action.payload
@@ -67,7 +70,7 @@ const LogInSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(addLead.fulfilled, (state, action)=>{
+        builder.addCase(addLead.fulfilled, (state, action) => {
             state.thisUser.code = action.payload
         })
     }

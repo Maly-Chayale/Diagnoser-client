@@ -1,5 +1,6 @@
 /* ROOT */
 .landing-page {
+    direction: rtl;
     position: relative;
     margin: 0;
     font-family: sans-serif;
@@ -208,4 +209,9 @@
     opacity: 0.9;
     justify-content: center;
     color: #ffffff;
+}
+
+.landing-page .right {
+    padding-right: 40%;
+    text-align: right;
 }
