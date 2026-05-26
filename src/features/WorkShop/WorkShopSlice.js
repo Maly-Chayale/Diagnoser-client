@@ -140,13 +140,13 @@ const WorkShopSlice = createSlice({
                 state.status = "faild"
             })
             .addCase(addWorkShop.fulfilled, (state, action) => {
-                const workshop = action.payload;
                 state.status = "succesfull";
+                const workshop = action.payload;
                 state.WorkShops = [...state.WorkShops, workshop]// state.WorkShops.push(workshop)
             })
             .addCase(deleteWorkShop.fulfilled, (state, action) => {
-                const workshop = action.payload;
                 state.status = "succesfull";
+                const workshop = action.payload;
                 state.WorkShops = state.WorkShops.filter(d => d.code != workshop.code)
             })
             .addCase(deleteWorkShop.pending, (state) => {

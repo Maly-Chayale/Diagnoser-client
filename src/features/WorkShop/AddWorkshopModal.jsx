@@ -6,6 +6,7 @@ import style from './AddWorkshopModal.module.css';
 import { FaUser, FaDollarSign, FaTimes } from 'react-icons/fa';
 import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
 import { useNavigate } from 'react-router-dom';
+import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
 
 function AddWorkshopModal({ open, onClose }) {
 
@@ -13,15 +14,38 @@ function AddWorkshopModal({ open, onClose }) {
     const navigate = useNavigate()
 
     const diagnosers = useSelector(s => s.Diagnoser.Diagnosers);
-    const status = useSelector(s => s.Diagnoser.status);
+    const statusD = useSelector(s => s.Diagnoser.status);
     const [diagnosersCan, setDiagnosersCan] = useState([]);
     const typeGroups = useSelector(s => s.TypeGroup.groups);
+    const statusType = useSelector(s => s.TypeGroup.statusType);
     const statusUser = useSelector(state => state.LogIn.statusUser);
     const user = useSelector(state => state.LogIn.thisUser);
 
     useEffect(() => {
-        if (status === "") dispatch(InitDiagnoser());
-    }, [dispatch, status]);
+        const load = async () => {
+            try {
+                if (statusD === "faild" || statusD === "")
+                    await dispatch(InitDiagnoser()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusD, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusType === "faild" || statusType === "")
+                    await dispatch(TypeGroups()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusType, dispatch]);
 
     const [form, setForm] = useState({
         code: 0,
@@ -79,6 +103,8 @@ function AddWorkshopModal({ open, onClose }) {
     if (!open && !showSuccess && !showDetails) return null;
 
     const getInputClass = (fieldName) => `${style.input} ${form[fieldName] ? style.filled : ''}`;
+
+    if (statusType !== "succesfull" || statusD !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <div className={style.backdrop}>

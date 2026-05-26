@@ -77,7 +77,9 @@ const ReferencesSlice = createSlice({
                 state.status = "succesfull";
                 state.references = action.payload;
             })
-            .addCase(InitReferences.rejected, (state) => { state.status = "failed"; })
+            .addCase(InitReferences.rejected, (state) => {
+                state.status = "failed";
+            })
 
             .addCase(addReference.fulfilled, (state, action) => {
                 state.status = "succesfull";

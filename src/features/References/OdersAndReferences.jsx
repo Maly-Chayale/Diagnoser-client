@@ -10,20 +10,26 @@ import BookingPopupDetails from './BookingPopupDetails';
 import CancelPopup from './CancelPopup';
 import { FaUser, FaCalendarAlt } from 'react-icons/fa';
 import { sendEmail } from '../Email/EmailSlice';
+import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
+import { InitCustomer } from '../Customers/CustomerSlice';
 
 const OdersAndReferences = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const references = useSelector(state => state.Reference.references);
-    const status = useSelector(state => state.Reference.status);
+    const statusR = useSelector(state => state.Reference.status);
     const customers = useSelector(state => state.Customer.Customers);
+    const statusC = useSelector(state => state.Customer.status);
     const user = useSelector(state => state.LogIn.thisUser);
     const statusUser = useSelector(state => state.LogIn.statusUser);
     const workshops = useSelector(state => state.WorkShop.WorkShops);
+    const statusW = useSelector(state => state.WorkShop.status);
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
+    const statusD = useSelector(state => state.Diagnoser.status);
     const diagnosersOfWorkshop = useSelector(state => state.WorkShop.Diagnosers);
     const statuss = useSelector(state => state.Status.statuss);
+    const status = useSelector(state => state.Status.status);
 
     const [activeBooking, setActiveBooking] = useState(null);
     const [activeBookingDetails, setActiveBookingDetails] = useState(null);
@@ -32,15 +38,69 @@ const OdersAndReferences = () => {
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        const loadData = async () => {
-            if (!status) await dispatch(InitReferences());
-            await dispatch(InitWorkShops());
-            await dispatch(fetchStatus());
-        };
-        loadData();
+        const load = async () => {
+            try {
+                if (statusD === "faild" || statusD === "")
+                    await dispatch(InitDiagnoser()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusD, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (status === "faild" || status === "")
+                    await dispatch(fetchStatus()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
     }, [status, dispatch]);
 
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusC === "faild" || statusC === "")
+                    await dispatch(InitCustomer()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusC, dispatch]);
 
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusR === "faild" || statusR === "")
+                    await dispatch(InitReferences()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusR, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusW === "faild" || statusW === "")
+                    await dispatch(InitWorkShops()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusW, dispatch]);
 
     const customer = code => customers.find(c => c.code === code);
     const getWorkshop = code => workshops.find(w => w.code === code);
@@ -161,7 +221,7 @@ const OdersAndReferences = () => {
         setActiveBooking(null)
     }
 
-    if (!status || status === "loading") return <>טוען נתונים...</>;
+    if (statusC !== "succesfull" || statusD !== "succesfull" || status !== "succesfull" || statusR !== "succesfull" || statusW !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <div className={styles.diagnoserPage}>

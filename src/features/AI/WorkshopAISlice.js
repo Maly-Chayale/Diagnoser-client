@@ -65,55 +65,34 @@ const WorkshopAISlice = createSlice({
     },
 
     extraReducers: (builder) => {
-
         builder
-
             .addCase(GetAIQuestions.pending, (state) => {
-
                 state.loading = true;
             })
-
             .addCase(GetAIQuestions.fulfilled, (state, action) => {
-
-                console.log(action.payload);
-
-
                 state.loading = false;
-
                 if (typeof action.payload === "string") {
-
                     state.questions = action.payload
                         .split("\n")
                         .filter(q => q.trim() !== "");
-
-                    console.log(state.questions);
-
-
-                } else {
-
+                } 
+                else 
                     state.questions = action.payload;
-                }
             })
 
             .addCase(GetAIQuestions.rejected, (state) => {
-
                 state.loading = false;
                 state.error = "error";
             })
 
             .addCase(SendAnswersToAI.pending, (state) => {
-
                 state.loading = true;
             })
-
             .addCase(SendAnswersToAI.fulfilled, (state, action) => {
-
                 state.loading = false;
                 state.result = action.payload;
             })
-
             .addCase(SendAnswersToAI.rejected, (state) => {
-
                 state.loading = false;
                 state.error = "error";
             });

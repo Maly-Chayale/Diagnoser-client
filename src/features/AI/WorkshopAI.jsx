@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import {  GetAIQuestions,  ResetAIState,  SendAnswersToAI,  SetAnswer} from "./WorkshopAISlice";
+import { GetAIQuestions, ResetAIState, SendAnswersToAI, SetAnswer } from "./WorkshopAISlice";
 import { useEffect, useState, useRef } from "react";
 import { InitWorkShops } from "../WorkShop/WorkShopSlice";
 import { InitDiagnoser } from "../Diagnosers/DiagnoserSlice";
@@ -16,22 +16,20 @@ const WorkshopAI = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { questions, answers, result, loading } =    useSelector((state) => state.WorkshopAI);
+  const { questions, answers, result, loading } = useSelector((state) => state.WorkshopAI);
 
   const workshops = useSelector((state) => state.WorkShop.WorkShops);
-  const diagnosers = useSelector((state) => state.Diagnoser.Diagnosers);
-  const groups = useSelector((state) => state.TypeGroup.groups);
-  const thisuser = useSelector((state) => state.LogIn.thisUser);
   const statusW = useSelector((state) => state.WorkShop.status);
+  const diagnosers = useSelector((state) => state.Diagnoser.Diagnosers);
   const statusD = useSelector((state) => state.Diagnoser.status);
+  const groups = useSelector((state) => state.TypeGroup.groups);
   const statusType = useSelector((state) => state.TypeGroup.statusType);
+  const thisuser = useSelector((state) => state.LogIn.thisUser);
 
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [history, setHistory] = useState([]);
   const [typing, setTyping] = useState(false);
-  const [isOrderOpen, setIsOrderOpen] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const chatEndRef = useRef(null);
 
@@ -40,10 +38,44 @@ const WorkshopAI = () => {
   }, [history, step, typing, loading]);
 
   useEffect(() => {
-    if (statusW === "") dispatch(InitWorkShops());
-    if (statusD === "") dispatch(InitDiagnoser());
-    if (statusType === "") dispatch(TypeGroups());
-  }, [dispatch, statusW, statusD, statusType]);
+    const load = async () => {
+      try {
+        if (statusW === "faild" || statusW === "")
+          await dispatch(InitWorkShops()).unwrap();
+      }
+      catch (err) {
+        console.error("InitCustomer ERROR:", err);
+      }
+    }
+    load()
+  }, [statusW, dispatch]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        if (statusD === "faild" || statusD === "")
+          await dispatch(InitDiagnoser()).unwrap();
+      }
+      catch (err) {
+        console.error("InitCustomer ERROR:", err);
+      }
+    }
+    load()
+  }, [statusD, dispatch]);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        if (statusType === "faild" || statusType === "")
+          await dispatch(TypeGroups()).unwrap();
+      }
+      catch (err) {
+        console.error("InitCustomer ERROR:", err);
+      }
+    }
+    load()
+  }, [statusType, dispatch]);
+
 
   const loadQuestions = async () => {
     await dispatch(ResetAIState());
@@ -58,23 +90,6 @@ const WorkshopAI = () => {
     await dispatch(SendAnswersToAI(payload));
     setOpen(false);
   };
-
-  /* =========================
-     LOAD STORES
-  ========================= */
-
-  useEffect(() => {
-
-    if (statusW === "")
-      dispatch(InitWorkShops());
-
-    if (statusD === "")
-      dispatch(InitDiagnoser());
-
-    if (statusType === "")
-      dispatch(TypeGroups());
-
-  }, [dispatch, statusW, statusD, statusType]);
 
   /* =========================
      PARSE RESULT
@@ -117,162 +132,162 @@ const WorkshopAI = () => {
   ========================= */
 
   // return (
-    // <>
-    //   <div className={style.safeAIPage}>
-    //     <div className={style.chatContainer}>
+  // <>
+  //   <div className={style.safeAIPage}>
+  //     <div className={style.chatContainer}>
 
-    //       {/* START BUTTON */}
-    //       {!open && (
-    //         <button
-    //           className={style.startBtn}
-    //           onClick={loadQuestions}
-    //         >
-    //           לעזרה – התאמת סדנה חכמה
-    //         </button>
-    //       )}
+  //       {/* START BUTTON */}
+  //       {!open && (
+  //         <button
+  //           className={style.startBtn}
+  //           onClick={loadQuestions}
+  //         >
+  //           לעזרה – התאמת סדנה חכמה
+  //         </button>
+  //       )}
 
-    //       {/* LOADING OVERLAY */}
-    //       {loading && (
-    //         <div className={style.loadingOverlay}>
-    //           <div className={style.spinner}></div>
-    //           <p>המערכת חושבת...</p>
-    //         </div>
-    //       )}
+  //       {/* LOADING OVERLAY */}
+  //       {loading && (
+  //         <div className={style.loadingOverlay}>
+  //           <div className={style.spinner}></div>
+  //           <p>המערכת חושבת...</p>
+  //         </div>
+  //       )}
 
-    //       {/* CHAT FLOW */}
-    //       {open && questions.length > 0 && (
-    //         <div className={style.chatBox}>
+  //       {/* CHAT FLOW */}
+  //       {open && questions.length > 0 && (
+  //         <div className={style.chatBox}>
 
-    //           {/* BOT QUESTION */}
-    //           <div className={style.botMsg}>
-    //             {questions[step]}
-    //           </div>
+  //           {/* BOT QUESTION */}
+  //           <div className={style.botMsg}>
+  //             {questions[step]}
+  //           </div>
 
-    //           {/* USER ANSWER INPUT */}
-    //           <div className={style.inputRow}>
+  //           {/* USER ANSWER INPUT */}
+  //           <div className={style.inputRow}>
 
-    //             <input
-    //               className={style.input}
-    //               value={answers[step] || ""}
-    //               onChange={(e) =>
-    //                 dispatch(
-    //                   SetAnswer({
-    //                     index: step,
-    //                     value: e.target.value
-    //                   })
-    //                 )
-    //               }
-    //               onKeyDown={(e) => {
-    //                 if (e.key === "Enter") {
-    //                   if (step < questions.length - 1) {
-    //                     setStep(step + 1);
-    //                   } else {
-    //                     finish();
-    //                   }
-    //                 }
-    //               }}
-    //             />
+  //             <input
+  //               className={style.input}
+  //               value={answers[step] || ""}
+  //               onChange={(e) =>
+  //                 dispatch(
+  //                   SetAnswer({
+  //                     index: step,
+  //                     value: e.target.value
+  //                   })
+  //                 )
+  //               }
+  //               onKeyDown={(e) => {
+  //                 if (e.key === "Enter") {
+  //                   if (step < questions.length - 1) {
+  //                     setStep(step + 1);
+  //                   } else {
+  //                     finish();
+  //                   }
+  //                 }
+  //               }}
+  //             />
 
-    //             {step < questions.length - 1 ? (
-    //               <button
-    //                 className={style.sendBtn}
-    //                 onClick={() => setStep(step + 1)}
-    //               >
-    //                 הבא
-    //               </button>
-    //             ) : (
-    //               <button
-    //                 className={style.sendBtn}
-    //                 onClick={finish}
-    //               >
-    //                 סיום
-    //               </button>
-    //             )}
+  //             {step < questions.length - 1 ? (
+  //               <button
+  //                 className={style.sendBtn}
+  //                 onClick={() => setStep(step + 1)}
+  //               >
+  //                 הבא
+  //               </button>
+  //             ) : (
+  //               <button
+  //                 className={style.sendBtn}
+  //                 onClick={finish}
+  //               >
+  //                 סיום
+  //               </button>
+  //             )}
 
-    //           </div>
+  //           </div>
 
-    //         </div>
-    //       )}
+  //         </div>
+  //       )}
 
-    //       {!open && result &&
-    //         (
-    //           <div className={style.aiMessage} dir="rtl">
-    //             <ReactMarkdown remarkPlugins={[remarkGfm]}>
-    //               {cleanResult}
-    //             </ReactMarkdown>
-    //           </div>
-    //         )
-    //       }
+  //       {!open && result &&
+  //         (
+  //           <div className={style.aiMessage} dir="rtl">
+  //             <ReactMarkdown remarkPlugins={[remarkGfm]}>
+  //               {cleanResult}
+  //             </ReactMarkdown>
+  //           </div>
+  //         )
+  //       }
 
-    //       {/* RESULT */}
-    //       {!open && workshop && (
-    //         <div className={style.resultBox}>
+  //       {/* RESULT */}
+  //       {!open && workshop && (
+  //         <div className={style.resultBox}>
 
-    //           <h2>{workshop.description}</h2>
+  //           <h2>{workshop.description}</h2>
 
-    //           <p>מחיר: {workshop.price}</p>
-    //           <p>כמות משתתפים: {workshop.accontOfPeople}</p>
+  //           <p>מחיר: {workshop.price}</p>
+  //           <p>כמות משתתפים: {workshop.accontOfPeople}</p>
 
-    //           {typeGroup && (
-    //             <p>סוג קבוצה: {typeGroup.description}</p>
-    //           )}
+  //           {typeGroup && (
+  //             <p>סוג קבוצה: {typeGroup.description}</p>
+  //           )}
 
-    //           {diagnoser && (
-    //             <div>
-    //               <h3>מאבחנת</h3>
-    //               <p>{diagnoser.name}</p>
-    //               <p>{diagnoser.mail}</p>
-    //             </div>
-    //           )}
+  //           {diagnoser && (
+  //             <div>
+  //               <h3>מאבחנת</h3>
+  //               <p>{diagnoser.name}</p>
+  //               <p>{diagnoser.mail}</p>
+  //             </div>
+  //           )}
 
-    //           <button
-    //             onClick={() =>
-    //               navigate(`/WorkshopDetails/${workshop.code}`)
-    //             }
-    //           >
-    //             מעבר לפרטי הסדנה
-    //           </button>
+  //           <button
+  //             onClick={() =>
+  //               navigate(`/WorkshopDetails/${workshop.code}`)
+  //             }
+  //           >
+  //             מעבר לפרטי הסדנה
+  //           </button>
 
-    //           <button
-    //             onClick={() => {
-    //               if (!thisuser) {
-    //                 setShowLoginModal(true);
-    //                 return;
-    //               }
-    //               setIsOrderOpen(true);
-    //             }}
-    //           >
-    //             הזמנת סדנה
-    //           </button>
+  //           <button
+  //             onClick={() => {
+  //               if (!thisuser) {
+  //                 setShowLoginModal(true);
+  //                 return;
+  //               }
+  //               setIsOrderOpen(true);
+  //             }}
+  //           >
+  //             הזמנת סדנה
+  //           </button>
 
-    //           {isOrderOpen && workshop && diagnoser && (
-    //             <OrderWorkshop
-    //               WorkShop={workshop}
-    //               diagnoser={diagnoser}
-    //               onClose={() => setIsOrderOpen(false)}
-    //             />
-    //           )}
+  //           {isOrderOpen && workshop && diagnoser && (
+  //             <OrderWorkshop
+  //               WorkShop={workshop}
+  //               diagnoser={diagnoser}
+  //               onClose={() => setIsOrderOpen(false)}
+  //             />
+  //           )}
 
 
 
-    //         </div>
-    //       )}
+  //         </div>
+  //       )}
 
-    //     </div>
-    //   </div>
+  //     </div>
+  //   </div>
 
-    //   {showLoginModal && (
-    //     <LoginRequiredModal
-    //       onClose={() => setShowLoginModal(false)}
-    //       onLogin={() => {
-    //         setShowLoginModal(false);
-    //         navigate("/login");
-    //       }}
-    //     />
-    //   )}
-    // </>
+  //   {showLoginModal && (
+  //     <LoginRequiredModal
+  //       onClose={() => setShowLoginModal(false)}
+  //       onLogin={() => {
+  //         setShowLoginModal(false);
+  //         navigate("/login");
+  //       }}
+  //     />
+  //   )}
+  // </>
 
-    const nextStep = () => {
+  const nextStep = () => {
     const userAnswer = answers[step] || "";
     setHistory((prev) => [
       ...prev,
@@ -318,6 +333,8 @@ const WorkshopAI = () => {
       "**מצאתי לך את הסנא המדויקת ביותר בשבילך על פי מה שביקשת:" +
       cleanResult.split("למה היא מתאימה:")[1];
   }
+
+  if (statusType !== "succesfull" || statusD !== "succesfull" || statusW !== "succesfull") return <>טוען נתונים...</>
 
   return (
     <div className={style.safeAIPage}>

@@ -8,11 +8,12 @@ import { useNavigate } from 'react-router-dom';
 
 const CustomersList = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate()
+
     const customers = useSelector(state => state.Customer.Customers);
     const status = useSelector(state => state.Customer.status);
 
     const [search, setSearch] = useState("");
-    const navigate = useNavigate()
 
     const string = (s) => s.name + " " + s.mail + " " + s.phone;
 
@@ -22,8 +23,16 @@ const CustomersList = () => {
     );
 
     useEffect(() => {
-        if (status === "")
-            dispatch(InitCustomer());
+        const load = async () => {
+            try {
+                if (status === "faild" || status === "")
+                    await dispatch(InitCustomer()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
     }, [status, dispatch]);
 
     const highlight = (text, query) => {
@@ -36,13 +45,7 @@ const CustomersList = () => {
         );
     };
 
-    if (status === "" || status === "loading") {
-        return <div className={style.loading}>טוען נתונים...</div>;
-    }
-
-    if (status === "faild") {
-        return <div className={style.error}>שגיאה בטעינה</div>;
-    }
+  if (status !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <div className={style["customers-page"]}>

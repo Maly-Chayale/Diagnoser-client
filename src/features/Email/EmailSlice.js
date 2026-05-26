@@ -37,7 +37,7 @@ const EmailSlice = createSlice({
                 state.status = "loading";
             })
             .addCase(sendEmail.fulfilled, (state) => {
-                state.status = "success";
+                state.status = "succesfull";
             })
             .addCase(sendEmail.rejected, (state, action) => {
                 state.status = "failed";

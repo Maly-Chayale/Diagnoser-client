@@ -80,13 +80,13 @@ const DiagnoserSlice = createSlice({
                 state.status = "faild"
             })
             .addCase(addDiagnoser.fulfilled, (state, action) => {
-                const diagnoser = action.payload;
                 state.status = "succesfull";
+                const diagnoser = action.payload;
                 state.Diagnosers =[...state.Diagnosers,diagnoser] //state.Diagnosers.push(diagnoser)
             })
             .addCase(deleteDiagnoser.fulfilled, (state, action) => {
-                const diagnoser = action.payload;
                 state.status = "succesfull";
+                const diagnoser = action.payload;
                 state.Diagnosers = state.Diagnosers?.filter(d => d.mail != diagnoser.mail)
             })
             .addCase(deleteDiagnoser.pending, (state) => {

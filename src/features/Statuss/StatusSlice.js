@@ -23,11 +23,11 @@ const StatusSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(fetchStatus.fulfilled, (state, action) => {
+                state.status = 'succesfull';
                 state.statuss = action.payload;
-                state.status = 'success';
             })
             .addCase(fetchStatus.rejected, (state) => {
-                state.status = 'failed';
+                state.status = 'faild';
             });
     }
 });
