@@ -13,28 +13,39 @@ function Workshop() {
     const dispatch = useDispatch();
 
     const workshops = useSelector(s => s.WorkShop.WorkShops);
+    const statusW = useSelector(s => s.WorkShop.status);
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers)
-
-    const status = useSelector(s => s.WorkShop.status);
-
+    const statusD = useSelector(state => state.Diagnoser.status)
     const statusUser = useSelector(s => s.LogIn.statusUser);
 
     const [search, setSearch] = useState("");
-
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
-
-        if (status === "" || status === "faild") {
-
-            dispatch(InitWorkShops());
+        const load = async () => {
+            try {
+                if (statusW === "faild" || statusW === "")
+                    await dispatch(InitWorkShops()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
         }
+        load()
+    }, [statusW, dispatch]);
 
-        dispatch(InitDiagnoser());
-
-        dispatch(TypeGroups());
-
-    }, [dispatch, status]);
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusD === "faild" || statusD === "")
+                    await dispatch(InitDiagnoser()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusD, dispatch]);
 
     const filtered = useMemo(() =>
         workshops.filter(w =>
@@ -48,9 +59,7 @@ function Workshop() {
     const getDiagnoser = (coded) => diagnosers.find(d => d.code === coded);
 
 
-    if (status === "loading") return <div>טוען...</div>;
-
-    if (status === "faild") return <div>שגיאה</div>;
+    if (statusW !== "succesfull" || statusD !== "succesfull") return <>טוען נתונים...</>
 
     return (
 

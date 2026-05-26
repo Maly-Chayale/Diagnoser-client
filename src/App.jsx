@@ -8,7 +8,6 @@ import styles from './App.module.css';
 // דפים
 import DiagnoserList from './features/Diagnosers/DiagnoserList';
 import CustomersList from './features/Customers/CustomersList';
-import Home from "./features/Home/Home";
 import Workshop from "./features/WorkShop/WorkShop";
 import DiagnoserDetails from './features/Diagnosers/DiagnoserDetails';
 import SignIn from './features/SignIn/SignIn';

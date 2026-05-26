@@ -9,25 +9,30 @@ import DiagnoserWorkshopsModal from './DiagnoserWorkshopsModal';
 
 const DiagnoserList = () => {
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
     const status = useSelector(state => state.Diagnoser.status);
     const statusUser = useSelector(state => state.LogIn.statusUser);
-
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const [filter, setFilter] = useState("הכל 🌐");
     const [open, setOpen] = useState(false);
     const [confirmDelete, setConfirmDelete] = useState(null);
     const [search, setSearch] = useState("");
-
-    // NEW
     const [selectedDiagnoserWorkshops, setSelectedDiagnoserWorkshops] = useState(null);
 
     useEffect(() => {
-        if (status === "" || status === "faild") {
-            dispatch(InitDiagnoser());
+        const load = async () => {
+            try {
+                if (status === "faild" || status === "")
+                    await dispatch(InitDiagnoser()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
         }
+        load()
     }, [status, dispatch]);
 
     const Delete = (d) => {
@@ -70,13 +75,7 @@ const DiagnoserList = () => {
         getText(s).toLowerCase().includes(search.toLowerCase())
     );
 
-    if (status === "" || status === "loading") {
-        return <div className={style.loading}>טוען נתונים...</div>;
-    }
-
-    if (status === "faild") {
-        return <div className={style.error}>שגיאה בטעינה</div>;
-    }
+    if (status !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <div className={style["diagnosticians-page"]}>

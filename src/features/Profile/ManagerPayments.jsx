@@ -5,22 +5,79 @@ import DiagnoserOrdersPopup from './DiagnoserOrdersPopup';
 import styles from './ManagerPayments.module.css';
 import { InitReferences } from '../References/ReferencesSlice';
 import { InitWorkShops } from '../WorkShop/WorkShopSlice';
+import { InitDiagnoser } from '../Diagnosers/DiagnoserSlice';
+import { InitCustomer } from '../Customers/CustomerSlice';
 
 const ManagerPayments = () => {
 
     const dispatch = useDispatch()
 
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
-    const { references, status } = useSelector(state => state.Reference);
+    const statusD = useSelector(state => state.Diagnoser.status);
+    const references = useSelector(state => state.Reference.references);
+    const statusR = useSelector(state => state.Reference.status);
     const workshops = useSelector(state => state.WorkShop.WorkShops);
     const statusW = useSelector(state => state.WorkShop.status);
     const customers = useSelector(state => state.Customer.Customers);
+    const statusC = useSelector(state => state.Customer.status);
     // const statusUser = useSelector(state => state.LogIn.statusUser);
 
     const [search, setSearch] = useState("");
     const [selectedDiagnoser, setSelectedDiagnoser] = useState(null);
 
     const string = (s) => `${s.name} ${s.mail} ${s.precentagePayment}`;
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusD === "faild" || statusD === "")
+                    await dispatch(InitDiagnoser()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusD, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusC === "faild" || statusC === "")
+                    await dispatch(InitCustomer()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusC, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusR === "faild" || statusR === "")
+                    await dispatch(InitReferences()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusR, dispatch]);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusW === "faild" || statusW === "")
+                    await dispatch(InitWorkShops()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusW, dispatch]);
 
     const filteredSlots = useMemo(() => {
         const sortedDiagnosers = [...diagnosers].sort((a, b) => a.name.localeCompare(b.name, 'he'));
@@ -31,12 +88,7 @@ const ManagerPayments = () => {
         setSelectedDiagnoser(diagnoser);
     };
 
-    useEffect(() => {
-        if (status === "")
-            dispatch(InitReferences())
-        if (statusW === "")
-            dispatch(InitWorkShops())
-    }, [status, statusW, dispatch])
+    if (statusR !== "succesfull" || statusW !== "succesfull" || statusD !== "succesfull" || statusW !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <div className={styles["payments-page"]}>

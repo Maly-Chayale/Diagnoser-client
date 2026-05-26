@@ -19,8 +19,19 @@ const LeadsList = () => {
   );
 
   useEffect(() => {
-    if (status !== "loaded") dispatch(InitLeads());
+    const load = async () => {
+      try {
+        if (status === "faild" || status === "")
+          await dispatch(InitLeads()).unwrap();
+      }
+      catch (err) {
+        console.error("InitCustomer ERROR:", err);
+      }
+    }
+    load()
   }, [status, dispatch]);
+
+  if (status !== "succesfull") return <>טוען נתונים...</>
 
   return (
     <div className={style.leadsPage}>
@@ -42,7 +53,7 @@ const LeadsList = () => {
               <span className={style.badge}>📧 {lead.mail}</span>
               <span className={style.badge}>📞 {lead.phone}</span>
             </div>
-           
+
           </div>
         ))}
       </div>

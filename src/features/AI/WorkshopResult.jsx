@@ -81,11 +81,20 @@ const WorkshopResult = ({
                         >
                             📅 הזמנת סדנה
                         </button>
+
                     </div>
 
                 </div>
 
-            </div>
+            </div >
+
+            {isOrderOpen && workshop && diagnoser && (
+                <OrderWorkshop
+                    WorkShop={workshop}
+                    diagnoser={diagnoser}
+                    onClose={() => setIsOrderOpen(false)}
+                />
+            )}
 
             {showLoginModal && (
                 <LoginRequiredModal
@@ -95,7 +104,8 @@ const WorkshopResult = ({
                         navigate("/login");
                     }}
                 />
-            )}
+            )
+            }
         </>
     );
 };

@@ -83,7 +83,7 @@ const LogIn = () => {
                 thisUser: thisuser,  // הערכים המעודכנים
                 status: status
             }));
-            navigate("../hello");
+            navigate("../AI");
         }
     }, [status]);
 
@@ -122,7 +122,7 @@ const LogIn = () => {
                 Diagnosers: diagnosers,
                 Leads: leads
             }));
-            navigate("../hello");
+            navigate("../AI");
         } else {
             setErr(true);
             dispatch(signOut())

@@ -1,16 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import style from './DiagnoserDetails.module.css';
+import { InitDiagnoser } from './DiagnoserSlice';
 
 const DiagnoserDetails = () => {
+
+    const dispatch = useDispatch()
+
     const diagnosers = useSelector((state) => state.Diagnoser.Diagnosers);
+    const status = useSelector((state) => state.Diagnoser.status);
     const { code } = useParams();
     const d = diagnosers.find(d => d.code == code);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (status === "faild" || status === "")
+                    await dispatch(InitDiagnoser()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [status, dispatch]);
 
     if (!d) {
         return <div className={style['details-page']}>לא נמצאה מאבחנת עם הקוד הזה.</div>;
     }
+
+  if (status !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <div className={style['details-page']}>

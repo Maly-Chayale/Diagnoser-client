@@ -1,24 +1,42 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import WorkshopDiagnosersModal from './WorkshopDiagnosersModal';
 import style from './AppointmentCard.module.css';
 import { useNavigate } from 'react-router-dom';
 import OrderWorkshop from './OrderWorkshop'
 import LoginRequiredModal from '../AI/LoginRequiredModal';
+import { TypeGroups } from '../TypeGroup/TypeGroupSlice';
 
 function WorkshopCard({ WorkShop }) {
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [bookingDiagnoser, setBookingDiagnoser] = useState(null);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const user = useSelector(state => state.LogIn.thisUser);
     const groups = useSelector(state => state.TypeGroup.groups);
+    const statusType = useSelector(state => state.TypeGroup.statusType);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                if (statusType === "faild" || statusType === "")
+                    await dispatch(TypeGroups()).unwrap();
+            }
+            catch (err) {
+                console.error("InitCustomer ERROR:", err);
+            }
+        }
+        load()
+    }, [statusType, dispatch]);
 
     const getType = (code) => {
         return groups.find(g => g.code === code)?.description;
     };
+
+    if (statusType !== "succesfull") return <>טוען נתונים...</>
 
     return (
         <>

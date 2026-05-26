@@ -6,8 +6,14 @@ import { UpdateUser } from "../SignIn/LogInSlice";
 import { InitReferences } from "../References/ReferencesSlice";
 
 const ProfileEditor = () => {
-  const diagnostician = useSelector(state => state.LogIn.thisUser);
+
   const dispatch = useDispatch();
+
+  const diagnostician = useSelector(state => state.LogIn.thisUser);
+  const user = useSelector(state => state.LogIn.thisUser);
+  const statusUser = useSelector(state => state.LogIn.statusUser);
+  const references = useSelector(state => state.Reference.references);
+  const statusR = useSelector(state => state.Reference.status);
 
   const [profile, setProfile] = useState(diagnostician);
   const [editing, setEditing] = useState(false);
@@ -15,21 +21,25 @@ const ProfileEditor = () => {
   const [amountPaid, setAmountPaid] = useState(0);
   const [remaining, setRemaining] = useState(0);
 
-  const user = useSelector(state => state.LogIn.thisUser);
-  const statusUser = useSelector(state => state.LogIn.statusUser);
-  const references = useSelector(state => state.Reference.references);
 
   useEffect(() => {
     if (references.length && user) {
       setRemaining(user.precentagePayment);
     }
   }, [references, user]);
-  
+
   useEffect(() => {
-    if (references.length===0) {
-      dispatch(InitReferences())
+    const load = async () => {
+      try {
+        if (statusR === "faild" || statusR === "")
+          await dispatch(InitReferences()).unwrap();
+      }
+      catch (err) {
+        console.error("InitCustomer ERROR:", err);
+      }
     }
-  }, [references, user]);
+    load()
+  }, [statusR, dispatch]);
 
   const handleChange = (field, value) =>
     setTempProfile({ ...tempProfile, [field]: value });
@@ -94,6 +104,8 @@ const ProfileEditor = () => {
     setRemaining((prev) => prev - amountPaid);
     setAmountPaid(0);
   };
+
+  if (statusR !== "succesfull") return <>טוען נתונים...</>
 
   return (
     <div className={styles.wrapper}>
