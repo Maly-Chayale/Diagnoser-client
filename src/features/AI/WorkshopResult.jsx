@@ -44,7 +44,7 @@ const WorkshopResult = ({
 
                     <div className={styles.header}>
                         <div className={styles.badge}>
-                             קוד סדנה: {workshop.code}
+                            קוד סדנה: {workshop.code}
                         </div>
 
                         <h2 className={styles.title}>
