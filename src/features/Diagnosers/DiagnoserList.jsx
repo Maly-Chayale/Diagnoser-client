@@ -5,8 +5,10 @@ import AddDiagnosticianPopup from './AddDiagnosticianPopup';
 import { useNavigate } from 'react-router-dom';
 import style from './Diagnoser.module.css';
 import ConfirmDeletePopup from './ConfirmDeletePopup';
+import DiagnoserWorkshopsModal from './DiagnoserWorkshopsModal';
 
 const DiagnoserList = () => {
+
     const diagnosers = useSelector(state => state.Diagnoser.Diagnosers);
     const status = useSelector(state => state.Diagnoser.status);
     const statusUser = useSelector(state => state.LogIn.statusUser);
@@ -19,6 +21,9 @@ const DiagnoserList = () => {
     const [confirmDelete, setConfirmDelete] = useState(null);
     const [search, setSearch] = useState("");
 
+    // NEW
+    const [selectedDiagnoserWorkshops, setSelectedDiagnoserWorkshops] = useState(null);
+
     useEffect(() => {
         if (status === "" || status === "faild") {
             dispatch(InitDiagnoser());
@@ -28,6 +33,10 @@ const DiagnoserList = () => {
     const Delete = (d) => {
         dispatch(deleteDiagnoser(d));
         setConfirmDelete(null);
+    };
+
+    const openWorkshopsModal = (diagnoser) => {
+        setSelectedDiagnoserWorkshops(diagnoser);
     };
 
     const highlight = (text, query) => {
@@ -72,9 +81,6 @@ const DiagnoserList = () => {
     return (
         <div className={style["diagnosticians-page"]}>
 
-            {/* <h1 className={style.title}>רשימת מאבחנות</h1> */}
-
-            {/* SEARCH */}
             <div className={style["search-row"]}>
                 <input
                     className={style["search-input"]}
@@ -84,7 +90,6 @@ const DiagnoserList = () => {
                 />
             </div>
 
-            {/* FILTERS */}
             <div className={style["filters-row"]}>
                 {["הכל 🌐", "זמינות⚡", "מורפולוגיה 🧠", "כירולוגיה ✋", "גרפולוגיה ✍️"].map((f) => (
                     <button
@@ -97,93 +102,52 @@ const DiagnoserList = () => {
                 ))}
             </div>
 
-            {/* CARDS */}
             <div className={style["cards-grid"]}>
                 {final?.map((d) => (
-
                     <div key={d.mail} className={style.card}>
 
                         <h2 className={style.name}>
                             {highlight(d.name, search)}
                         </h2>
+
                         <div className={style.capabilities}>
-
-                            {d.morphology && (
-                                <span className={`${style.badge} ${style.morphology}`}>
-                                    🧠 מורפולוגיה
-                                </span>
-                            )}
-
-                            {d.graphology && (
-                                <span className={`${style.badge} ${style.graphology}`}>
-                                    ✍️ גרפולוגיה
-                                </span>
-                            )}
-
-                            {d.chirology && (
-                                <span className={`${style.badge} ${style.chirology}`}>
-                                    ✋ כירולוגיה
-                                </span>
-                            )}
-
+                            {d.morphology && <span className={`${style.badge} ${style.morphology}`}>🧠 מורפולוגיה</span>}
+                            {d.graphology && <span className={`${style.badge} ${style.graphology}`}>✍️ גרפולוגיה</span>}
+                            {d.chirology && <span className={`${style.badge} ${style.chirology}`}>✋ כירולוגיה</span>}
                         </div>
 
+                        <p className={style.description}>📧 {highlight(d.mail, search)}</p>
+                        <p className={style.description}>📞 {highlight(d.phone, search)}</p>
 
-
-
-                        <p className={style.description}>
-                            📧 {highlight(d.mail, search)}
-                        </p>
-
-                        <p className={style.description}>
-                            📞 {highlight(d.phone, search)}
-                        </p>
-
-                        {/* only show when NOT available */}
                         {statusUser !== "Esty" && !d.available && (
-                            <span className={style["status-off"]}>
-                                ⛔ לא זמינה כרגע
-                            </span>
+                            <span className={style["status-off"]}>⛔ לא זמינה כרגע</span>
                         )}
 
+                        {statusUser === "Esty" && (
+                            <button
+                                className={d.available ? style["status-on"] : style["status-off"]}
+                                onClick={() => {
+                                    const updatedDiagnoser = { ...d, available: !d.available };
+                                    dispatch(updateDiagnoser(updatedDiagnoser));
+                                }}
+                            >
+                                {d.available ? "✅ זמינה עכשיו" : "⛔ לא זמינה כרגע"}
+                            </button>
+                        )}
 
-
-
-
-
-
-
-
-{statusUser === "Esty" && (
-    <button
-    className={d.available ? style["status-on"] : style["status-off"]}
-    onClick={() => {
-        const updatedDiagnoser = { ...d, available: !d.available };
-        dispatch(updateDiagnoser(updatedDiagnoser));
-    }}
->
-    {d.available ? "✅ זמינה עכשיו" : "⛔ לא זמינה כרגע"}
-</button>
-)}
-
-
-
-                        {/* {statusUser === "Esty" && (
-    <button
-        className={style["primary-btn1"]}
-        onClick={() => {
-            const updatedDiagnoser = { ...d, available: !d.available };
-            dispatch(updateDiagnoser(updatedDiagnoser));
-        }}
-    >
-        {d.available ? "סמן כלא זמינה" : "סמן כזמינה"}
-    </button>
-)} */}
                         <button
                             className={style["primary-btn1"]}
                             onClick={() => navigate(`/DiagnoserDetails/${d.code}`)}
                         >
                             פרטים נוספים
+                        </button>
+
+                        {/* NEW BUTTON */}
+                        <button
+                            className={style["primary-btn1"]}
+                            onClick={() => openWorkshopsModal(d)}
+                        >
+                            לצפיה בכל הסדנאות
                         </button>
 
                         {statusUser === "Esty" && (
@@ -194,15 +158,11 @@ const DiagnoserList = () => {
                                 מחיקה
                             </button>
                         )}
+
                     </div>
                 ))}
             </div>
-            {/* 
-            {
-                final.length==0&&<p className="empty-text">לא נמצאו מאבחנות מתאימות לחיפוש.</p>
-            } */}
 
-            {/* POPUP */}
             {confirmDelete && (
                 <ConfirmDeletePopup
                     isOpen={!!confirmDelete}
@@ -211,26 +171,37 @@ const DiagnoserList = () => {
                     name={confirmDelete.name}
                 />
             )}
-            {(statusUser === "Esty") && <button
-                className={style["primary-btn2"]}
-                onClick={() => setOpen(true)}
-            >
-                ➕ הוספת מאבחנת
-            </button>}
 
-
-            {/* <AddDiagnosticianPopup
-    isOpen={open}
-    onClose={() => setOpen(false)}
-    onSave={(data) => {
-        dispatch(addDiagnoser(data)); // אם אתה רוצה כפול
-    }}
-/> */}
+            {statusUser === "Esty" && (
+                <button
+                    className={style["primary-btn2"]}
+                    onClick={() => setOpen(true)}
+                >
+                    ➕ הוספת מאבחנת
+                </button>
+            )}
 
             <AddDiagnosticianPopup
                 isOpen={open}
                 onClose={() => setOpen(false)}
             />
+
+            {/* NEW MODAL CALL */}
+            {selectedDiagnoserWorkshops && (
+                <DiagnoserWorkshopsModal
+                    diagnoser={selectedDiagnoserWorkshops}
+                    onClose={() => setSelectedDiagnoserWorkshops(null)}
+                    onBooking={(workshop) => {
+                        if (!statusUser || statusUser !== "Esty") {
+                            // אפשר לשנות ללוגין שלך אם צריך
+                            console.log("need login");
+                            return;
+                        }
+                        console.log("booking:", workshop);
+                    }}
+                />
+            )}
+
         </div>
     );
 };
